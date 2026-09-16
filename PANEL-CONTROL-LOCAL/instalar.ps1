@@ -73,7 +73,14 @@ sh.Run """$pyw"" ""$fantasma""", 0, False
 Unregister-ScheduledTask -TaskName 'PanelAP_ClicFantasma' -Confirm:$false -ErrorAction SilentlyContinue
 $actF = New-ScheduledTaskAction -Execute "$env:SystemRoot\System32\wscript.exe" `
         -Argument ('//nologo //B "{0}"' -f $vbsFant) -WorkingDirectory $dir
-$trgF = New-ScheduledTaskTrigger -AtLogOn
+# 2026-09-16: antes era "-AtLogOn", pero algunas PCs (politica de IT) NO
+# dejan crear tareas que se disparen "al iniciar sesion" (Register-
+# ScheduledTask da "Acceso denegado" SOLO con ese disparador -- el de
+# PanelAP_Tick, por horario, sí las deja). Se cambia a un disparador
+# repetido cada 1 minuto (mismo efecto de "siempre corriendo"), que sí
+# suele estar permitido. clic_fantasma_pc.py ahora se fija solo si ya hay
+# otra copia viva antes de arrancar, para no acumular procesos.
+$trgF = New-ScheduledTaskTrigger -Once -At (Get-Date) -RepetitionInterval (New-TimeSpan -Minutes 1) -RepetitionDuration ([TimeSpan]::MaxValue)
 $setF = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries `
         -StartWhenAvailable -MultipleInstances IgnoreNew -ExecutionTimeLimit ([TimeSpan]::Zero)
 $prnF = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Limited

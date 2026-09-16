@@ -16,6 +16,7 @@ PENDIENTES-LOCAL/HISTORICO-NODT/
 **/runs/
 **/_diagnosticos/
 PANEL-CONTROL-LOCAL/_panel.pid
+PANEL-CONTROL-LOCAL/_clic_fantasma.pid
 PANEL-CONTROL-LOCAL/agenda_estado.json
 PANEL-CONTROL-LOCAL/tick.log
 PANEL-CONTROL-LOCAL/tick_latido.json
