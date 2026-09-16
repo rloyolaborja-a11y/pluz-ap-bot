@@ -1,0 +1,125 @@
+EXTRAER GAP (automatico) — Reporte de Pendientes/Atendidas AP
+================================================================
+
+Que es esto
+-----------
+Un robot (RPA) que hace, dentro de SDAPeru ("Sistema de Distribucion -
+Modulos Locales"), exactamente los mismos clics que ya haces a mano para
+extraer el reporte GAP descritos en "RPA GAP.docx" -- y deja el Excel
+listo en la carpeta OneDrive "GAP" para que un segundo paso lo lleve a
+..\CARGA\EXCEL\.
+
+IMPORTANTE: esto son DOS piezas que corren en DOS máquinas distintas --
+por eso este zip trae DOS carpetas separadas, una para cada una. Dentro de
+cada carpeta hay DOS formas de usarlo: a MANO (los dos primeros archivos
+de cada carpeta) o AUTOMATICO de punta a punta (los dos ultimos) -- ver
+mas abajo, en "Uso del dia a dia", cual conviene segun el caso.
+
+  Carpeta PARA-LA-VM\
+      Copia el CONTENIDO de esta carpeta DENTRO del escritorio virtual
+      (Oracle Secure Desktops), en tu carpeta GAP\PROGRAMACIÓN de ahi.
+      Necesita que TU ya hayas entrado a SDAPeru con tu usuario y
+      contraseña a mano (el robot nunca toca contraseñas).
+        - extraer_gap_vm.py / Extraer-GAP-VM.bat: corre UNA extraccion,
+          vos decidis cuando (doble clic cada vez que la necesitas).
+        - vigilar_gap_vm.py / Vigilar-GAP-VM.bat: se queda corriendo
+          vigilando, y arranca la extraccion SOLO cuando le llega una
+          senal desde tu PC real (ver "Modo automatico" mas abajo).
+
+  Carpeta PARA-TU-PC-REAL\
+      Copia el CONTENIDO de esta carpeta en tu PC REAL (donde ya tienes el
+      resto de "1. REPORTE").
+        - mover_excel_gap_pc.py / Mover-Excel-GAP-PC.bat: toma el Excel
+          MAS RECIENTE que ya este en la carpeta OneDrive "GAP" y lo copia
+          a CARGA\EXCEL. Para usar despues de correr Extraer-GAP-VM.bat a
+          mano en la VM y esperar a que OneDrive sincronice.
+        - iniciar_y_esperar_gap_pc.py / Iniciar-GAP-PC.bat: manda la señal
+          a la VM Y espera solo a que llegue el Excel nuevo para copiarlo
+          -- todo en un solo paso (ver "Modo automatico" mas abajo).
+
+Por ahora el rango de fechas es SIEMPRE los ULTIMOS 30 DIAS desde hoy
+(igual que el robot de SAP), cada vez que se corre una extraccion. Se
+puede cambiar editando RANGO_DIAS al principio de extraer_gap_vm.py (esto
+aplica tanto al modo manual como al automatico, porque los dos usan el
+mismo RANGO_DIAS), o corriendo a mano en una consola dentro de la VM:
+    python extraer_gap_vm.py --preguntar-fechas
+
+Requisitos (una sola vez)
+--------------------------
+DENTRO de la VM:
+1. Instalar Python (https://www.python.org/downloads/ — marca "Add Python
+   to PATH" al instalar).
+2. Abrir una consola (CMD) DENTRO de la VM, en la carpeta PARA-LA-VM\, y
+   ejecutar:
+       pip install pywinauto pillow
+
+EN TU PC REAL:
+1. Tambien necesitas Python instalado ahi (si ya lo tienes por el robot de
+   SAP, no hace falta instalarlo de nuevo).
+2. Ninguna libreria extra hace falta en la PC real.
+
+Uso del dia a dia -- MODO MANUAL (paso a paso, vos controlas cada momento)
+----------------------------------------------------------------------------
+1. Entra al escritorio virtual (login + verificacion por celular, como
+   siempre) y abre SDAPeru con tu usuario/clave.
+2. Deja visible la pantalla del arbol "Gestion de Alumbrado Publico".
+3. DENTRO de la VM: doble clic en Extraer-GAP-VM.bat. Espera a que avise
+   "Listo: ...".
+4. Espera unos segundos a que OneDrive sincronice (el icono de OneDrive en
+   la barra de tareas de tu PC real deja de "girar").
+5. EN TU PC REAL: doble clic en Mover-Excel-GAP-PC.bat. Espera a que avise
+   "Listo: ...". Ya quedo el Excel en CARGA\EXCEL.
+
+Uso del dia a dia -- MODO AUTOMATICO (un solo clic desde tu PC real)
+-----------------------------------------------------------------------
+Esto evita tener que entrar a la VM cada vez que queres el reporte -- pero
+necesita que, alguna vez durante el dia, hayas dejado corriendo el
+"vigilante" dentro de la VM (con SDAPeru ya logueado):
+
+PRIMERO, una vez al empezar el dia (o cada vez que la sesion de SDAPeru
+venza):
+1. Entra al escritorio virtual y abre SDAPeru con tu usuario/clave, como
+   siempre.
+2. Deja visible el arbol "Gestion de Alumbrado Publico".
+3. DENTRO de la VM: doble clic en Vigilar-GAP-VM.bat. Se queda corriendo
+   en una consola -- podes minimizarla, pero NO la cierres. Va a quedar
+   vigilando hasta que le llegue una senal, sin usar el mouse para nada.
+
+DESPUES, cada vez que quieras el reporte (las veces que quieras, mientras
+el vigilante de la VM siga corriendo):
+1. EN TU PC REAL: doble clic en Iniciar-GAP-PC.bat.
+2. Espera -- puede tardar varios minutos (la VM tiene que leer la senal,
+   hacer la extraccion completa, y OneDrive sincronizar el archivo de
+   vuelta a tu PC). El programa va avisando en que va.
+3. Al terminar, el Excel ya esta copiado solo en CARGA\EXCEL -- no hizo
+   falta entrar a la VM para nada en este paso.
+
+Si Iniciar-GAP-PC.bat se agota esperando (por ejemplo, te olvidaste de
+dejar corriendo Vigilar-GAP-VM.bat en la VM, o la sesion de SDAPeru vencio
+justo en el medio), no pasa nada grave: te avisa bien claro, y en cuanto
+soluciones eso podes correr Mover-Excel-GAP-PC.bat a mano (Modo Manual,
+paso 5) para traer el archivo sin tener que repetir el envio de la señal.
+
+Si algo falla
+--------------
+Este es un robot NUEVO, recien armado a partir de capturas de pantalla del
+Word y de las primeras pruebas reales -- es posible que de vez en cuando
+haga falta ajustar algun detalle. Cuando algo falla:
+
+1. El programa imprime en que paso se quedo.
+2. La Pieza de la VM (extraer_gap_vm.py, tambien usada por
+   vigilar_gap_vm.py) guarda automaticamente una foto de la pantalla (y
+   casi siempre tambien un .txt con el detalle) en una carpeta
+   "diagnosticos" (dentro de una carpeta "GAP_RPA_Excel" en tu carpeta de
+   usuario DE LA VM, ej. C:\Users\TU_USUARIO\GAP_RPA_Excel). Si estabas en
+   modo automatico, el vigilante NO se cae por esto -- guarda el
+   diagnostico, avisa en la consola, y sigue vigilando la proxima señal.
+3. Mandame esa foto (y el .txt si hay) y lo corregimos -- igual que
+   hicimos con el de SAP.
+
+Nota sobre login y verificacion
+--------------------------------
+Este robot resuelve solo la parte DESPUES de que ya iniciaste sesion en
+SDAPeru. El login con usuario/contraseña de SDAPeru, y la verificacion por
+celular para entrar al escritorio virtual, siguen siendo pasos manuales
+tuyos -- eso no se automatiza, ni en modo manual ni en modo automatico.

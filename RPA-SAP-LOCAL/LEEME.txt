@@ -1,0 +1,85 @@
+DESCARGAR EXCEL DE SAP (automatico) — Reporte de Pendientes/Atendidas AP
+==========================================================================
+
+Qué es esto
+-----------
+Un robot (RPA) que hace, en Chrome, exactamente los mismos clics que ya
+haces a mano para descargar el Excel de SAP (IW39, Clase de orden ZM06,
+Layout /PRT) descritos en "RPA DESCARGAR DE SAP.docx" — y lo deja guardado
+directo en ..\CARGA\SAP\, listo para que Ejecutar.bat (de PENDIENTES-LOCAL
+o ATENDIDAS-LOCAL) lo use.
+
+Por ahora descarga los ÚLTIMOS 30 DÍAS desde hoy cada vez que lo corres
+(se puede cambiar editando RANGO_DIAS al principio de
+descargar_excel_sap.py). Si alguna vez necesitas un rango puntual distinto,
+corre en una consola:
+    python descargar_excel_sap.py --preguntar-fechas
+y te va a pedir las fechas (Enter para dejar el default).
+
+Requisitos (una sola vez)
+--------------------------
+1. Tener Python instalado (https://www.python.org/downloads/ — marca
+   "Add Python to PATH" al instalar).
+2. Abrir una consola (CMD) en esta carpeta y ejecutar:
+       pip install playwright pywinauto
+       playwright install chromium
+   (esto instala el navegador que el robot va a manejar. Desde
+   fix3-2026-09-03 el robot usa el CHROMIUM propio de Playwright, NO el
+   Chrome de la empresa: el Chrome corporativo carga por política una
+   extensión de seguridad/DLP que cerraba el navegador justo al bajar el
+   Excel de SAP. Por eso ahora es "playwright install chromium", no
+   "chrome". pywinauto queda como respaldo por si tu PC llegara a mostrar
+   el cuadro nativo de Windows "Guardar como").
+
+   NOTA: la primera corrida con esta versión te va a pedir iniciar sesión
+   en SAP una vez (perfil nuevo). Después queda recordada como siempre.
+
+Uso del día a día
+------------------
+1. Doble clic en Descargar-Excel-SAP.bat.
+2. Se abre una ventana de Chrome. La PRIMERA vez (o si la sesión de SAP ya
+   venció) te va a pedir iniciar sesión (usuario/clave/MFA) — hazlo
+   normalmente ahí mismo, el robot espera hasta 5 minutos y sigue solo en
+   cuanto detecta que ya entraste. Las siguientes veces, si la sesión sigue
+   activa, ni te pide nada.
+3. Espera a que el programa avise "Listo: ..." — ya quedó el Excel en
+   ..\CARGA\SAP\, reemplazando cualquiera que hubiera antes ahí.
+
+Descargar 3 meses de una (para la pestaña NO DT de Pendientes)
+--------------------------------------------------------------
+Doble clic en Descargar-3-Meses-SAP.bat (o: python descargar_excel_sap.py
+--meses 3). Hace 3 descargas seguidas de 30 días cada una (mes actual, -1,
+-2) reusando el mismo navegador y el mismo login, y deja SAP_m0.xlsx,
+SAP_m1.xlsx y SAP_m2.xlsx en ..\CARGA\SAP\ (borra lo que hubiera antes).
+procesar_diario.py de Pendientes ya sabe leer los 3 y unirlos. Si CUALQUIERA
+de las 3 falla, se detiene todo — la data de 3 meses tiene que estar
+completa.
+
+Novedad (fix4): si después de "Ejecutar" SAP se queda "cargando" sin armar la
+lista de resultados, el robot ya no espera 5 minutos en vano — reintenta
+solo (reabriendo IW39 desde cero) hasta 3 veces antes de rendirse.
+
+Si algo falla
+--------------
+Este es un robot NUEVO, recién armado a partir de capturas de pantalla del
+Word, no de una prueba en vivo — es my probable que en la primera corrida
+real haga falta ajustar 1 o 2 selectores (algún botón o campo que SAP
+llame distinto a lo que el robot espera). Cuando algo falla:
+
+1. El programa imprime en qué paso se quedó.
+2. Guarda automáticamente una foto de la pantalla y el HTML de esa pantalla
+   en una carpeta "diagnosticos" (dentro de una carpeta "SAP_RPA_Excel" en
+   tu carpeta de usuario de Windows, ej. C:\Users\TU_USUARIO\SAP_RPA_Excel).
+3. Mándame esa foto (y si puedes el .html también) y lo corregimos.
+
+Esto es normal — el robot de croquis (IW33) que ya usas tuvo el mismo
+proceso de ajuste al principio.
+
+Nota sobre el rango de fechas y "NO DT"
+-------------------------------------------
+Este robot resuelve la parte de AUTOMATIZAR la descarga del Excel SAP. La
+otra conversación pendiente — que Pendientes AP (pestaña "NO DT") no
+pierda los pendientes de meses anteriores cuando subes solo el Excel del
+mes actual — sigue pendiente de decidir cómo resolverla (ajuste de lógica
+en el sitio, o ampliar el rango que descarga este mismo robot). Se retoma
+después, como quedamos.

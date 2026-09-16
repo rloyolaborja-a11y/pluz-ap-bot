@@ -1,0 +1,100 @@
+PUBLICAR EL SITIO WEB (Pendientes AP + Atendidas AP) — sin subir por github.com
+================================================================================
+
+Qué es esto
+-----------
+Esta carpeta ya viene con el código del sitio web adentro, en SITIO\
+(index.html, assets\, pendientes\, atendidas\). Ejecutando Publicar.bat lo
+subes a tu repositorio de GitHub a través de tu Apps Script (el "puente"
+hacia GitHub) — sin entrar a github.com ni arrastrar archivos a mano, y
+sin que tu computadora necesite hablarle directo a GitHub.
+
+Requisitos (una sola vez)
+--------------------------
+1. Tener Python instalado. Con eso YA ALCANZA — este script no necesita
+   instalar ninguna librería adicional (no hace falta "pip install" de
+   nada), usa solo lo que trae Python por defecto.
+   Cómo instalarlo (2 minutos, sin permisos de administrador):
+     a) Ve a https://www.python.org/downloads/ y descarga la versión para
+        Windows (botón grande amarillo "Download Python").
+     b) Abre el instalador. En la PRIMERA pantalla marca la casilla
+        "Add python.exe to PATH" (abajo del todo) ANTES de darle a
+        "Install Now".
+     c) Espera a que termine y cierra el instalador.
+   (Si tu PC tiene Windows 10/11 y "python" está habilitado como alias de
+   la Microsoft Store, al escribir "python" en el buscador de Windows te
+   puede ofrecer instalarlo directo desde ahí — también funciona igual.)
+2. Arma la Apps Script de Google siguiendo LEEME-APPS-SCRIPT.txt (está en
+   la carpeta de arriba, junto a esta) — esto se hace una sola vez y es
+   compartida por PENDIENTES-LOCAL, ATENDIDAS-LOCAL y esta carpeta.
+3. Renombra "config.ejemplo.json" a "config.json" y pega ahí la URL de tu
+   Apps Script en el campo "script_url" (la clave "secret" ya viene lista
+   — no hace falta tocarla salvo que hayas elegido otra distinta en
+   LEEME-APPS-SCRIPT.txt).
+   IMPORTANTE: config.json queda solo en tu computadora. Este archivo YA
+   NO contiene tu token de GitHub, pero de todas formas no lo compartas
+   ni lo subas a ningún lado.
+4. Abre SITIO\assets\js\gh-token.js y pega ahí también la misma URL de tu
+   Apps Script, en el valor de PUBLISH_PROXY_URL (esa parte la usan las
+   páginas web cuando alguien procesa un GAP/SAP/GAB desde el navegador —
+   es un lugar distinto al config.json de este script, pero apunta a la
+   misma Apps Script). Como este archivo vive dentro de SITIO\, cuando
+   corras Publicar.bat esta actualización sube sola al sitio junto con el
+   resto del código.
+
+Uso del día a día
+------------------
+Cada vez que Claude te mande una actualización, te va a mandar de nuevo
+esta MISMA carpeta completa (ya con el sitio nuevo adentro de SITIO\). Solo
+tienes que:
+1. Reemplazar tu carpeta PUBLICAR-WEB-LOCAL vieja por la nueva (o al menos
+   la subcarpeta SITIO\ de adentro) — así te aseguras de tener el sitio
+   actualizado.
+   OJO: si reemplazas la carpeta completa, vuelve a copiar tu config.json
+   (el que ya tiene tu URL de Apps Script) antes de borrar la carpeta
+   vieja, o simplemente pégala de nuevo en la nueva copia. El nuevo
+   SITIO\assets\js\gh-token.js que te mandamos ya viene con la URL de
+   ejemplo en blanco otra vez — si ya tenías la tuya configurada, tendrás
+   que pegarla de nuevo ahí (o avísanos y te la dejamos ya puesta la
+   próxima vez).
+2. Si tu Apps Script no cambió, no hace falta tocar nada más de
+   configuración.
+3. Doble clic en Publicar.bat.
+4. Espera a que termine (te va a listar archivo por archivo si salió bien).
+   Vercel va a redesplegar solo en 1-2 minutos.
+
+No hace falta entrar a ningún navegador para este paso — todo se hace con
+el .bat.
+
+Qué NO se toca
+---------------
+El script nunca sube ninguna carpeta llamada "data" (ahí viven
+bd_actual.json, bd_completa.json, data_requisito.json, criterios.json,
+feriados.json, tecnicos.json). Esos archivos son datos en vivo — se
+actualizan solo con "Procesar y actualizar" desde la web, o con el feed.py
+de PENDIENTES-LOCAL / ATENDIDAS-LOCAL. Si este script los tocara, podría
+pisar una publicación más nueva sin darte cuenta.
+
+Si algo falla
+--------------
+- "No se pudo publicar" / "Clave incorrecta": revisa que "script_url" y
+  "secret" en config.json coincidan exactamente con los de tu Apps Script
+  (ver LEEME-APPS-SCRIPT.txt, en la carpeta de arriba).
+- Error 401/403 al publicar un archivo puntual: el token de GitHub
+  guardado dentro de tu Apps Script venció o perdió el permiso correcto
+  — entra a script.google.com, abre el proyecto, Configuración del
+  proyecto → Propiedades del script, y actualiza GITHUB_TOKEN con uno
+  nuevo (Contents: Read and write sobre el repositorio). No hace falta
+  tocar nada en esta computadora para eso.
+- "No encuentro SITIO\index.html": la carpeta SITIO\ quedó vacía o mal
+  copiada — revisa que tenga index.html, assets\, pendientes\ y atendidas\
+  directo adentro.
+- Si un archivo puntual falla pero los demás sí se publicaron, puedes
+  volver a correr Publicar.bat tranquilo — vuelve a subir todo (no importa
+  que algunos ya estuvieran actualizados, simplemente los deja igual).
+
+Esto es un complemento, no un reemplazo
+-----------------------------------------
+Seguir subiendo por github.com sigue funcionando igual que siempre. Esta
+carpeta es solo una forma más rápida de hacer lo mismo desde tu computadora,
+sin entrar al navegador ni arrastrar archivos.

@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Panel de Control · Reporte AP</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,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" />
+<style>
+  :root{
+    --bg:#eef1f5; --card:#fff; --ink:#1b2733; --ink-soft:#5b6b7b;
+    --border:#e2e8f0; --accent:#1f6feb;
+    --side:#1b2b46; --side-ink:#c7d4e6; --side-active:#2c4574; --side-hi:#5aa0ff;
+    --ok:#1d7a34; --ok-bg:#e5f5e8; --err:#c0392b; --err-bg:#fdecea;
+    --warn-bg:#fff4e2; --warn-ink:#96591c; --term-bg:#0f141b; --term-ink:#d6e2ee;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);display:flex;
+    font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+
+  /* ---- Sidebar ---- */
+  aside{width:216px;flex-shrink:0;background:var(--side);color:var(--side-ink);
+    display:flex;flex-direction:column;height:100vh}
+  .brand{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .brand b{display:block;color:#fff;font-size:14px;letter-spacing:.02em}
+  .brand span{font-size:11px;color:#8ba0c0}
+  nav{padding:10px 0;flex:1;overflow:auto}
+  nav a{display:flex;align-items:center;gap:11px;padding:11px 18px;cursor:pointer;
+    color:var(--side-ink);font-size:13.5px;font-weight:600;border-left:3px solid transparent}
+  nav a .ic{width:18px;text-align:center;opacity:.85}
+  nav a:hover{background:rgba(255,255,255,.05)}
+  nav a.active{background:var(--side-active);border-left-color:var(--side-hi);color:#fff}
+  .side-foot{padding:14px 18px;border-top:1px solid rgba(255,255,255,.08);font-size:12px}
+  .state-line{display:flex;align-items:center;gap:8px;font-weight:700}
+  .dot{width:9px;height:9px;border-radius:50%;background:#8ba0c0;flex-shrink:0}
+  .dot.run{background:#ffb454;animation:pulse 1.2s infinite}
+  .dot.ok{background:#5fd08a}.dot.err{background:#ff7a68}
+  @keyframes pulse{50%{opacity:.35}}
+  .state-sub{color:#8ba0c0;margin-top:3px;font-size:11px;word-break:break-word}
+
+  /* ---- Content ---- */
+  main{flex:1;height:100vh;overflow:auto;padding:26px 30px}
+  .view{display:none}.view.active{display:block}
+  h2.tt{margin:0 0 4px;font-size:18px}
+  p.tt-sub{margin:0 0 20px;color:var(--ink-soft);font-size:13px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 22px;margin-bottom:16px}
+  .row{display:flex;flex-wrap:wrap;gap:20px 30px;align-items:flex-end}
+  .field{display:flex;flex-direction:column;gap:7px}
+  .field label{font-size:12px;color:var(--ink-soft);font-weight:600}
+  .checks{display:flex;gap:16px;flex-wrap:wrap}
+  .checks label{display:flex;gap:7px;align-items:center;font-weight:500;cursor:pointer}
+  select{font:inherit;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--ink)}
+  .btns{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+  button{font:inherit;font-weight:700;border:0;border-radius:9px;padding:10px 20px;cursor:pointer}
+  button.primary{background:var(--accent);color:#fff}
+  button.danger{background:var(--err);color:#fff}
+  button.ghost{background:#e9edf3;color:var(--ink);padding:6px 13px;font-size:12px}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .msg{margin-top:12px;font-size:13px;min-height:18px}
+  .msg.err{color:var(--err)}.msg.ok{color:var(--ok)}
+  .lock-tag{font-size:11px;font-weight:700;background:#e9edf3;color:var(--ink-soft);padding:2px 8px;border-radius:8px;margin-left:8px}
+  .locked{opacity:.5;pointer-events:none}
+  .acc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+  .acc-grid button{display:flex;flex-direction:column;align-items:flex-start;gap:4px;
+    text-align:left;background:#f2f5f9;color:var(--ink);border:1px solid var(--border);
+    padding:13px 15px;line-height:1.35}
+  .acc-grid button:hover{border-color:var(--accent);background:#eaf1fe}
+  .acc-grid button small{font-weight:500;color:var(--ink-soft);font-size:11.5px}
+  .est-tbl{width:100%;border-collapse:collapse;font-size:13px}
+  .est-tbl th{text-align:left;color:var(--ink-soft);font-size:11px;text-transform:uppercase;padding:6px 8px}
+  .est-tbl td{padding:8px;border-top:1px solid var(--border)}
+  .est-warn{color:var(--err);font-weight:700}
+  .est-ok{color:var(--ok);font-weight:700}
+
+  .term-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .term-head .muted{color:var(--ink-soft);font-size:12px}
+  .term{background:var(--term-bg);color:var(--term-ink);border-radius:10px;padding:14px 16px;
+    font:12.5px/1.55 ui-monospace,"Cascadia Code",Consolas,monospace;white-space:pre-wrap;
+    word-break:break-word;overflow:auto}
+  #view-terminal .term{height:calc(100vh - 190px)}
+  #view-corrida .term{height:230px;margin-top:16px}
+  .term .l-ok{color:#7fd39a}.term .l-err{color:#ff9b8a;font-weight:700}
+  .term .l-head{color:#8ab4ff}.term .l-step{color:#ffd479;font-weight:700}
+
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--border)}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-soft)}
+  tbody tr{cursor:pointer}tbody tr:hover{background:#f6f8fb}
+  .badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:8px}
+  .badge.ok{background:var(--ok-bg);color:var(--ok)}
+  .badge.err{background:var(--err-bg);color:var(--err)}
+  .badge.corriendo{background:var(--warn-bg);color:var(--warn-ink)}
+  .badge.detenido{background:#e9edf3;color:var(--ink-soft)}
+</style>
+</head>
+<body>
+<aside>
+  <div class="brand">
+    <b>Panel de Control</b>
+    <span>Reporte AP · SAP + GAP</span>
+  </div>
+  <nav>
+    <a data-v="corrida" class="active"><span class="ic">▶</span> Corrida</a>
+    <a data-v="terminal"><span class="ic">▤</span> Terminal</a>
+    <a data-v="historial"><span class="ic">≣</span> Historial</a>
+    <a data-v="programacion"><span class="ic">◷</span> Programación</a>
+    <a data-v="acciones"><span class="ic">◆</span> Acciones</a>
+    <a data-v="estado"><span class="ic">✚</span> Estado</a>
+  </nav>
+  <div class="side-foot">
+    <div class="state-line"><span class="dot" id="dot"></span><span id="state">Ocioso</span></div>
+    <div class="state-sub" id="state-sub"></div>
+    <button id="btn-salir" style="margin-top:12px;width:100%;background:rgba(255,255,255,.08);color:var(--side-ink);font-size:12px;padding:7px">⏻ Salir del panel</button>
+  </div>
+</aside>
+
+<main>
+  <!-- CORRIDA -->
+  <section class="view active" id="view-corrida">
+    <h2 class="tt">Corrida</h2>
+    <p class="tt-sub">Elegí qué correr y dale a Ejecutar. Descarga SAP + GAP, procesa y publica.</p>
+    <div class="card">
+      <div class="row">
+        <div class="field">
+          <label>Reportes</label>
+          <div class="checks">
+            <label><input type="checkbox" class="rep" value="pendientes" checked> Pendientes</label>
+            <label><input type="checkbox" class="rep" value="atendidas" checked> Atendidas</label>
+            <label><input type="checkbox" class="rep" value="veredas" checked> Veredas</label>
+          </div>
+        </div>
+        <div class="field">
+          <label for="meses">Meses a procesar</label>
+          <select id="meses">
+            <option>1</option><option>2</option><option selected>3</option>
+            <option>4</option><option>5</option><option>6</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Opciones</label>
+          <div class="checks">
+            <label><input type="checkbox" id="prueba"> Modo prueba (no publica)</label>
+            <label><input type="checkbox" id="silencioso"> Modo silencioso (SAP fuera de pantalla)</label>
+          </div>
+        </div>
+      </div>
+      <div class="btns">
+        <button class="primary" id="btn-run">▶ Ejecutar ahora</button>
+        <button class="danger" id="btn-stop" disabled>■ Detener</button>
+      </div>
+      <div class="msg" id="msg"></div>
+      <div class="term" id="term-mini"></div>
+    </div>
+  </section>
+
+  <!-- TERMINAL -->
+  <section class="view" id="view-terminal">
+    <h2 class="tt">Terminal en vivo</h2>
+    <p class="tt-sub" id="term-label">—</p>
+    <div class="term-head">
+      <label class="muted" style="display:flex;gap:6px;align-items:center">
+        <input type="checkbox" id="autoscroll" checked> autoscroll
+      </label>
+      <button class="ghost" id="btn-copiar" style="margin-left:auto">Copiar</button>
+      <button class="ghost" id="btn-descargar">Descargar log</button>
+    </div>
+    <div class="term" id="term"></div>
+  </section>
+
+  <!-- HISTORIAL -->
+  <section class="view" id="view-historial">
+    <h2 class="tt">Historial de corridas</h2>
+    <p class="tt-sub">Clic en una fila para ver su log completo en el Terminal.</p>
+    <div class="card">
+      <table>
+        <thead><tr>
+          <th class="ordenable" data-campo="inicio">Inicio <span class="ord-ic"></span></th><th>Duración</th><th>Reportes</th><th>Meses</th><th>Origen</th><th class="ordenable" data-campo="estado">Resultado <span class="ord-ic"></span></th>
+        </tr></thead>
+        <tbody id="hist"><tr><td colspan="6" style="color:var(--ink-soft)">Sin corridas todavía.</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PROGRAMACION -->
+  <section class="view" id="view-programacion">
+    <h2 class="tt">Programación automática</h2>
+    <p class="tt-sub">Corre la corrida completa cada cierto tiempo, aunque el panel esté cerrado (con la PC prendida y tu sesión de Windows abierta).</p>
+    <div class="card">
+      <div class="row">
+        <div class="field">
+          <label>Estado</label>
+          <div class="checks"><label><input type="checkbox" id="pg-activa"> Programación activada</label></div>
+        </div>
+        <div class="field">
+          <label for="pg-intervalo">Intervalo</label>
+          <select id="pg-intervalo">
+            <option value="1">cada 1 hora</option><option value="2">cada 2 horas</option>
+            <option value="3">cada 3 horas</option><option value="4">cada 4 horas</option>
+            <option value="6">cada 6 horas</option><option value="12">cada 12 horas</option>
+            <option value="24">una vez al día</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="pg-minuto">Arranque</label>
+          <select id="pg-minuto">
+            <option value="50">a los :50 (10 min antes de la hora)</option>
+            <option value="45">a los :45</option>
+            <option value="30">a los :30</option>
+            <option value="0">en punto (:00)</option>
+          </select>
+        </div>
+      </div>
+      <div class="row" style="margin-top:18px">
+        <div class="field">
+          <label>Ventana horaria</label>
+          <div class="checks"><label><input type="checkbox" id="pg-todo-dia"> Todo el día (24 h)</label></div>
+        </div>
+        <div class="field">
+          <label for="pg-desde">Desde</label>
+          <select id="pg-desde"></select>
+        </div>
+        <div class="field">
+          <label for="pg-hasta">Hasta</label>
+          <select id="pg-hasta"></select>
+        </div>
+      </div>
+      <div class="msg" id="pg-info" style="margin-top:18px"></div>
+      <div class="msg" id="pg-aviso"></div>
+    </div>
+  </section>
+
+  <!-- ACCIONES -->
+  <section class="view" id="view-acciones">
+    <h2 class="tt">Acciones sueltas</h2>
+    <p class="tt-sub">Lo que antes eran los <code>.bat</code> aparte. Cada una corre sola, aparece en el Terminal y el Historial. Una a la vez.</p>
+    <div class="card">
+      <div class="acc-grid">
+        <button data-accion="publicar-sitio">Publicar solo el sitio<small>Sube el código del portal a Vercel (sin tocar datos)</small></button>
+        <button data-accion="descargar-sap">Descargar SAP (3 meses)<small>Deja los Excel en CARGA\SAP</small></button>
+        <button data-accion="descargar-gap">Traer GAP de la VM (3 meses)<small>Manda la señal a la VM y espera los Excel</small></button>
+        <button data-accion="importar-historico">Importar mes al histórico<small>Atendidas — poné los Excel en EXCEL-MESES-ANTERIORES\ primero</small></button>
+        <button data-accion="publicar-historico">Publicar histórico<small>Atendidas — meses ya cerrados</small></button>
+        <button data-accion="login-sap">🔑 Iniciar sesión en SAP<small>Abre una ventana visible para reloguear</small></button>
+      </div>
+      <div class="msg" id="acc-msg"></div>
+    </div>
+  </section>
+
+  <!-- ESTADO -->
+  <section class="view" id="view-estado">
+    <h2 class="tt">Estado del sistema</h2>
+    <p class="tt-sub">Frescura de los Excel, publicación de cada reporte y la programación.</p>
+    <div class="card">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+        <button class="ghost" id="est-refrescar">↻ Actualizar</button>
+      </div>
+      <div id="est-body">Cargando…</div>
+    </div>
+  </section>
+</main>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const term = $("#term"), termMini = $("#term-mini");
+let verId = null, verDesde = 0, polling = false;
+
+/* ---- navegación ---- */
+function irA(v){
+  document.querySelectorAll("nav a").forEach(a => a.classList.toggle("active", a.dataset.v === v));
+  document.querySelectorAll(".view").forEach(s => s.classList.toggle("active", s.id === "view-" + v));
+  if (v === "historial") refrescarHistorial();
+  if (v === "estado") cargarSalud();
+}
+document.querySelectorAll("nav a").forEach(a => a.onclick = () => irA(a.dataset.v));
+
+/* ---- terminal ---- */
+function claseLinea(t){
+  const s = t.trimStart();
+  if (s.startsWith(">>> ")) return "l-step";
+  if (/^(=|#|!){3,}/.test(s) || s.startsWith("Panel de Control")) return "l-head";
+  if (/\bFALLO\b|ERROR|Traceback|se aborta|SE DETUVO/i.test(s)) return "l-err";
+  if (/\bOK\b|\[OK\]|TODO OK|✓/.test(s)) return "l-ok";
+  return "";
+}
+function pintar(lineas){
+  for (const cont of [term, termMini]){
+    const frag = document.createDocumentFragment();
+    for (const t of lineas){
+      const div = document.createElement("div");
+      const c = claseLinea(t); if (c) div.className = c;
+      div.textContent = t || " ";
+      frag.appendChild(div);
+    }
+    cont.appendChild(frag);
+    if ($("#autoscroll").checked) cont.scrollTop = cont.scrollHeight;
+  }
+  verDesde += lineas.length;
+}
+function limpiarTerm(){ term.innerHTML = ""; termMini.innerHTML = ""; verDesde = 0; }
+
+async function pollLog(){
+  if (polling) return; polling = true;
+  try{
+    const d = await (await fetch(`/api/log?id=${encodeURIComponent(verId||"")}&desde=${verDesde}`)).json();
+    if (verId === null) verId = d.id;
+    if (d.id !== verId){ verId = d.id; limpiarTerm(); }
+    if (d.lineas && d.lineas.length) pintar(d.lineas);
+    $("#term-label").textContent = d.id ? `corrida ${d.id} · ${d.estado}` : "—";
+  }catch(e){}
+  polling = false;
+}
+
+/* ---- estado ---- */
+function fmtDur(s){ if (s==null) return "—"; return s<60 ? s+"s" : Math.floor(s/60)+"m "+String(s%60).padStart(2,"0")+"s"; }
+function badge(e){
+  const m={ok:"ok",error:"err",corriendo:"corriendo",detenido:"detenido"};
+  const t={ok:"OK",error:"Falló",corriendo:"Corriendo",detenido:"Detenido"};
+  return `<span class="badge ${m[e]||"detenido"}">${t[e]||e}</span>`;
+}
+async function refrescarEstado(){
+  try{
+    const d = await (await fetch("/api/estado")).json();
+    const dot = $("#dot"), st = $("#state"), sub = $("#state-sub");
+    if (d.corriendo){
+      dot.className = "dot run"; st.textContent = "Corriendo";
+      sub.textContent = (d.corrida && d.corrida.paso) ? d.corrida.paso : "";
+      $("#btn-run").disabled = true; $("#btn-stop").disabled = false;
+      pollLog();
+    }else{
+      $("#btn-run").disabled = false; $("#btn-stop").disabled = true;
+      if (d.ultima){
+        const e = d.ultima.estado;
+        dot.className = "dot " + (e==="ok"?"ok":e==="error"?"err":"");
+        st.textContent = e==="ok" ? "Última corrida OK" : e==="error" ? "Última corrida falló" : "Ocioso";
+        sub.textContent = (d.ultima.inicio||"").replace("T"," ") + " · " + fmtDur(d.ultima.dur_seg);
+      }else{ dot.className = "dot"; st.textContent = "Ocioso"; sub.textContent = ""; }
+      if (verId && verDesde) pollLog();  // terminar de traer las últimas líneas
+    }
+    if (d.programacion){
+      pintarProgramacion(d.programacion);
+      const nav = document.querySelector('nav a[data-v="programacion"]');
+      const alerta = d.programacion.tick_atrasado || (d.programacion.activa && !d.programacion.tick_instalado);
+      if (nav) nav.style.color = alerta ? "#ff9b8a" : "";
+    }
+  }catch(e){
+    $("#dot").className = "dot err";
+    $("#state").textContent = "Panel desconectado";
+    $("#state-sub").textContent = "Cerrá esta ventana y reabrí “Panel de Control AP”. Las corridas programadas siguen andando igual.";
+  }
+}
+
+/* ---- programación ---- */
+let pgTocado = false;   // no pisar lo que el usuario está editando
+function pintarProgramacion(pg){
+  if (!pgTocado){
+    $("#pg-activa").checked = !!pg.activa;
+    $("#pg-intervalo").value = String(pg.intervalo_horas || 1);
+    $("#pg-minuto").value = String(pg.minuto ?? 50);
+    const todoDia = (pg.hora_desde || 0) === 0 && (pg.hora_hasta || 24) === 24;
+    $("#pg-todo-dia").checked = todoDia;
+    $("#pg-desde").value = String(pg.hora_desde || 0);
+    $("#pg-hasta").value = String(pg.hora_hasta || 24);
+    $("#pg-desde").disabled = $("#pg-hasta").disabled = todoDia;
+  }
+  const info = $("#pg-info"), aviso = $("#pg-aviso");
+  if (pg.activa && pg.reintentar_en){
+    info.className = "msg"; info.textContent = "Falló la última corrida automática — reintento a las " + pg.reintentar_en.replace("T", " ");
+  } else if (pg.activa && pg.proxima){
+    info.className = "msg ok";
+    info.textContent = "Próxima corrida automática: " + pg.proxima.replace("T", "  ");
+  } else if (pg.activa){
+    info.className = "msg"; info.textContent = "Programación activada.";
+  } else {
+    info.className = "msg"; info.textContent = "Programación desactivada — solo corre con el botón.";
+  }
+  if (pg.activa && !pg.tick_instalado){
+    aviso.className = "msg err";
+    aviso.textContent = "⚠ Falta correr Instalar-Panel.bat una vez: sin eso la corrida automática NO se dispara.";
+  } else if (pg.tick_atrasado){
+    aviso.className = "msg err";
+    aviso.textContent = "⚠ El chequeo automático (tarea de Windows) no corre desde hace más de 2 h. Revisá que la tarea 'PanelAP_Tick' siga habilitada, o corré Instalar-Panel.bat de nuevo.";
+  } else { aviso.textContent = ""; }
+}
+
+function guardarProgramacion(){
+  const todoDia = $("#pg-todo-dia").checked;
+  const pg = {
+    activa: $("#pg-activa").checked,
+    intervalo_horas: parseInt($("#pg-intervalo").value, 10),
+    minuto: parseInt($("#pg-minuto").value, 10),
+    hora_desde: todoDia ? 0 : parseInt($("#pg-desde").value, 10),
+    hora_hasta: todoDia ? 24 : parseInt($("#pg-hasta").value, 10),
+  };
+  $("#pg-desde").disabled = $("#pg-hasta").disabled = todoDia;
+  fetch("/api/config", {method:"POST", headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({programacion: pg})}).then(() => { pgTocado = false; refrescarEstado(); });
+}
+
+(function initPrograma(){
+  const d = $("#pg-desde"), h = $("#pg-hasta");
+  for (let i = 0; i < 24; i++) d.add(new Option(String(i).padStart(2,"0")+":00", i));
+  for (let i = 1; i <= 24; i++) h.add(new Option(String(i%24).padStart(2,"0")+":00", i));
+  ["pg-activa","pg-intervalo","pg-minuto","pg-todo-dia","pg-desde","pg-hasta"].forEach(id => {
+    $("#"+id).addEventListener("change", () => { pgTocado = true; guardarProgramacion(); });
+  });
+})();
+
+let ultimoHistorial = [];
+let ordenHist = { campo: "inicio", asc: false };
+
+function pintarHistorial(){
+  const tb = $("#hist");
+  if (!ultimoHistorial.length){ tb.innerHTML = '<tr><td colspan="6" style="color:var(--ink-soft)">Sin corridas todavía.</td></tr>'; return; }
+  const { campo, asc } = ordenHist;
+  const filas = [...ultimoHistorial].sort((a, b) => {
+    const va = (a[campo] ?? "").toString();
+    const vb = (b[campo] ?? "").toString();
+    return asc ? va.localeCompare(vb) : vb.localeCompare(va);
+  });
+  tb.innerHTML = filas.map(c => `
+    <tr data-id="${c.id}">
+      <td>${(c.inicio||"").replace("T"," ")}</td><td>${fmtDur(c.dur_seg)}</td>
+      <td>${(c.reportes||[]).join(", ")}${c.prueba?" · prueba":""}</td>
+      <td>${c.meses ?? "—"}</td><td>${c.origen||"—"}</td><td>${badge(c.estado)}</td>
+    </tr>`).join("");
+  tb.querySelectorAll("tr[data-id]").forEach(tr => tr.onclick = () => {
+    verId = tr.dataset.id; limpiarTerm(); irA("terminal"); pollLog();
+  });
+  document.querySelectorAll("#view-historial th.ordenable").forEach(th => {
+    const ic = th.querySelector(".ord-ic");
+    ic.textContent = th.dataset.campo === campo ? (asc ? "▲" : "▼") : "";
+  });
+}
+
+async function refrescarHistorial(){
+  try{
+    const d = await (await fetch("/api/historial")).json();
+    ultimoHistorial = d.corridas;
+    pintarHistorial();
+  }catch(e){}
+}
+
+document.querySelectorAll("#view-historial th.ordenable").forEach(th => {
+  th.style.cursor = "pointer";
+  th.onclick = () => {
+    const campo = th.dataset.campo;
+    ordenHist = (ordenHist.campo === campo) ? { campo, asc: !ordenHist.asc } : { campo, asc: true };
+    pintarHistorial();
+  };
+});
+
+/* ---- acciones ---- */
+function cfgActual(){
+  return {
+    reportes: [...document.querySelectorAll(".rep:checked")].map(c=>c.value),
+    meses: parseInt($("#meses").value,10),
+    prueba: $("#prueba").checked,
+    silencioso: $("#silencioso").checked,
+  };
+}
+$("#btn-run").onclick = async () => {
+  const msg = $("#msg"); msg.className="msg"; msg.textContent="";
+  const cfg = cfgActual();
+  if (!cfg.reportes.length){ msg.className="msg err"; msg.textContent="Elegí al menos un reporte."; return; }
+  $("#btn-run").disabled = true;
+  const r = await fetch("/api/ejecutar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(cfg)});
+  const d = await r.json();
+  if (!r.ok){ msg.className="msg err"; msg.textContent=d.error||"No se pudo iniciar."; $("#btn-run").disabled=false; return; }
+  msg.className="msg ok"; msg.textContent="Corrida iniciada.";
+  verId = d.id; limpiarTerm(); irA("terminal"); refrescarEstado();
+};
+$("#btn-stop").onclick = async () => {
+  if (!confirm("¿Detener la corrida en curso?")) return;
+  $("#btn-stop").disabled = true;
+  const r = await fetch("/api/detener",{method:"POST"});
+  const d = await r.json().catch(()=>({}));
+  $("#msg").className = r.ok ? "msg" : "msg err";
+  $("#msg").textContent = r.ok ? (d.mensaje || "Deteniendo…") : (d.error || "No se pudo detener.");
+};
+$("#btn-copiar").onclick = () => navigator.clipboard.writeText(term.textContent).then(()=>{
+  $("#btn-copiar").textContent="¡Copiado!"; setTimeout(()=>$("#btn-copiar").textContent="Copiar",1200);
+});
+$("#btn-descargar").onclick = () => { if (verId) location.href = `/api/log-crudo?id=${verId}`; };
+$("#btn-salir").onclick = async () => {
+  if (!confirm("¿Cerrar el Panel de Control? (las corridas programadas siguen andando)")) return;
+  try { await fetch("/api/salir", {method:"POST"}); } catch(e){}
+  document.body.innerHTML = '<p style="padding:40px;font:15px system-ui">Panel cerrado. Ya podés cerrar esta ventana.</p>';
+};
+
+document.querySelectorAll(".rep,#meses,#prueba,#silencioso").forEach(el => el.addEventListener("change", () => {
+  fetch("/api/config",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(cfgActual())});
+}));
+
+(async () => {
+  try{
+    const c = await (await fetch("/api/config")).json();
+    document.querySelectorAll(".rep").forEach(cb => cb.checked = (c.reportes||[]).includes(cb.value));
+    $("#meses").value = String(c.meses||3);
+    $("#prueba").checked = !!c.prueba;
+  }catch(e){}
+  refrescarEstado(); refrescarHistorial(); pollLog();
+})();
+/* ---- acciones sueltas ---- */
+document.querySelectorAll(".acc-grid button").forEach(b => b.onclick = async () => {
+  const accion = b.dataset.accion;
+  const m = $("#acc-msg"); m.className = "msg"; m.textContent = "";
+  if (accion === "descargar-gap" && !confirm("La VM tiene que tener Vigilar-GAP-VM.bat corriendo. ¿Seguir?")) return;
+  const r = await fetch("/api/accion", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({accion})});
+  const d = await r.json();
+  if (!r.ok){ m.className = "msg err"; m.textContent = d.error || "No se pudo iniciar."; return; }
+  verId = d.id; limpiarTerm(); irA("terminal");
+});
+
+/* ---- estado / salud ---- */
+function hace(iso, horas){
+  if (!iso) return "—";
+  const t = new Date(iso).toLocaleString("es-PE", {timeZone:"America/Lima", day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit"});
+  return horas == null ? t : `${t}  ·  hace ${horas} h`;
+}
+async function cargarSalud(){
+  const body = $("#est-body");
+  body.textContent = "Cargando…";
+  try{
+    const s = await (await fetch("/api/salud")).json();
+    const g = s.excel_gap || {}, sap = s.excel_sap || {}, p = s.publicaciones || {};
+    const gapWarn = (g.horas != null && g.horas > 8);
+    body.innerHTML = `
+      <table class="est-tbl">
+        <tr><th>Qué</th><th>Detalle</th></tr>
+        <tr><td>Excel SAP en CARGA</td><td>${sap.n||0} archivo(s) · ${hace(sap.mas_nuevo, sap.horas)}</td></tr>
+        <tr><td>Excel GAP en CARGA</td><td>${g.n||0} archivo(s) · ${hace(g.mas_nuevo, g.horas)}
+          ${gapWarn ? '<span class="est-warn"> — ¿la VM del GAP está prendida?</span>' : ''}</td></tr>
+        <tr><td>Última publicación · Pendientes</td><td>${hace(p.pendientes)}</td></tr>
+        <tr><td>Última publicación · Atendidas</td><td>${hace(p.atendidas)}</td></tr>
+        <tr><td>Última publicación · Veredas</td><td>${hace(p.veredas)}</td></tr>
+      </table>`;
+  }catch(e){ body.innerHTML = '<span class="est-warn">No se pudo cargar el estado.</span>'; }
+}
+$("#est-refrescar").onclick = cargarSalud;
+
+setInterval(refrescarEstado, 2500);
+setInterval(() => { if (verId) pollLog(); }, 1400);
+</script>
+</body>
+</html>

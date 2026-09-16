@@ -1,0 +1,36 @@
+# Claves/config -- NUNCA se suben (viven solo en cada PC)
+config.json
+credentials-pluz
+*.pat
+
+# El sitio web ya es su propio repo aparte (PUBLICAR-WEB-LOCAL/SITIO)
+PUBLICAR-WEB-LOCAL/SITIO/
+
+# Datos descargados/generados -- pesan mucho y no son "código"
+CARGA/
+**/SALIDA/
+**/HISTORICO/
+**/EXCEL-MESES-ANTERIORES/
+**/logs/
+**/runs/
+**/_diagnosticos/
+PANEL-CONTROL-LOCAL/_panel.pid
+PANEL-CONTROL-LOCAL/agenda_estado.json
+PANEL-CONTROL-LOCAL/tick.log
+PANEL-CONTROL-LOCAL/tick_latido.json
+PANEL-CONTROL-LOCAL/o.txt
+*.xlsx
+*.xls
+*.xlsm
+
+# Perfil del navegador embebido del panel (cookies/sesión -- nunca subir)
+**/.ventana-app/
+
+# Python
+__pycache__/
+*.pyc
+
+# Windows / editor
+.DS_Store
+Thumbs.db
+NUL

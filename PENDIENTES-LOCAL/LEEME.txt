@@ -1,0 +1,94 @@
+REPORTE DE PENDIENTES AP — Procesamiento local (sin usar el navegador)
+========================================================================
+
+Qué es esto
+-----------
+Una versión "de escritorio" del botón "Procesar y actualizar" de la página
+web. En vez de subir el Excel desde el navegador, lo dejas en la carpeta
+compartida ..\CARGA\ (un nivel arriba de esta carpeta) y ejecutas
+Ejecutar.bat con doble clic — hace exactamente el mismo cálculo
+(Contratista, Tipo DT, Intervalo, LEGAL, PLAZO, etc.) y publica el
+resultado directo en GitHub, sin depender de adjuntar archivos en ningún
+chat ni de abrir el navegador.
+
+Nota: la carpeta ..\CARGA\ es COMPARTIDA con ATENDIDAS-LOCAL — el mismo
+Excel grande que dejas en ..\CARGA\EXCEL\ alimenta a los dos reportes, no
+hace falta copiarlo dos veces. El SAP en ..\CARGA\SAP\ solo lo usa
+PENDIENTES-LOCAL.
+
+Requisitos (una sola vez)
+--------------------------
+1. Tener Python instalado (https://www.python.org/downloads/ — al instalar,
+   marca la casilla "Add Python to PATH").
+2. Abrir una consola (CMD) en esta carpeta y ejecutar:
+       pip install pandas openpyxl
+   (ya NO hace falta instalar "requests" — la publicación usa solo lo que
+   trae Python por defecto).
+3. Arma la Apps Script de Google (el "puente" hacia GitHub) siguiendo
+   LEEME-APPS-SCRIPT.txt, en la carpeta de arriba — esto se hace una sola
+   vez y es compartido por PENDIENTES-LOCAL, ATENDIDAS-LOCAL y
+   PUBLICAR-WEB-LOCAL.
+4. Renombra "config.ejemplo.json" a "config.json" y pega ahí la URL de tu
+   Apps Script en el campo "script_url" (la clave "secret" ya viene lista
+   — no hace falta tocarla salvo que hayas elegido otra distinta en
+   LEEME-APPS-SCRIPT.txt). Los campos "path"/"path_completa" ya están
+   completos, apuntando a tu repositorio.
+   IMPORTANTE: config.json queda solo en tu computadora. Este archivo YA
+   NO contiene tu token de GitHub (ese vive únicamente dentro de la Apps
+   Script), pero de todas formas no lo compartas ni lo subas a ningún
+   lado.
+
+Uso del día a día
+------------------
+1. Copia el Excel grande (reducido) del día dentro de ..\CARGA\EXCEL\
+2. Copia el Excel SAP del día dentro de ..\CARGA\SAP\
+   (si dejas varios archivos, siempre toma el más reciente de cada carpeta
+   — no hace falta borrar los anteriores, aunque para no confundirte es
+   buena idea ir limpiando de vez en cuando).
+3. Doble clic en Ejecutar.bat.
+4. El programa va a:
+   - Procesar el Excel + SAP contra REQUISITO\data_requisito.json (los mismos
+     mapas de Contratista/Distrito/Zona/etc. que usa la web).
+   - Guardar en SALIDA\ un Excel con la BD COMPLETA (incluye datos del
+     cliente) — ese archivo se queda solo en tu computadora, nunca se sube
+     a ningún lado. Es el mismo tipo de reporte que descargas con el botón
+     "Exportar a Excel" en la pestaña "Buscar y exportar" de la web.
+   - Guardar en SALIDA\bd_actual.json la versión del Dashboard y en
+     SALIDA\bd_completa.json la BD completa (con datos del cliente) y
+     publicar AMBAS automáticamente en tu repositorio de GitHub (mismos
+     archivos que actualiza el botón "Publicar para todos" en la web) —
+     así el sitio online queda actualizado sin que tengas que abrir el
+     navegador, y "Buscar y exportar" en la web queda siempre activo con
+     estos últimos datos, sin que nadie tenga que reprocesar nada ahí.
+
+Si algo falla
+--------------
+- "El archivo GAP no tiene el formato esperado" / fechas inválidas: revisa
+  que el Excel no haya perdido la fila de título o alguna columna al
+  copiarlo/guardarlo.
+- "No se pudo publicar" / "Clave incorrecta": revisa que "script_url" y
+  "secret" en config.json coincidan con los de tu Apps Script (ver
+  LEEME-APPS-SCRIPT.txt) y que tengas conexión a internet.
+- Si prefieres NO publicar automáticamente (por ejemplo, para revisar el
+  Excel de SALIDA antes de subirlo), simplemente no crees config.json —
+  el programa procesa y genera los archivos igual, solo se salta el paso
+  de publicar. Cuando quieras publicar ese resultado, corre feed.py aparte
+  (doble clic no funciona con .py directamente; ábrelo con
+  "python feed.py" desde una consola en esta carpeta).
+
+Sobre REQUISITO\data_requisito.json
+--------------------------------------
+Ahí viven las tablas de Contratista, Distrito, Zona, Motivo, LEGAL, SED y
+Poste que usa el cálculo. A diferencia de bd_actual.json/bd_completa.json,
+esta tabla NO se publica sola cada vez que corres Ejecutar.bat — solo
+cambia de vez en cuando (por ejemplo, cuando aparece un código de
+contratista nuevo en el SAP que aún no está mapeado). Cuando Claude te
+pida actualizar esta tabla, él edita el archivo y te dice que corras:
+    python actualizar_requisito.py
+(desde una consola en esta carpeta) para publicarla en el sitio.
+
+Esto es un complemento, no un reemplazo
+-----------------------------------------
+El botón "Procesar y actualizar" de la página web sigue funcionando igual
+que siempre. Este .bat es solo una forma más rápida de hacer lo mismo desde
+tu computadora sin pasar por el navegador.

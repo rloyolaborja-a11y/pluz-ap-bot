@@ -1,0 +1,51 @@
+REPORTES AP — HERRAMIENTAS LOCALES (todo en esta única carpeta/zip)
+=====================================================================
+
+IMPORTANTE — CAMBIO EN ESTA ENTREGA: ahora, para publicar, tu computadora
+ya NO le habla directo a GitHub — le habla a una Apps Script tuya en
+Google, y es ella la que publica en tu repositorio. Esto evita que un
+bloqueo de red/TI hacia GitHub afecte tus publicaciones. Antes de usar
+cualquiera de las 3 carpetas de abajo, arma esa Apps Script (una sola vez)
+siguiendo LEEME-APPS-SCRIPT.txt, que está aquí mismo, junto a este
+archivo. Ahí también está Code.gs, el código que vas a pegar en Google.
+
+Esta carpeta trae 4 subcarpetas. Cada una hace una cosa distinta:
+
+1. CARGA\
+   Aquí dejas los Excel del día — UNA sola vez, no hace falta copiarlos en
+   cada carpeta de reporte:
+     - CARGA\EXCEL\  -> el Excel grande (reducido), el mismo que alimenta
+       TANTO a Pendientes como a Atendidas.
+     - CARGA\SAP\    -> el Excel SAP, que solo usa Pendientes (para
+       detectar reasignaciones).
+   No tiene .bat propio — es solo el "buzón" de entrada que leen las dos
+   carpetas de abajo.
+
+2. PENDIENTES-LOCAL\
+   Procesa lo que hay en CARGA\ y publica el reporte de Pendientes AP.
+   Uso diario. Ver PENDIENTES-LOCAL\LEEME.txt.
+
+3. ATENDIDAS-LOCAL\
+   Procesa lo que hay en CARGA\EXCEL\ y publica el reporte de Atendidas AP.
+   Uso diario. Ver ATENDIDAS-LOCAL\LEEME.txt.
+
+4. PUBLICAR-WEB-LOCAL\
+   Sube el CÓDIGO del sitio web (lo que se ve, los gráficos, el diseño) a tu
+   repositorio de GitHub — esto NO es para uso diario, solo lo usas cuando
+   Claude te entrega una versión nueva del portal con cambios visuales o de
+   funcionamiento (como este). Ya viene con el sitio cargado adentro, en
+   PUBLICAR-WEB-LOCAL\SITIO\. Ver PUBLICAR-WEB-LOCAL\LEEME.txt.
+
+Ninguna requiere que abras github.com ni ningún navegador — todo se hace
+con doble clic en el .bat de cada carpeta (CARGA no tiene .bat, solo
+recibe los Excel). El navegador solo lo usas para ver el resultado final
+en tu link de Vercel.
+
+¿Cuál corro hoy?
+-----------------
+- ¿Es tu rutina de todos los días con los Excel del reporte? → Primero
+  deja los Excel en CARGA\, luego corre PENDIENTES-LOCAL y/o
+  ATENDIDAS-LOCAL (según qué reporte necesites actualizar — puedes correr
+  los dos, uno después del otro, con el mismo Excel ya puesto en CARGA\).
+- ¿Claude te mandó esta carpeta porque cambió algo del diseño/gráficos de
+  la página? → PUBLICAR-WEB-LOCAL, una sola vez.

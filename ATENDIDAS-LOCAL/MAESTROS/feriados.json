@@ -1,0 +1,2978 @@
+[
+ {
+  "fecha": "2024-12-18",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2024-12-19",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2024-12-20",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2024-12-21",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2024-12-22",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2024-12-23",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2024-12-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2024-12-25",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2024-12-26",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2024-12-27",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2024-12-28",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2024-12-29",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2024-12-30",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2024-12-31",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-01",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-01-02",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-03",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-04",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-01-05",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-01-06",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-07",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-08",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-09",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-10",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-11",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-01-12",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-01-13",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-14",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-15",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-16",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-17",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-18",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-01-19",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-01-20",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-21",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-22",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-23",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-25",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-01-26",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-01-27",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-28",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-29",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-30",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-01-31",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-01",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-02-02",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-02-03",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-04",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-05",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-06",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-07",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-08",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-02-09",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-02-10",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-11",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-12",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-13",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-14",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-15",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-02-16",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-02-17",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-18",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-19",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-20",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-21",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-22",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-02-23",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-02-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-25",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-26",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-27",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-02-28",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-01",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-03-02",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-03-03",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-04",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-05",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-06",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-07",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-08",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-03-09",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-03-10",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-11",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-12",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-13",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-14",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-15",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-03-16",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-03-17",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-18",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-19",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-20",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-21",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-22",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-03-23",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-03-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-25",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-26",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-27",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-28",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-03-29",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-03-30",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-03-31",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-01",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-02",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-03",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-04",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-05",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-04-06",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-04-07",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-08",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-09",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-10",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-11",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-12",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-04-13",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-04-14",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-15",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-16",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-17",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-04-18",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-04-19",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-04-20",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-04-21",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-22",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-23",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-25",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-26",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-04-27",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-04-28",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-29",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-04-30",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-01",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-05-02",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-03",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-05-04",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-05-05",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-06",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-07",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-08",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-09",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-10",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-05-11",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-05-12",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-13",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-14",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-15",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-16",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-17",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-05-18",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-05-19",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-20",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-21",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-22",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-23",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-24",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-05-25",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-05-26",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-27",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-28",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-29",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-30",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-05-31",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-06-01",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-06-02",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-03",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-04",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-05",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-06",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-07",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-06-08",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-06-09",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-10",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-11",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-12",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-13",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-14",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-06-15",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-06-16",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-17",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-18",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-19",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-20",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-21",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-06-22",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-06-23",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-25",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-26",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-27",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-06-28",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-06-29",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-06-30",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-01",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-02",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-03",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-04",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-05",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-07-06",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-07-07",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-08",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-09",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-10",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-11",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-12",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-07-13",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-07-14",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-15",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-16",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-17",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-18",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-19",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-07-20",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-07-21",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-22",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-23",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-07-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-25",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-26",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-07-27",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-07-28",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-07-29",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-07-30",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-07-31",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-01",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-02",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-08-03",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-08-04",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-05",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-06",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-08-07",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-08",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-09",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-08-10",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-08-11",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-12",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-13",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-14",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-15",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-16",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-08-17",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-08-18",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-19",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-20",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-21",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-22",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-23",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-08-24",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-08-25",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-26",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-27",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-28",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-29",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-08-30",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-08-31",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-09-01",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-02",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-03",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-04",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-05",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-06",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-09-07",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-09-08",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-09",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-10",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-11",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-12",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-13",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-09-14",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-09-15",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-16",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-17",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-18",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-19",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-20",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-09-21",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-09-22",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-23",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-25",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-26",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-27",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-09-28",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-09-29",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-09-30",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-01",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-02",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-03",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-04",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-10-05",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-10-06",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-07",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-08",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-10-09",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-10",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-11",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-10-12",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-10-13",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-14",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-15",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-16",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-17",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-18",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-10-19",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-10-20",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-21",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-22",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-23",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-25",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-10-26",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-10-27",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-28",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-29",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-30",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-10-31",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-01",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-11-02",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-11-03",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-04",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-05",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-06",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-07",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-08",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-11-09",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-11-10",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-11",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-12",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-13",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-14",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-15",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-11-16",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-11-17",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-18",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-19",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-20",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-21",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-22",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-11-23",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-11-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-25",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-26",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-27",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-28",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-11-29",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-11-30",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-12-01",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-12-02",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-12-03",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-12-04",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-12-05",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-12-06",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-12-07",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-12-08",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-12-09",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-12-10",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-12-11",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-12-12",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-12-13",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-12-14",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-12-15",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-12-16",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-12-17",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-12-18",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-12-19",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-12-20",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-12-21",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-12-22",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-12-23",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-12-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-12-25",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-12-26",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-12-27",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-12-28",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2025-12-29",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-12-30",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2025-12-31",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-01",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-01-02",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-03",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-01-04",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-01-05",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-06",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-07",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-08",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-09",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-10",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-01-11",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-01-12",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-13",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-14",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-15",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-16",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-17",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-01-18",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-01-19",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-20",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-21",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-22",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-23",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-24",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-01-25",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-01-26",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-27",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-28",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-29",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-30",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-01-31",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-02-01",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-02-02",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-03",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-04",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-05",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-06",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-07",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-02-08",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-02-09",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-10",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-11",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-12",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-13",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-14",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-02-15",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-02-16",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-17",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-18",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-19",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-20",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-21",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-02-22",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-02-23",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-25",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-26",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-27",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-02-28",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-03-01",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-03-02",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-03",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-04",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-05",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-06",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-07",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-03-08",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-03-09",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-10",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-11",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-12",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-13",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-14",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-03-15",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-03-16",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-17",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-18",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-19",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-20",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-21",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-03-22",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-03-23",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-25",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-26",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-27",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-28",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-03-29",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-03-30",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-03-31",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-01",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-02",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-03",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-04",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-04-05",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-04-06",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-07",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-08",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-09",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-10",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-11",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-04-12",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-04-13",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-14",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-15",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-16",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-17",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-18",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-04-19",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-04-20",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-21",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-22",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-23",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-25",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-04-26",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-04-27",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-28",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-29",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-04-30",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-01",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-02",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-05-03",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-05-04",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-05",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-06",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-07",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-08",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-09",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-05-10",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-05-11",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-12",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-13",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-14",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-15",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-16",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-05-17",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-05-18",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-19",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-20",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-21",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-22",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-23",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-05-24",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-05-25",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-26",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-27",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-28",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-29",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-05-30",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-05-31",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-06-01",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-06-02",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-06-03",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-06-04",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-06-05",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-06-06",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-06-07",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-06-08",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-06-09",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-06-10",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-06-11",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-06-12",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-06-13",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-06-14",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-06-15",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-06-16",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-06-17",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-06-18",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-06-19",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-06-20",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-06-21",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-06-22",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-06-23",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-06-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-06-25",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-06-26",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-06-27",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-06-28",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-06-29",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-06-30",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-01",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-02",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-03",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-04",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-07-05",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-07-06",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-07",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-08",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-09",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-10",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-11",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-07-12",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-07-13",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-14",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-15",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-16",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-17",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-18",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-07-19",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-07-20",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-21",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-22",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-23",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-07-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-25",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-07-26",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-07-27",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-28",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-07-29",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-07-30",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-07-31",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-01",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-08-02",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-08-03",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-04",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-05",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-06",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-07",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-08",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-08-09",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-08-10",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-11",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-12",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-13",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-14",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-15",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-08-16",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-08-17",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-18",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-19",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-20",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-21",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-22",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-08-23",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-08-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-25",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-26",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-27",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-28",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-08-29",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-08-30",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-08-31",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-01",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-02",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-03",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-04",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-05",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-09-06",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-09-07",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-08",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-09",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-10",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-11",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-12",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-09-13",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-09-14",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-15",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-16",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-17",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-18",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-19",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-09-20",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-09-21",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-22",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-23",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-25",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-26",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-09-27",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-09-28",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-29",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-09-30",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-01",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-02",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-03",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-10-04",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-10-05",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-06",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-07",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-08",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-09",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-10",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-10-11",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-10-12",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-13",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-14",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-15",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-16",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-17",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-10-18",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-10-19",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-20",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-21",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-22",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-23",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-24",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-10-25",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-10-26",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-27",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-28",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-29",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-30",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-10-31",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-11-01",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-11-02",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-03",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-04",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-05",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-06",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-07",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-11-08",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-11-09",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-10",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-11",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-12",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-13",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-14",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-11-15",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-11-16",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-17",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-18",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-19",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-20",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-21",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-11-22",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-11-23",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-25",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-26",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-27",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-11-28",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-11-29",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-11-30",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-01",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-02",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-03",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-04",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-05",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-12-06",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-12-07",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-08",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-09",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-10",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-11",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-12",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-12-13",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-12-14",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-15",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-16",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-17",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-18",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-19",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-12-20",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-12-21",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-22",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-23",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-24",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-25",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-26",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-12-27",
+  "estado": "Feriado"
+ },
+ {
+  "fecha": "2026-12-28",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-29",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-30",
+  "estado": "Hábil"
+ },
+ {
+  "fecha": "2026-12-31",
+  "estado": "Hábil"
+ }
+]

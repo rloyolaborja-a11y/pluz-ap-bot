@@ -1,0 +1,127 @@
+REPORTE DE ATENDIDAS AP — Procesamiento local (sin usar el navegador)
+========================================================================
+
+Qué es esto
+-----------
+Una versión "de escritorio" del botón "Procesar y actualizar" de la página
+web. En vez de subir el Excel desde el navegador, lo dejas en la carpeta
+compartida ..\CARGA\EXCEL\ (un nivel arriba de esta carpeta) y ejecutas
+Ejecutar.bat con doble clic — hace exactamente el mismo cálculo
+(filtrado, deduplicado, clasificación de Actividad/Rubro, Días hábiles,
+Contratista, etc.) y publica el resultado directo en GitHub.
+
+Nota: la carpeta ..\CARGA\EXCEL\ es COMPARTIDA con PENDIENTES-LOCAL — el
+mismo Excel grande alimenta a los dos reportes, no hace falta copiarlo dos
+veces.
+
+Requisitos (una sola vez)
+--------------------------
+1. Tener Python instalado (https://www.python.org/downloads/ — al instalar,
+   marca la casilla "Add Python to PATH").
+2. Abrir una consola (CMD) en esta carpeta y ejecutar:
+       pip install pandas openpyxl
+   (ya NO hace falta instalar "requests" — la publicación usa solo lo que
+   trae Python por defecto).
+3. Arma la Apps Script de Google (el "puente" hacia GitHub) siguiendo
+   LEEME-APPS-SCRIPT.txt, en la carpeta de arriba — esto se hace una sola
+   vez y es compartido por PENDIENTES-LOCAL, ATENDIDAS-LOCAL y
+   PUBLICAR-WEB-LOCAL.
+4. Renombra "config.ejemplo.json" a "config.json" y pega ahí la URL de tu
+   Apps Script en el campo "script_url" (la clave "secret" ya viene lista
+   — no hace falta tocarla salvo que hayas elegido otra distinta en
+   LEEME-APPS-SCRIPT.txt). Los demás campos ya están completos, apuntando
+   a tu repositorio.
+   IMPORTANTE: config.json queda solo en tu computadora. Este archivo YA
+   NO contiene tu token de GitHub (ese vive únicamente dentro de la Apps
+   Script), pero de todas formas no lo compartas ni lo subas a ningún
+   lado.
+
+Sobre la carpeta MAESTROS\
+----------------------------
+Trae una copia de tecnicos.json, feriados.json y criterios.json — los
+mismos datos que puedes editar desde el panel de administrador de la
+página web (pestañas Técnicos/Contratista, Feriados, Criterios). Si editas
+y publicas cambios ahí en la web, conviene traer también la versión
+actualizada a esta carpeta (descárgala desde tu repositorio de GitHub,
+carpeta atendidas/data/, y reemplaza el archivo correspondiente aquí) para
+que el .bat clasifique con las reglas más recientes.
+
+Uso del día a día
+------------------
+1. Copia el Excel grande (reducido) del día dentro de ..\CARGA\EXCEL\
+   (si dejas varios archivos, siempre toma el más reciente).
+2. Doble clic en Ejecutar.bat.
+3. El programa va a:
+   - Filtrar Estado = ATENDIDA y Motivo en (Lámpara apagada, Zona sin AP,
+     Sed AP fuera de servicio), deduplicar por Cod.SalesForce, clasificar
+     Actividad/Rubro con MAESTROS\criterios.json, calcular Días
+     hábiles/Rango contra MAESTROS\feriados.json y Contratista contra
+     MAESTROS\tecnicos.json.
+   - Guardar en SALIDA\ un Excel con la BD COMPLETA (incluye la columna
+     "Poste - Referencias", con datos del cliente) — se queda solo en tu
+     computadora, nunca se sube. Es el mismo reporte que descargas con
+     "Exportar a Excel" en la pestaña "Buscar y exportar" de la web.
+   - Guardar en SALIDA\bd_actual.json la versión del Dashboard (sin esa
+     columna) y en SALIDA\bd_completa.json la BD completa (con esa
+     columna) — SOLO con las filas del mes calendario actual — y publicar
+     AMBAS automáticamente en tu repositorio de GitHub (mismos archivos
+     que actualiza el botón "Publicar para todos" en la web) — así
+     "Buscar y exportar" en la web queda siempre activo con estos últimos
+     datos, sin que nadie tenga que reprocesar nada ahí.
+   - Si el Excel trae también días de un mes que ya cerró (el robot del
+     GAP exporta ~30 días, así que a inicios de mes siempre trae la cola
+     del mes anterior), esas filas se archivan SOLAS en HISTORICO\ (se
+     mezclan con lo que ya hubiera de ese mes, no se pisan) y se publican
+     también, automáticamente — no hace falta hacer nada aparte para que
+     un mes que se acaba de cerrar aparezca en el desplegable "Mes".
+
+Si algo falla
+--------------
+- "El archivo GAB no tiene filas de datos": revisa que el Excel conserve
+  la fila de título y la de encabezados tal como las exporta SAP.
+  Verás en pantalla el resumen de filas en cada paso del filtro
+  (total -> ATENDIDA -> motivo válido -> únicas -> final) — si el número
+  final te parece muy bajo, revisa esos pasos intermedios.
+- "No se pudo publicar" / "Clave incorrecta": revisa que "script_url" y
+  "secret" en config.json coincidan con los de tu Apps Script (ver
+  LEEME-APPS-SCRIPT.txt) y que tengas conexión a internet.
+- Sin config.json, el programa procesa y genera los archivos igual, solo
+  se salta el paso de publicar.
+
+Esto es un complemento, no un reemplazo
+-----------------------------------------
+El botón "Procesar y actualizar" de la página web sigue funcionando igual
+que siempre. Este .bat es solo una forma más rápida de hacer lo mismo desde
+tu computadora sin pasar por el navegador.
+
+Sobre Publicar-Historico.bat
+------------------------------
+Publica lo que haya en HISTORICO\ (los meses ya archivados) a tu
+repositorio. Ejecutar.bat YA lo corre solo, automáticamente, cada vez que
+archiva un mes nuevo — así que en el día a día NO hace falta tocar este
+.bat. Sirve como respaldo por si esa publicación automática falla un día
+(sale un aviso, no es grave) o si quieres forzar una republicación sin
+esperar a la próxima corrida de Ejecutar.bat.
+
+Sobre EXCEL-MESES-ANTERIORES\ e Importar-Mes-Historico.bat (meses viejos,
+que nunca pasaron por el robot del GAP)
+-----------------------------------------------------------------------
+Desde que Ejecutar.bat archiva solo cada mes que se va cerrando, esto solo
+hace falta para meses de ANTES de que el robot ya estuviera corriendo día
+a día (por ejemplo, si te faltan columnas completas de meses viejos que
+solo quedaron archivados "reducidos"). Para completarlos:
+
+1. Consigue el Excel (GAB) ORIGINAL de ese mes — debe cubrir el mes
+   calendario COMPLETO (del día 1 al último día), no el export de ~30 días
+   del robot del GAP, que no llega a cubrir el mes entero.
+2. Dejas ese Excel (puedes dejar varios, uno por mes) suelto dentro de la
+   carpeta EXCEL-MESES-ANTERIORES\ (al lado de este archivo).
+3. Doble clic en Importar-Mes-Historico.bat — SIN arrastrar nada encima,
+   solo doble clic. Busca solo los Excel que haya en esa carpeta, los
+   procesa todos, y a cada uno que logre importar lo mueve a
+   EXCEL-MESES-ANTERIORES\YA-IMPORTADOS\ (así no se vuelve a procesar la
+   próxima vez que corras esto). Si prefieres, también puedes seguir
+   arrastrando un Excel directo sobre el .bat, como antes — funciona igual
+   y no lo mueve de donde estaba.
+4. Al terminar, corre Publicar-Historico.bat (o espera a la próxima
+   corrida de Ejecutar.bat, que también lo publica).

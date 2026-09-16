@@ -1,0 +1,174 @@
+ACTUALIZACIÓN 2026-08-29 — LOS DATOS YA NO PASAN POR GITHUB/VERCEL
+====================================================================
+Antes, publicar los DATOS (bd_actual.json, bd_completa.json, criterios,
+etc.) también generaba un despliegue en Vercel, lo que agotaba la cuota
+diaria. Desde este cambio, publicar datos guarda los archivos en Google
+Drive (dentro de esta misma Apps Script) y la página los lee EN VIVO
+desde ahí — ya NO se crea ningún commit ni despliegue por publicar
+datos. Solo publicar CÓDIGO DEL SITIO (Publicar.bat) sigue yendo por
+GitHub/Vercel, como antes, a propósito (eso sí debe desplegarse).
+
+Qué tienes que hacer para activar esto:
+1. Ve a script.google.com, abre tu proyecto de la Apps Script.
+2. Reemplaza TODO el contenido de Code.gs por el Code.gs nuevo que te
+   mandamos junto con esta actualización (mismo archivo de siempre).
+3. Guarda (ícono del disquete).
+4. Clic en "Implementar" → "Gestionar implementaciones" → el ícono de
+   lápiz (editar) sobre la implementación que ya tienes activa → en
+   "Versión" elige "Nueva versión" → "Implementar". IMPORTANTE: así la
+   URL (.../exec) NO cambia — no hace falta tocar ningún config.json ni
+   gh-token.js por esto.
+5. Nada más que configurar: la primera vez que se publique un dato, la
+   Apps Script crea sola una carpeta "PortalAP_Datos" en el Drive de la
+   cuenta de Google que usaste para crear el proyecto — ahí quedan
+   guardados los archivos de datos.
+
+Con eso, GITHUB_TOKEN sigue usándose SOLO para publicar código del
+sitio (Publicar.bat) — para los datos ya no hace falta.
+====================================================================
+
+
+CÓMO ARMAR LA "APPS SCRIPT" (el puente hacia GitHub) — PASO A PASO
+====================================================================
+
+Por qué este paso
+------------------
+Hasta ahora, tu computadora (o el navegador) le hablaba directo a GitHub
+para publicar los cambios. Cuando TI bloquea GitHub en la red de la
+oficina o en tu máquina, esa publicación deja de funcionar.
+
+La solución: en vez de hablarle directo a GitHub, tu computadora (y la
+página web) le van a hablar a una pequeña "Apps Script" tuya, alojada en
+Google (script.google.com). Esa Apps Script es la única que tiene tu
+token real de GitHub guardado, y es ella la que hace el trabajo de subir
+los archivos — corriendo en los servidores de Google, no en tu máquina.
+Como Google casi nunca está bloqueado, esto resuelve el problema.
+
+Ventaja extra de seguridad: tu token de GitHub ya NO queda guardado en
+ningún archivo de tu computadora ni en ningún archivo que viaje al
+navegador — vive solo dentro de la Apps Script, en un lugar que nadie
+puede ver ni siquiera abriendo el código de la página.
+
+Esto se hace UNA SOLA VEZ. Después de armado, todo sigue funcionando
+igual que antes (Ejecutar.bat, Publicar.bat, "Procesar y actualizar" en
+la web) — solo cambia por dónde pasa la publicación.
+
+Paso 1: Crear el proyecto en script.google.com
+------------------------------------------------
+1. Entra a https://script.google.com con tu cuenta de Google (puede ser
+   cualquier cuenta Gmail, no hace falta que sea corporativa).
+2. Clic en "Proyecto nuevo" (o "New project").
+3. Te abre un editor con un archivo "Code.gs" vacío (con una función
+   "myFunction" de ejemplo). Borra todo ese contenido.
+4. Abre el archivo Code.gs que te mandamos junto con esto (está en esta
+   misma carpeta) con el Bloc de notas, copia TODO su contenido, y
+   pégalo en el editor de Google reemplazando lo que borraste.
+5. Arriba a la izquierda, dale un nombre al proyecto, por ejemplo
+   "Puente GitHub - Reporte AP" (clic donde dice "Proyecto sin título").
+6. Guarda con el ícono del disquete (o Ctrl+S).
+
+Paso 2: Guardar tu token de GitHub y la clave (SECRET) en el proyecto
+------------------------------------------------------------------------
+Esto es para que tu token quede guardado DENTRO de Google, no en ningún
+archivo tuyo.
+1. En el menú de la izquierda, clic en el ícono de engranaje
+   ("Configuración del proyecto" / "Project Settings").
+2. Baja hasta "Propiedades del script" ("Script properties") y clic en
+   "Añadir propiedad de script" ("Add script property").
+3. Agrega dos propiedades:
+     Propiedad: GITHUB_TOKEN
+     Valor: (pega aquí tu token personal de GitHub — el mismo tipo que
+             ya usabas antes, con permiso "Contents: Read and write"
+             sobre el repositorio)
+
+     Propiedad: SECRET
+     Valor: 3ellAaF_6l8em53D6EZXU7ggodbOoJA3
+     (esta es una clave lista para usar que ya viene puesta también en
+     tus archivos de configuración — así no tienes que inventar ni
+     copiar nada más. Si prefieres usar otra, puedes escribir la que
+     quieras aquí, pero entonces tendrás que reemplazarla también en
+     los 4 lugares del Paso 4 más abajo.)
+4. Clic en "Guardar propiedades del script".
+
+Paso 3: Publicar la Apps Script como "aplicación web"
+--------------------------------------------------------
+1. Arriba a la derecha, clic en el botón azul "Implementar" ("Deploy") →
+   "Nueva implementación" ("New deployment").
+2. Clic en el ícono de engranaje junto a "Selecciona el tipo" y elige
+   "Aplicación web" ("Web app").
+3. En "Ejecutar como" ("Execute as"), deja "Yo" / tu correo (Me).
+4. En "Quién tiene acceso" ("Who has access"), elige "Cualquier usuario"
+   ("Anyone"). (Esto NO hace pública tu Apps Script para cualquier cosa
+   — solo permite que le lleguen peticiones desde tu computadora o la
+   web; sin la SECRET correcta, la Apps Script rechaza cualquier intento
+   de publicar.)
+5. Clic en "Implementar" ("Deploy").
+6. Google te va a pedir autorizar el script (porque accede a
+   UrlFetchApp para hablarle a GitHub). Va a aparecer una pantalla que
+   dice algo como "Google no ha verificado esta aplicación" — esto es
+   normal porque es TU PROPIO script, hecho por ti. Clic en
+   "Avanzado"/"Advanced" y luego en "Ir a [nombre del proyecto] (no
+   seguro)" / "Go to [project name] (unsafe)", y después "Permitir" /
+   "Allow".
+7. Te va a mostrar una URL que termina en algo como:
+       https://script.google.com/macros/s/AKfycb.../exec
+   COPIA ESA URL COMPLETA — la vas a necesitar en el paso siguiente.
+
+Paso 4: Pegar la URL en los 4 lugares donde hace falta
+-----------------------------------------------------------
+Pega la URL que copiaste (la que termina en /exec) en cada uno de estos
+4 archivos, reemplazando el texto "PEGA_AQUI_LA_URL_DE_TU_APPS_SCRIPT":
+
+1. PUBLICAR-WEB-LOCAL\config.json
+   (renombra primero config.ejemplo.json a config.json si no lo has
+   hecho, y pega la URL en el campo "script_url")
+2. PENDIENTES-LOCAL\config.json
+   (mismo paso: renombra config.ejemplo.json a config.json y pega la URL
+   en "script_url")
+3. ATENDIDAS-LOCAL\config.json
+   (igual)
+4. PUBLICAR-WEB-LOCAL\SITIO\assets\js\gh-token.js
+   (ábrelo con el Bloc de notas y reemplaza el valor de
+   PUBLISH_PROXY_URL — este archivo es el que usa la página web en el
+   navegador; ya viaja incluido dentro de SITIO\, así que cuando corras
+   Publicar.bat esta actualización sube sola al sitio junto con el resto
+   del código)
+
+La clave SECRET (3ellAaF_6l8em53D6EZXU7ggodbOoJA3) YA viene puesta en
+los 4 archivos de ejemplo — no tienes que tocarla, a menos que hayas
+decidido usar una distinta en el Paso 2, en cuyo caso reemplázala
+también en estos 4 lugares.
+
+Con eso, todo queda conectado: tu computadora y la página web le hablan
+a la Apps Script, y la Apps Script le habla a GitHub por ti.
+
+Si más adelante necesitas cambiar algo
+------------------------------------------
+- Si tu token de GitHub vence o lo revocas, entra de nuevo a
+  script.google.com, abre el proyecto, ve a Configuración del proyecto →
+  Propiedades del script, y actualiza el valor de GITHUB_TOKEN. No hace
+  falta volver a hacer "Nueva implementación" para esto.
+- Si quieres revisar qué se ha estado publicando, puedes ver el
+  historial de ejecuciones en el ícono de reloj ("Ejecuciones" /
+  "Executions") del editor de Apps Script.
+- Si algún día quieres desactivar por completo este puente (por ejemplo
+  si cambias de repositorio), simplemente borra el proyecto en
+  script.google.com — dejará de responder a las peticiones.
+
+Si algo falla
+--------------
+- "Clave incorrecta" al publicar: la SECRET en tu config.json /
+  gh-token.js no coincide con la que pusiste en Propiedades del script
+  en Google. Revisa que sean exactamente iguales (sin espacios de más).
+- "Falta configurar la propiedad GITHUB_TOKEN/SECRET": olvidaste el
+  Paso 2, o el nombre de la propiedad quedó mal escrito (debe ser
+  exactamente GITHUB_TOKEN y SECRET, en mayúsculas).
+- "La Apps Script respondió algo inesperado" / errores raros de
+  permisos: vuelve a "Implementar" → "Gestionar implementaciones" →
+  edita la implementación existente (ícono de lápiz) y confirma que
+  "Quién tiene acceso" siga en "Cualquier usuario".
+- Error 401/403 al publicar un archivo puntual: el token de GitHub
+  guardado en GITHUB_TOKEN venció o no tiene permiso de escritura sobre
+  el repositorio — genera uno nuevo en GitHub (Settings → Developer
+  settings → Personal access tokens) con "Contents: Read and write", y
+  actualízalo en Propiedades del script.

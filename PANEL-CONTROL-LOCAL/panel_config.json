@@ -1,0 +1,17 @@
+{
+  "reportes": [
+    "pendientes",
+    "atendidas",
+    "veredas"
+  ],
+  "meses": 3,
+  "prueba": false,
+  "silencioso": true,
+  "programacion": {
+    "activa": true,
+    "intervalo_horas": 1,
+    "minuto": 50,
+    "hora_desde": 0,
+    "hora_hasta": 24
+  }
+}

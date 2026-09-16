@@ -1,0 +1,635 @@
+[
+ {
+  "id": 1,
+  "actividad": "SED AP FUERA DE SERVICIO",
+  "rubro": "SED AP FUERA DE SERVICIO",
+  "orden": 1,
+  "palabraObs": "",
+  "palabraMot": "SED AP FUERA DE SERVICIO"
+ },
+ {
+  "id": 2,
+  "actividad": "Red Subt",
+  "rubro": "Zona sin AP",
+  "orden": 2,
+  "palabraObs": "N2XY",
+  "palabraMot": ""
+ },
+ {
+  "id": 3,
+  "actividad": "Red Subt",
+  "rubro": "Zona sin AP",
+  "orden": 2,
+  "palabraObs": "NA3XY",
+  "palabraMot": ""
+ },
+ {
+  "id": 4,
+  "actividad": "Red Subt",
+  "rubro": "Zona sin AP",
+  "orden": 2,
+  "palabraObs": "SUB",
+  "palabraMot": ""
+ },
+ {
+  "id": 5,
+  "actividad": "Red Subt",
+  "rubro": "Zona sin AP",
+  "orden": 2,
+  "palabraObs": "S/ V",
+  "palabraMot": ""
+ },
+ {
+  "id": 6,
+  "actividad": "Red Subt",
+  "rubro": "Zona sin AP",
+  "orden": 2,
+  "palabraObs": "CABLE CORTO",
+  "palabraMot": ""
+ },
+ {
+  "id": 7,
+  "actividad": "Red Subt",
+  "rubro": "Zona sin AP",
+  "orden": 2,
+  "palabraObs": "C/V",
+  "palabraMot": ""
+ },
+ {
+  "id": 8,
+  "actividad": "Red Subt",
+  "rubro": "Zona sin AP",
+  "orden": 2,
+  "palabraObs": "C/ V",
+  "palabraMot": ""
+ },
+ {
+  "id": 9,
+  "actividad": "Red Subt",
+  "rubro": "Zona sin AP",
+  "orden": 2,
+  "palabraObs": "S/V",
+  "palabraMot": ""
+ },
+ {
+  "id": 10,
+  "actividad": "Red Subt",
+  "rubro": "Zona sin AP",
+  "orden": 2,
+  "palabraObs": "NA2XY",
+  "palabraMot": ""
+ },
+ {
+  "id": 11,
+  "actividad": "Red Subt",
+  "rubro": "Zona sin AP",
+  "orden": 2,
+  "palabraObs": "CABLE EN CORTO",
+  "palabraMot": ""
+ },
+ {
+  "id": 12,
+  "actividad": "Tablero AP",
+  "rubro": "Zona sin AP",
+  "orden": 3,
+  "palabraObs": "SED",
+  "palabraMot": ""
+ },
+ {
+  "id": 13,
+  "actividad": "Tablero AP",
+  "rubro": "Zona sin AP",
+  "orden": 3,
+  "palabraObs": "CONTACTOR",
+  "palabraMot": ""
+ },
+ {
+  "id": 14,
+  "actividad": "Tablero AP",
+  "rubro": "Zona sin AP",
+  "orden": 3,
+  "palabraObs": "NH",
+  "palabraMot": ""
+ },
+ {
+  "id": 15,
+  "actividad": "Tablero AP",
+  "rubro": "Zona sin AP",
+  "orden": 3,
+  "palabraObs": "TAB",
+  "palabraMot": ""
+ },
+ {
+  "id": 16,
+  "actividad": "Tablero AP",
+  "rubro": "Zona sin AP",
+  "orden": 3,
+  "palabraObs": "FOTO",
+  "palabraMot": ""
+ },
+ {
+  "id": 79,
+  "actividad": "Tablero AP",
+  "rubro": "Zona sin AP",
+  "orden": 3,
+  "palabraObs": "FUSIBLE",
+  "palabraMot": "",
+  "_nota": "Agregado 2026-08-29: FUSIBLE sin KTK -> Tablero AP. Si el texto trae FUSIBLE y KTK a la vez, gana la regla de KTK (id 40, Lámpara) — ver el caso especial en clasificar()."
+ },
+ {
+  "id": 17,
+  "actividad": "Red Aérea",
+  "rubro": "Zona sin AP",
+  "orden": 4,
+  "palabraObs": "CONECTOR",
+  "palabraMot": ""
+ },
+ {
+  "id": 18,
+  "actividad": "Red Aérea",
+  "rubro": "Zona sin AP",
+  "orden": 4,
+  "palabraObs": "AUTO",
+  "palabraMot": ""
+ },
+ {
+  "id": 19,
+  "actividad": "Red Aérea",
+  "rubro": "Zona sin AP",
+  "orden": 4,
+  "palabraObs": "AEREO",
+  "palabraMot": ""
+ },
+ {
+  "id": 20,
+  "actividad": "Red Aérea",
+  "rubro": "Zona sin AP",
+  "orden": 4,
+  "palabraObs": "AÉREO",
+  "palabraMot": ""
+ },
+ {
+  "id": 21,
+  "actividad": "Red Aérea",
+  "rubro": "Zona sin AP",
+  "orden": 4,
+  "palabraObs": "AEREA",
+  "palabraMot": ""
+ },
+ {
+  "id": 22,
+  "actividad": "Red Aérea",
+  "rubro": "Zona sin AP",
+  "orden": 4,
+  "palabraObs": "CORTA CIRCUITO",
+  "palabraMot": ""
+ },
+ {
+  "id": 23,
+  "actividad": "Red Aérea",
+  "rubro": "Zona sin AP",
+  "orden": 4,
+  "palabraObs": "AÉREA",
+  "palabraMot": ""
+ },
+ {
+  "id": 24,
+  "actividad": "Red Aérea",
+  "rubro": "Zona sin AP",
+  "orden": 4,
+  "palabraObs": "CNX",
+  "palabraMot": ""
+ },
+ {
+  "id": 25,
+  "actividad": "Tablero AP",
+  "rubro": "Zona sin AP",
+  "orden": 5,
+  "palabraObs": "LLAM",
+  "palabraMot": "ZONA SIN AP"
+ },
+ {
+  "id": 26,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 6,
+  "palabraObs": "LLAM",
+  "palabraMot": "LAMPARA APAGADA"
+ },
+ {
+  "id": 27,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 7,
+  "palabraObs": "LUM",
+  "palabraMot": ""
+ },
+ {
+  "id": 28,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 7,
+  "palabraObs": "LAMP",
+  "palabraMot": ""
+ },
+ {
+  "id": 29,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 7,
+  "palabraObs": "LÁM",
+  "palabraMot": ""
+ },
+ {
+  "id": 30,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 7,
+  "palabraObs": "REACT",
+  "palabraMot": ""
+ },
+ {
+  "id": 31,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 7,
+  "palabraObs": "IGNI",
+  "palabraMot": ""
+ },
+ {
+  "id": 32,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 7,
+  "palabraObs": "CONDEN",
+  "palabraMot": ""
+ },
+ {
+  "id": 33,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 7,
+  "palabraObs": "DIFUS",
+  "palabraMot": ""
+ },
+ {
+  "id": 34,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 7,
+  "palabraObs": "EQUI",
+  "palabraMot": ""
+ },
+ {
+  "id": 35,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 7,
+  "palabraObs": "CAMBIO X DEFECTO",
+  "palabraMot": ""
+ },
+ {
+  "id": 36,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 7,
+  "palabraObs": "F. CONTACTO",
+  "palabraMot": ""
+ },
+ {
+  "id": 37,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 7,
+  "palabraObs": "F.CONTACTO",
+  "palabraMot": ""
+ },
+ {
+  "id": 38,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 7,
+  "palabraObs": "FALSO CONTACTO",
+  "palabraMot": ""
+ },
+ {
+  "id": 39,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 7,
+  "palabraObs": "X CORROSION",
+  "palabraMot": ""
+ },
+ {
+  "id": 40,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 7,
+  "palabraObs": "KTK",
+  "palabraMot": ""
+ },
+ {
+  "id": 41,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 7,
+  "palabraObs": "PASANTE",
+  "palabraMot": ""
+ },
+ {
+  "id": 42,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 7,
+  "palabraObs": "CONECCION EN CORTOCIRCUITO",
+  "palabraMot": ""
+ },
+ {
+  "id": 43,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 7,
+  "palabraObs": "LAM",
+  "palabraMot": ""
+ },
+ {
+  "id": 44,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 8,
+  "palabraObs": "CONFORME",
+  "palabraMot": "LAMPARA APAGADA"
+ },
+ {
+  "id": 45,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 8,
+  "palabraObs": "TODO NORMAL",
+  "palabraMot": "LAMPARA APAGADA"
+ },
+ {
+  "id": 46,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 8,
+  "palabraObs": "FALTAN DATOS",
+  "palabraMot": "LAMPARA APAGADA"
+ },
+ {
+  "id": 47,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 8,
+  "palabraObs": "MAYOR REFERENCIA",
+  "palabraMot": "LAMPARA APAGADA"
+ },
+ {
+  "id": 48,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 8,
+  "palabraObs": "MALA DIRECCION",
+  "palabraMot": "LAMPARA APAGADA"
+ },
+ {
+  "id": 49,
+  "actividad": "Tablero AP",
+  "rubro": "Zona sin AP",
+  "orden": 9,
+  "palabraObs": "MALA DIRECCION",
+  "palabraMot": "ZONA SIN AP"
+ },
+ {
+  "id": 50,
+  "actividad": "Tablero AP",
+  "rubro": "Zona sin AP",
+  "orden": 9,
+  "palabraObs": "TODO NORMAL",
+  "palabraMot": "ZONA SIN AP"
+ },
+ {
+  "id": 51,
+  "actividad": "Tablero AP",
+  "rubro": "Zona sin AP",
+  "orden": 9,
+  "palabraObs": "CONFORME",
+  "palabraMot": "ZONA SIN AP"
+ },
+ {
+  "id": 52,
+  "actividad": "Tablero AP",
+  "rubro": "Zona sin AP",
+  "orden": 9,
+  "palabraObs": "MAYOR REFERENCIA",
+  "palabraMot": "ZONA SIN AP"
+ },
+ {
+  "id": 53,
+  "actividad": "Tablero AP",
+  "rubro": "Zona sin AP",
+  "orden": 9,
+  "palabraObs": "FALTAN DATOS",
+  "palabraMot": "ZONA SIN AP"
+ },
+ {
+  "id": 54,
+  "actividad": "Red Aérea",
+  "rubro": "Zona sin AP",
+  "orden": 10,
+  "palabraObs": "SE RENOVO  DEL POSTE",
+  "palabraMot": ""
+ },
+ {
+  "id": 55,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 11,
+  "palabraObs": "OPERATIVO",
+  "palabraMot": "LAMPARA APAGADA"
+ },
+ {
+  "id": 56,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 11,
+  "palabraObs": "OPERATIVA",
+  "palabraMot": "LAMPARA APAGADA"
+ },
+ {
+  "id": 57,
+  "actividad": "Tablero AP",
+  "rubro": "Zona sin AP",
+  "orden": 12,
+  "palabraObs": "OPERATIVA",
+  "palabraMot": "ZONA SIN AP"
+ },
+ {
+  "id": 58,
+  "actividad": "Tablero AP",
+  "rubro": "Zona sin AP",
+  "orden": 12,
+  "palabraObs": "OPERATIVO",
+  "palabraMot": "ZONA SIN AP"
+ },
+ {
+  "id": 59,
+  "actividad": "Red Aérea",
+  "rubro": "Zona sin AP",
+  "orden": 13,
+  "palabraObs": "SE NORMALIZO MONTAJE",
+  "palabraMot": ""
+ },
+ {
+  "id": 60,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 14,
+  "palabraObs": "ENCONTRO NORMALIZADO",
+  "palabraMot": "LAMPARA APAGADA"
+ },
+ {
+  "id": 61,
+  "actividad": "Tablero AP",
+  "rubro": "Zona sin AP",
+  "orden": 15,
+  "palabraObs": "ENCONTRO NORMALIZADO",
+  "palabraMot": "ZONA SIN AP"
+ },
+ {
+  "id": 62,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 16,
+  "palabraObs": "AP NORMAL",
+  "palabraMot": ""
+ },
+ {
+  "id": 63,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 16,
+  "palabraObs": "CORTACIRCUITO",
+  "palabraMot": ""
+ },
+ {
+  "id": 64,
+  "actividad": "Red Aérea",
+  "rubro": "Zona sin AP",
+  "orden": 17,
+  "palabraObs": "2X16",
+  "palabraMot": ""
+ },
+ {
+  "id": 65,
+  "actividad": "Red Aérea",
+  "rubro": "Zona sin AP",
+  "orden": 17,
+  "palabraObs": "3X35",
+  "palabraMot": ""
+ },
+ {
+  "id": 66,
+  "actividad": "Red Aérea",
+  "rubro": "Zona sin AP",
+  "orden": 17,
+  "palabraObs": "3X70",
+  "palabraMot": ""
+ },
+ {
+  "id": 67,
+  "actividad": "Red Aérea",
+  "rubro": "Zona sin AP",
+  "orden": 18,
+  "palabraObs": "SE NORMALIZO SOBRECARGA DEL POSTE",
+  "palabraMot": ""
+ },
+ {
+  "id": 68,
+  "actividad": "Red Aérea",
+  "rubro": "Zona sin AP",
+  "orden": 18,
+  "palabraObs": "SE NORMALIZO SOBRECARGA  DEL POSTE",
+  "palabraMot": ""
+ },
+ {
+  "id": 69,
+  "actividad": "Red Aérea",
+  "rubro": "Zona sin AP",
+  "orden": 19,
+  "palabraObs": "CONCENTRICO",
+  "palabraMot": ""
+ },
+ {
+  "id": 70,
+  "actividad": "Red Aérea",
+  "rubro": "Zona sin AP",
+  "orden": 19,
+  "palabraObs": "CONCÉNTRICO",
+  "palabraMot": ""
+ },
+ {
+  "id": 71,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 20,
+  "palabraObs": "SE NORMALIZO CON SAP",
+  "palabraMot": "LAMPARA APAGADA"
+ },
+ {
+  "id": 72,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 20,
+  "palabraObs": "SE NORMALIZÓ CON SAP",
+  "palabraMot": "LAMPARA APAGADA"
+ },
+ {
+  "id": 73,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 21,
+  "palabraObs": "SE ENDEREZO DEL POSTE",
+  "palabraMot": ""
+ },
+ {
+  "id": 74,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 21,
+  "palabraObs": "SE RENOVO DEL POSTE",
+  "palabraMot": ""
+ },
+ {
+  "id": 75,
+  "actividad": "Lámpara",
+  "rubro": "Lámparas",
+  "orden": 21,
+  "palabraObs": "SE ENDEREZO  DEL POSTE",
+  "palabraMot": ""
+ },
+ {
+  "id": 76,
+  "actividad": "Tablero AP",
+  "rubro": "Zona sin AP",
+  "orden": 22,
+  "palabraObs": "SE NORMALIZO CON SAP",
+  "palabraMot": "ZONA SIN AP"
+ },
+ {
+  "id": 77,
+  "actividad": "Tablero AP",
+  "rubro": "Zona sin AP",
+  "orden": 22,
+  "palabraObs": "SE NORMALIZÓ CON SAP",
+  "palabraMot": "ZONA SIN AP"
+ },
+ {
+  "id": 78,
+  "actividad": "Red Subt",
+  "rubro": "Zona sin AP",
+  "orden": 23,
+  "palabraObs": "EMPAL",
+  "palabraMot": ""
+ }
+]

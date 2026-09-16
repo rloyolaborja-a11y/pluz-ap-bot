@@ -1,0 +1,66 @@
+PANEL DE CONTROL — Reporte AP
+=============================
+
+Para qué sirve
+--------------
+Reemplaza a los .bat: desde el navegador elegís qué reportes correr, cuántos
+meses, lo lanzás con un botón y ves el terminal en vivo + el historial.
+
+Cómo se abre
+------------
+Doble clic en  Panel-AP.bat
+Se abre solo en  http://localhost:8765
+El panel queda en una ventana MINIMIZADA — cerrá esa ventana para apagarlo.
+
+Qué hace cada corrida
+---------------------
+Llama a EJECUTAR-TODO\ejecutar_todo.py con las opciones que elegiste:
+  - Reportes   -> --reportes pendientes,atendidas,veredas
+  - Meses      -> --meses N
+  - Modo prueba-> --sin-publicar   (procesa pero NO publica al sitio)
+Los .bat de siempre siguen funcionando igual, sin cambios.
+
+Programación automática (Fase 2)
+-------------------------------
+1. Corré UNA VEZ  Instalar-Panel.bat  -> crea la Tarea de Windows
+   "PanelAP_Tick" (revisa cada 5 min si toca) y los accesos directos.
+2. En el panel -> pestaña "Programación": activala, elegí intervalo
+   (cada 1 h...), minuto de arranque (:50 = 10 min antes de la hora) y
+   ventana horaria.
+3. Listo. Corre sola aunque el panel esté cerrado, MIENTRAS la PC esté
+   prendida y tu sesión de Windows abierta (la descarga SAP/GAP lo necesita).
+   Si una corrida automática falla -> globo de aviso de Windows + el panel
+   queda marcando "Última corrida falló".
+Para sacar la automatización:  Desinstalar-Panel.bat
+
+Estado del desarrollo
+---------------------
+  Fase 1 (LISTO) : Ejecutar ahora + terminal en vivo + historial.
+  Fase 2 (LISTO) : Programación automática con Tarea de Windows.
+  Fase 3 (LISTO) : Modo silencioso del SAP — tilde "Modo silencioso" en la
+                   pestaña Corrida; el navegador del SAP corre fuera de
+                   pantalla (minimizado), no tapa nada ni roba el foco.
+                   Si la sesión del SAP alguna vez vence, la corrida falla
+                   con aviso claro (hay que loguearse una vez sin silencioso).
+  Fase 4 (LISTO) : Pestaña "Acciones" (publicar solo sitio, descargar SAP/GAP
+                   a mano, importar/publicar histórico, login SAP) +
+                   pestaña "Estado" (frescura de Excel, última publicación de
+                   cada reporte, aviso si la VM del GAP parece caída).
+
+  Robustez (LISTO):
+   - Aviso de Windows si falla CUALQUIER corrida (no solo la automática).
+   - La corrida automática que falla se reintenta UNA vez ~10 min después.
+   - Timeout duro: si una corrida pasa de 45 min se corta y se marca error.
+   - Si la Tarea de Windows deja de correr (>2 h), el panel avisa en rojo.
+   - Los logs de corridas de más de 45 días se borran solos.
+
+Archivos
+--------
+  panel.py             el servidor (solo librería estándar de Python)
+  agenda.py            cálculo de "cuándo toca correr"
+  tick.py              lo corre la Tarea de Windows cada 5 min
+  ui.html              la interfaz
+  panel_config.json    se crea solo; guarda tus opciones
+  agenda_estado.json   marca del último disparo automático
+  runs\                log + resumen de cada corrida
+  tick.log             qué hizo el tick en cada chequeo
