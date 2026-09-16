@@ -30,6 +30,7 @@ haya llegado -- sin tener que repetir el envio de la senal.
 from __future__ import annotations
 
 import json
+import os
 import sys
 import time
 from datetime import datetime
@@ -39,12 +40,34 @@ from pathlib import Path
 # Configuracion basica -- mismas rutas que ya usa mover_excel_gap_pc.py
 # ----------------------------------------------------------------------
 
-CARPETA_ONEDRIVE_GAP = Path(
-    r"C:\Users\P721725611\OneDrive - Pluz Energía Perú S.A.A\GAP"
-)
-CARPETA_DESTINO = Path(
-    r"C:\Users\P721725611\Desktop\Programaciones\1. REPORTE\CARGA\EXCEL"
-)
+# 2026-09-16: detectada sola en vez de escrita a mano -- ver el mismo
+# comentario en mover_excel_gap_pc.py.
+def _detectar_carpeta_onedrive_gap() -> Path:
+    candidatos_base = []
+    for var in ("OneDriveCommercial", "OneDriveConsumer", "OneDrive"):
+        v = os.environ.get(var)
+        if v:
+            candidatos_base.append(Path(v))
+    for base in candidatos_base:
+        posible = base / "GAP"
+        if posible.is_dir():
+            return posible
+    try:
+        for posible in Path("C:/Users").glob("*/OneDrive*/GAP"):
+            if posible.is_dir():
+                return posible
+    except Exception:
+        pass
+    raise SystemExit(
+        "ERROR: no encuentro la carpeta compartida 'GAP' de OneDrive en esta "
+        "PC. Revisa que OneDrive este sincronizado y que la carpeta se llame "
+        "'GAP' (dentro de alguna carpeta que empiece con 'OneDrive' en tu "
+        "carpeta de usuario)."
+    )
+
+
+CARPETA_ONEDRIVE_GAP = _detectar_carpeta_onedrive_gap()
+CARPETA_DESTINO = Path(__file__).resolve().parent.parent.parent / "CARGA" / "EXCEL"
 
 SUBCARPETA_SENAL = "_senal_inicio"
 EXTENSIONES_EXCEL = (".xls", ".xlsx")

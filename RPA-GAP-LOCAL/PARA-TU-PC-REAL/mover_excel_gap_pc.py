@@ -17,20 +17,49 @@ COMO SE USA
 
 from __future__ import annotations
 
+import os
 import sys
 import time
 from pathlib import Path
 
 # ----------------------------------------------------------------------
-# Configuracion basica -- ajusta aqui si alguna de las dos rutas cambia
+# Configuracion basica
 # ----------------------------------------------------------------------
 
-CARPETA_ONEDRIVE_GAP = Path(
-    r"C:\Users\P721725611\OneDrive - Pluz Energía Perú S.A.A\GAP"
-)
-CARPETA_DESTINO = Path(
-    r"C:\Users\P721725611\Desktop\Programaciones\1. REPORTE\CARGA\EXCEL"
-)
+# 2026-09-16: antes esta ruta traia el usuario de Windows de ESTA PC
+# ("P721725611") escrito a mano -- funcionaba solo aca. Se detecta sola
+# (mismo mecanismo que ya usa vigilar_gap_vm.py del lado de la VM) para que
+# esta misma carpeta sirva tal cual en cualquier otra PC (ej. la de
+# respaldo), sin tener que tocar el codigo.
+def _detectar_carpeta_onedrive_gap() -> Path:
+    candidatos_base = []
+    for var in ("OneDriveCommercial", "OneDriveConsumer", "OneDrive"):
+        v = os.environ.get(var)
+        if v:
+            candidatos_base.append(Path(v))
+    for base in candidatos_base:
+        posible = base / "GAP"
+        if posible.is_dir():
+            return posible
+    try:
+        for posible in Path("C:/Users").glob("*/OneDrive*/GAP"):
+            if posible.is_dir():
+                return posible
+    except Exception:
+        pass
+    raise SystemExit(
+        "ERROR: no encuentro la carpeta compartida 'GAP' de OneDrive en esta "
+        "PC. Revisa que OneDrive este sincronizado y que la carpeta se llame "
+        "'GAP' (dentro de alguna carpeta que empiece con 'OneDrive' en tu "
+        "carpeta de usuario)."
+    )
+
+
+CARPETA_ONEDRIVE_GAP = _detectar_carpeta_onedrive_gap()
+# CARGA\EXCEL vive siempre 3 niveles arriba de este archivo
+# (RPA-GAP-LOCAL\PARA-TU-PC-REAL\este_archivo.py) -- calculado relativo al
+# propio script, no a una ruta fija, para que funcione en cualquier PC.
+CARPETA_DESTINO = Path(__file__).resolve().parent.parent.parent / "CARGA" / "EXCEL"
 
 EXTENSIONES_EXCEL = (".xls", ".xlsx")
 

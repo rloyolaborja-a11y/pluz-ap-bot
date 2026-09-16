@@ -539,6 +539,9 @@ def iniciar_corrida(cfg, origen="manual", comando=None, cwd=None, titulo=None, b
 # Acciones sueltas (lo que antes eran .bat aparte)
 # ---------------------------------------------------------------------------
 ACCIONES = {
+    "actualizar-codigo": {
+        "titulo": "Actualizar código del bot",
+        "cwd": RAIZ, "cmd": [str(RAIZ / "actualizar_codigo.py")]},
     "publicar-sitio": {
         "titulo": "Publicar solo el sitio (código)",
         "cwd": PUBLICAR_WEB_DIR, "cmd": ["publicar_sitio.py"]},
