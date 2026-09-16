@@ -80,7 +80,7 @@ $actF = New-ScheduledTaskAction -Execute "$env:SystemRoot\System32\wscript.exe" 
 # repetido cada 1 minuto (mismo efecto de "siempre corriendo"), que sí
 # suele estar permitido. clic_fantasma_pc.py ahora se fija solo si ya hay
 # otra copia viva antes de arrancar, para no acumular procesos.
-$trgF = New-ScheduledTaskTrigger -Once -At (Get-Date) -RepetitionInterval (New-TimeSpan -Minutes 1) -RepetitionDuration ([TimeSpan]::MaxValue)
+$trgF = New-ScheduledTaskTrigger -Once -At (Get-Date) -RepetitionInterval (New-TimeSpan -Minutes 1) -RepetitionDuration (New-TimeSpan -Days 3650)
 $setF = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries `
         -StartWhenAvailable -MultipleInstances IgnoreNew -ExecutionTimeLimit ([TimeSpan]::Zero)
 $prnF = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Limited
