@@ -76,6 +76,27 @@ def _clic_fantasma_loop():
         time.sleep(INTERVALO_CLIC_FANTASMA_SEG)
 
 
+RUTA_MANUAL_TXT = Path(__file__).resolve().parent / "ruta_carpeta_gap.txt"
+
+
+def _leer_ruta_manual():
+    """Si en esta VM la carpeta no se llama "GAP" (o el detector automático
+    de más abajo no la encuentra), se puede pegar la ruta exacta en
+    "ruta_carpeta_gap.txt" (mismo lugar que este archivo, una sola línea
+    con la ruta completa) -- gana siempre sobre el detector automático."""
+    if not RUTA_MANUAL_TXT.exists():
+        return None
+    texto = RUTA_MANUAL_TXT.read_text(encoding="utf-8").strip()
+    if not texto:
+        return None
+    ruta = Path(texto)
+    if not ruta.is_dir():
+        print(f"AVISO: 'ruta_carpeta_gap.txt' apunta a una carpeta que no existe:\n  {ruta}")
+        print("Se ignora y se intenta detectar sola.")
+        return None
+    return ruta
+
+
 def _detectar_carpeta_onedrive_gap() -> Path:
     """Encuentra la carpeta compartida 'GAP' de OneDrive SIN depender de
     saber de antemano el nombre de usuario de esta VM (puede ser distinto
@@ -84,6 +105,9 @@ def _detectar_carpeta_onedrive_gap() -> Path:
     variables de entorno que Windows define para OneDrive, y si no las
     encuentra, busca cualquier carpeta 'GAP' dentro de
     C:\\Users\\*\\OneDrive*\\."""
+    manual = _leer_ruta_manual()
+    if manual:
+        return manual
     candidatos_base = []
     for var in ("OneDriveCommercial", "OneDriveConsumer", "OneDrive"):
         v = os.environ.get(var)

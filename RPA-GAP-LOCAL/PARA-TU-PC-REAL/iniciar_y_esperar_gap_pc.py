@@ -41,8 +41,30 @@ from pathlib import Path
 # ----------------------------------------------------------------------
 
 # 2026-09-16: detectada sola en vez de escrita a mano -- ver el mismo
-# comentario en mover_excel_gap_pc.py.
+# comentario en mover_excel_gap_pc.py. Si la carpeta no se llama "GAP" en
+# esta PC, se puede pegar la ruta exacta en "ruta_carpeta_gap.txt" (mismo
+# lugar que este archivo, una sola línea) -- gana siempre sobre el detector.
+RUTA_MANUAL_TXT = Path(__file__).resolve().parent / "ruta_carpeta_gap.txt"
+
+
+def _leer_ruta_manual():
+    if not RUTA_MANUAL_TXT.exists():
+        return None
+    texto = RUTA_MANUAL_TXT.read_text(encoding="utf-8").strip()
+    if not texto:
+        return None
+    ruta = Path(texto)
+    if not ruta.is_dir():
+        print(f"AVISO: 'ruta_carpeta_gap.txt' apunta a una carpeta que no existe:\n  {ruta}")
+        print("Se ignora y se intenta detectar sola.")
+        return None
+    return ruta
+
+
 def _detectar_carpeta_onedrive_gap() -> Path:
+    manual = _leer_ruta_manual()
+    if manual:
+        return manual
     candidatos_base = []
     for var in ("OneDriveCommercial", "OneDriveConsumer", "OneDrive"):
         v = os.environ.get(var)

@@ -27,11 +27,37 @@ from pathlib import Path
 # ----------------------------------------------------------------------
 
 # 2026-09-16: antes esta ruta traia el usuario de Windows de ESTA PC
-# ("P721725611") escrito a mano -- funcionaba solo aca. Se detecta sola
-# (mismo mecanismo que ya usa vigilar_gap_vm.py del lado de la VM) para que
-# esta misma carpeta sirva tal cual en cualquier otra PC (ej. la de
-# respaldo), sin tener que tocar el codigo.
+# ("P721725611") escrito a mano -- funcionaba solo aca. Ahora se detecta
+# sola (mismo mecanismo que ya usa vigilar_gap_vm.py del lado de la VM) para
+# que esta misma carpeta sirva tal cual en cualquier otra PC (ej. la de
+# respaldo), sin tener que tocar el codigo -- PERO la detección automática
+# asume que la carpeta se llama exactamente "GAP" dentro de OneDrive. Si en
+# otra PC se llama distinto (o el detector no la encuentra por lo que sea),
+# se puede pegar la ruta exacta en "ruta_carpeta_gap.txt" (mismo lugar que
+# este archivo) -- una sola línea con la ruta completa, nada más. Si ese
+# archivo existe y apunta a una carpeta real, gana siempre por sobre el
+# detector automático.
+RUTA_MANUAL_TXT = Path(__file__).resolve().parent / "ruta_carpeta_gap.txt"
+
+
+def _leer_ruta_manual():
+    if not RUTA_MANUAL_TXT.exists():
+        return None
+    texto = RUTA_MANUAL_TXT.read_text(encoding="utf-8").strip()
+    if not texto:
+        return None
+    ruta = Path(texto)
+    if not ruta.is_dir():
+        print(f"AVISO: 'ruta_carpeta_gap.txt' apunta a una carpeta que no existe:\n  {ruta}")
+        print("Se ignora y se intenta detectar sola.")
+        return None
+    return ruta
+
+
 def _detectar_carpeta_onedrive_gap() -> Path:
+    manual = _leer_ruta_manual()
+    if manual:
+        return manual
     candidatos_base = []
     for var in ("OneDriveCommercial", "OneDriveConsumer", "OneDrive"):
         v = os.environ.get(var)
