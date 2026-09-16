@@ -245,6 +245,17 @@
       </div>
       <div class="msg" id="acc-msg"></div>
     </div>
+
+    <h2 class="tt" style="margin-top:20px">Carpeta de GAP (OneDrive) — esta PC</h2>
+    <p class="tt-sub">Normalmente se detecta sola. Si en esta PC la carpeta compartida no se llama "GAP", pegá la ruta exacta acá (se ve en la barra de direcciones del Explorador de Windows).</p>
+    <div class="card">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <input type="text" id="gap-ruta-input" placeholder="ej. C:\Users\MJefa\OneDrive - Pluz Energía Perú S.A.A\GAP" style="flex:1;min-width:280px">
+        <button class="ghost" id="gap-ruta-guardar">Guardar</button>
+        <button class="ghost" id="gap-ruta-limpiar">Volver a detectar sola</button>
+      </div>
+      <div class="msg" id="gap-ruta-msg"></div>
+    </div>
   </section>
 
   <!-- ESTADO -->
@@ -511,6 +522,28 @@ document.querySelectorAll(".acc-grid button").forEach(b => b.onclick = async () 
   if (!r.ok){ m.className = "msg err"; m.textContent = d.error || "No se pudo iniciar."; return; }
   verId = d.id; limpiarTerm(); irA("terminal");
 });
+
+/* ---- carpeta GAP a mano (por si el detector automático no aplica) ---- */
+(async () => {
+  try {
+    const d = await (await fetch("/api/gap-ruta")).json();
+    $("#gap-ruta-input").value = d.ruta || "";
+  } catch (e) {}
+})();
+$("#gap-ruta-guardar").onclick = async () => {
+  const m = $("#gap-ruta-msg"); m.className = "msg"; m.textContent = "Guardando…";
+  const r = await fetch("/api/gap-ruta", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ruta: $("#gap-ruta-input").value})});
+  const d = await r.json();
+  if (!r.ok) { m.className = "msg err"; m.textContent = d.error || "No se pudo guardar."; return; }
+  m.className = "msg ok"; m.textContent = "Guardado.";
+};
+$("#gap-ruta-limpiar").onclick = async () => {
+  $("#gap-ruta-input").value = "";
+  const m = $("#gap-ruta-msg"); m.className = "msg"; m.textContent = "Guardando…";
+  const r = await fetch("/api/gap-ruta", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ruta: ""})});
+  await r.json();
+  m.className = "msg ok"; m.textContent = "Listo, vuelve a detectar sola.";
+};
 
 /* ---- estado / salud ---- */
 function hace(iso, horas){

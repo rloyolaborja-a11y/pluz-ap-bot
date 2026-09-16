@@ -37,6 +37,7 @@ EJECUTAR_TODO_DIR = RAIZ / "EJECUTAR-TODO"
 ORQUESTADOR = EJECUTAR_TODO_DIR / "ejecutar_todo.py"
 SAP_DIR = RAIZ / "RPA-SAP-LOCAL"
 GAP_PC_DIR = RAIZ / "RPA-GAP-LOCAL" / "PARA-TU-PC-REAL"
+RUTA_GAP_TXT = GAP_PC_DIR / "ruta_carpeta_gap.txt"
 ATENDIDAS_DIR = RAIZ / "ATENDIDAS-LOCAL"
 PUBLICAR_WEB_DIR = RAIZ / "PUBLICAR-WEB-LOCAL"
 CARGA_SAP = RAIZ / "CARGA" / "SAP"
@@ -819,6 +820,15 @@ class Handler(BaseHTTPRequestHandler):
         if ruta == "/api/config":
             return self._json(cargar_config())
 
+        if ruta == "/api/gap-ruta":
+            actual = ""
+            if RUTA_GAP_TXT.exists():
+                try:
+                    actual = RUTA_GAP_TXT.read_text(encoding="utf-8").strip()
+                except OSError:
+                    pass
+            return self._json({"ruta": actual})
+
         if ruta == "/api/historial":
             return self._json({"corridas": historial()})
 
@@ -881,6 +891,22 @@ class Handler(BaseHTTPRequestHandler):
             if err:
                 return self._json({"error": err}, 409)
             return self._json({"ok": True, "id": c.id})
+
+        if ruta == "/api/gap-ruta":
+            # 2026-09-16: para no tener que crear el .txt a mano -- se pega
+            # la ruta acá y el panel escribe el mismo archivo que ya leen
+            # mover_excel_gap_pc.py / iniciar_y_esperar_gap_pc.py (gana
+            # siempre sobre el detector automático). Vacío = borrar el
+            # archivo (volver a detectar sola).
+            texto = str(cuerpo.get("ruta") or "").strip()
+            if texto:
+                ruta_obj = Path(texto)
+                if not ruta_obj.is_dir():
+                    return self._json({"error": f"Esa carpeta no existe: {texto}"}, 400)
+                RUTA_GAP_TXT.write_text(texto, encoding="utf-8")
+            elif RUTA_GAP_TXT.exists():
+                RUTA_GAP_TXT.unlink()
+            return self._json({"ok": True, "ruta": texto})
 
         if ruta == "/api/accion":
             c, err = iniciar_accion(cuerpo.get("accion", ""))
