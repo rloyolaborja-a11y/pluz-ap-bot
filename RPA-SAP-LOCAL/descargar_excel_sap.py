@@ -250,15 +250,30 @@ IW39_URL_DIRECTA = "https://pluz-peru-portal-prd.workzonehr.cfapps.br10.hana.ond
 BASE_DIR = Path(__file__).resolve().parent
 CARGA_SAP_DIR = BASE_DIR.parent / "CARGA" / "SAP"
 DIAG_BASE_DIR = Path.home() / "SAP_RPA_Excel"
-# (2026-09-03) Perfil NUEVO y separado del anterior "perfil_chrome": el
-# robot usa el Chromium propio de Playwright (no el Chrome de la empresa), y
-# no conviene mezclar el user-data-dir entre los dos motores.
-# (2026-09-18) Se probo cambiar a Edge (channel="msedge") pensando que el
-# antivirus solo afinaba sus reglas sobre Chrome/Chromium -- no fue asi, el
-# navegador se seguia cerrando igual de seguido con Edge. Se vuelve al
-# Chromium de Playwright (que a la usuaria le venia funcionando bien) hasta
-# retomar con mas tiempo la reescritura sin CDP (ver descargar_excel_sap_uia.py).
-PROFILE_DIR = DIAG_BASE_DIR / "perfil_chromium"
+# (2026-09-18) El antivirus/EDR corporativo que mata el navegador a mitad de
+# la descarga de SAP es INTERMITENTE y, por lo que se vio en la practica, no
+# se comporta igual en todas las PCs: en la PC de la usuaria el Chromium
+# propio de Playwright viene andando mejor, pero en la de la contratista fue
+# al reves (con Chromium le fallaba, con Edge le funciono). En vez de forzar
+# el mismo motor para todos, cada PC puede elegir el suyo con un archivo de
+# texto opcional "motor_navegador.txt" (en esta misma carpeta) con el
+# contenido "chromium" o "msedge" -- si no existe, o dice cualquier otra
+# cosa, se usa "chromium" por defecto. El perfil de Playwright queda
+# separado por motor (no se pueden mezclar formatos de perfil).
+MOTOR_NAVEGADOR_TXT = BASE_DIR / "motor_navegador.txt"
+
+
+def _leer_motor_navegador() -> str:
+    try:
+        valor = MOTOR_NAVEGADOR_TXT.read_text(encoding="utf-8-sig").strip().lower()
+    except Exception:
+        valor = ""
+    return valor if valor in ("chromium", "msedge") else "chromium"
+
+
+MOTOR_NAVEGADOR = _leer_motor_navegador()
+_CHANNEL_KWARGS = {"channel": "msedge"} if MOTOR_NAVEGADOR == "msedge" else {}
+PROFILE_DIR = DIAG_BASE_DIR / ("perfil_edge" if MOTOR_NAVEGADOR == "msedge" else "perfil_chromium")
 DIAGNOSTICS_DIR = DIAG_BASE_DIR / "diagnosticos"
 
 TIMEOUT_MS = 60_000
@@ -1259,6 +1274,7 @@ async def correr(ventanas) -> list:
         # en descargar_excel_sap_uia.py, en construccion aparte.
         contexto = await playwright.chromium.launch_persistent_context(
             user_data_dir=str(PROFILE_DIR),
+            **_CHANNEL_KWARGS,
             headless=False,
             no_viewport=True,
             accept_downloads=True,
@@ -1432,7 +1448,7 @@ async def solo_login() -> None:
     PROFILE_DIR.mkdir(parents=True, exist_ok=True)
     async with async_playwright() as pw:
         ctx = await pw.chromium.launch_persistent_context(
-            user_data_dir=str(PROFILE_DIR), headless=False, no_viewport=True,
+            user_data_dir=str(PROFILE_DIR), **_CHANNEL_KWARGS, headless=False, no_viewport=True,
             args=["--disable-blink-features=AutomationControlled"],
             ignore_default_args=["--enable-automation"],
         )

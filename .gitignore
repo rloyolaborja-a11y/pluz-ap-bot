@@ -3,6 +3,10 @@ config.json
 credentials-pluz
 *.pat
 
+# Preferencia de motor de navegador para SAP -- es POR PC (cada una puede
+# andar mejor con uno distinto), no se comparte entre maquinas.
+RPA-SAP-LOCAL/motor_navegador.txt
+
 # El sitio web ya es su propio repo aparte (PUBLICAR-WEB-LOCAL/SITIO)
 PUBLICAR-WEB-LOCAL/SITIO/
 
