@@ -88,7 +88,7 @@ def _nombre_proceso(pid: int) -> str:
         ctypes.windll.kernel32.CloseHandle(handle)
 
 
-def _traer_navegador_al_frente_sync() -> None:
+def _traer_navegador_al_frente_sync(pista_titulo: str | None = None) -> None:
     """Busca una ventana visible que pertenezca al proceso 'msedge.exe' (el
     navegador que usa este script) y la trae al frente antes de sacar la
     foto de pantalla completa -- si el Panel de Control (u otra ventana)
@@ -105,8 +105,18 @@ def _traer_navegador_al_frente_sync() -> None:
     # msedge.exe (esta hecho con Edge en modo app) -- hay que excluirlo por
     # titulo, si no el filtro por proceso solo no alcanza para diferenciarlo
     # del navegador que de verdad esta automatizando SAP.
-    titulos_excluidos = ("panel de control",)
+    # (2026-09-18, 2do intento) La usuaria tiene ADEMAS otras ventanas de
+    # Edge propias abiertas al mismo tiempo (ej. "Secure Desktops" de
+    # Oracle, para conectarse a un escritorio remoto) -- msedge.exe NO
+    # alcanza para identificar cual es la de SAP. Si se pasa 'pista_titulo'
+    # (el titulo real de la pagina, sacado de page.title() en el momento del
+    # error, cuando se puede) se usa eso para filtrar de verdad. Si no hay
+    # pista (porque la pagina ya estaba muerta), al menos se excluyen los
+    # titulos conocidos que NO son SAP para no traer al frente otra cosa.
+    titulos_excluidos = ("panel de control", "secure desktops", "inicio - inicio")
+    pista = (pista_titulo or "").strip().lower()
     try:
+        candidatas = []
         for ventana in WinDesktop(backend="win32").windows(visible_only=True):
             try:
                 clase = ventana.class_name() or ""
@@ -120,6 +130,14 @@ def _traer_navegador_al_frente_sync() -> None:
                     continue
             except Exception:
                 continue
+            candidatas.append((ventana, titulo))
+
+        if pista:
+            con_pista = [v for v, t in candidatas if pista in t]
+            if con_pista:
+                candidatas = [(v, "") for v in con_pista]
+
+        for ventana, _ in candidatas:
             try:
                 ventana.set_focus()
             except Exception:
@@ -508,8 +526,13 @@ async def guardar_diagnostico(page: Page, etapa: str, error: Exception, contexto
     # que si de verdad crasheo, se vea su aviso de "se cerro de forma
     # inesperada"; si no hay ninguna ventana de navegador (porque
     # literalmente ya no existe el proceso), no se hace nada y listo.
+    pista_titulo: str | None = None
     try:
-        await asyncio.to_thread(_traer_navegador_al_frente_sync)
+        pista_titulo = await page_usada.title()
+    except Exception:
+        pass
+    try:
+        await asyncio.to_thread(_traer_navegador_al_frente_sync, pista_titulo)
     except Exception:
         pass
     try:
