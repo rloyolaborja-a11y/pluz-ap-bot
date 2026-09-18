@@ -69,6 +69,32 @@ except ImportError:
     _PYWINAUTO_DISPONIBLE = False
 
 
+def _traer_navegador_al_frente_sync() -> None:
+    """Busca cualquier ventana de Edge o Chrome (visible, no minimizada) y la
+    trae al frente antes de sacar la foto de pantalla completa -- si el
+    Panel de Control (u otra ventana) estaba tapando todo, esto la destapa
+    para que la captura sirva de algo. Si no encuentra ninguna (por ejemplo,
+    porque el navegador ya no existe como proceso), no hace nada."""
+    if not _PYWINAUTO_DISPONIBLE:
+        return
+    try:
+        for ventana in WinDesktop(backend="win32").windows(visible_only=True):
+            try:
+                clase = ventana.class_name() or ""
+            except Exception:
+                continue
+            if clase.startswith("Chrome_WidgetWin"):
+                try:
+                    ventana.set_focus()
+                except Exception:
+                    try:
+                        ventana.restore()
+                    except Exception:
+                        pass
+    except Exception:
+        pass
+
+
 def _captura_pantalla_completa_sync(ruta: Path) -> bool:
     """Foto de TODA la pantalla de Windows (con ventanas, barras de aviso del
     navegador, dialogos de "Edge se cerro de forma inesperada", etc.) -- a
@@ -439,6 +465,18 @@ async def guardar_diagnostico(page: Page, etapa: str, error: Exception, contexto
     # es la unica forma de ver si de verdad crasheo Edge/Chrome entero (con
     # su aviso de "se cerro de forma inesperada") o si solo se quedo pegado
     # en algun dialogo.
+    # (2026-09-18, 2do intento) La primera version de esta captura no servia
+    # de nada cuando la ventana del Panel de Control (u otra cosa) tapaba
+    # toda la pantalla -- Edge quedaba escondido atras y la foto no lo
+    # mostraba. Ahora, antes de la foto, se intenta traer al frente
+    # cualquier ventana de Edge/Chrome (por su clase de ventana nativa) para
+    # que si de verdad crasheo, se vea su aviso de "se cerro de forma
+    # inesperada"; si no hay ninguna ventana de navegador (porque
+    # literalmente ya no existe el proceso), no se hace nada y listo.
+    try:
+        await asyncio.to_thread(_traer_navegador_al_frente_sync)
+    except Exception:
+        pass
     try:
         ok_captura = await asyncio.to_thread(
             _captura_pantalla_completa_sync, DIAGNOSTICS_DIR / f"{etapa}_{stamp}_pantalla.bmp"
