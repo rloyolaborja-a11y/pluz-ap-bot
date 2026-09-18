@@ -69,28 +69,64 @@ except ImportError:
     _PYWINAUTO_DISPONIBLE = False
 
 
+def _nombre_proceso(pid: int) -> str:
+    """Nombre del ejecutable (ej. 'msedge.exe') de un proceso por su PID,
+    con ctypes puro (sin psutil, que no es dependencia del proyecto)."""
+    import ctypes
+    from ctypes import wintypes
+
+    PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+    handle = ctypes.windll.kernel32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
+    if not handle:
+        return ""
+    try:
+        buf = ctypes.create_unicode_buffer(260)
+        tam = wintypes.DWORD(260)
+        ok = ctypes.windll.kernel32.QueryFullProcessImageNameW(handle, 0, buf, ctypes.byref(tam))
+        return Path(buf.value).name.lower() if ok else ""
+    finally:
+        ctypes.windll.kernel32.CloseHandle(handle)
+
+
 def _traer_navegador_al_frente_sync() -> None:
-    """Busca cualquier ventana de Edge o Chrome (visible, no minimizada) y la
-    trae al frente antes de sacar la foto de pantalla completa -- si el
-    Panel de Control (u otra ventana) estaba tapando todo, esto la destapa
-    para que la captura sirva de algo. Si no encuentra ninguna (por ejemplo,
-    porque el navegador ya no existe como proceso), no hace nada."""
+    """Busca una ventana visible que pertenezca al proceso 'msedge.exe' (el
+    navegador que usa este script) y la trae al frente antes de sacar la
+    foto de pantalla completa -- si el Panel de Control (u otra ventana)
+    estaba tapando todo, esto la destapa para que la captura sirva de algo.
+
+    (2026-09-18) OJO: NO filtrar solo por la clase de ventana nativa
+    "Chrome_WidgetWin" -- Claude Code (y cualquier app basada en
+    Electron/Chromium, como VSCode) usa esa MISMA clase, y el primer
+    intento termino trayendo al frente la ventana de Claude Code en vez de
+    Edge. Ahora se filtra por el PROCESO real (msedge.exe) via su PID."""
     if not _PYWINAUTO_DISPONIBLE:
         return
+    # (2026-09-18) El Panel de Control TAMBIEN corre como una ventana de
+    # msedge.exe (esta hecho con Edge en modo app) -- hay que excluirlo por
+    # titulo, si no el filtro por proceso solo no alcanza para diferenciarlo
+    # del navegador que de verdad esta automatizando SAP.
+    titulos_excluidos = ("panel de control",)
     try:
         for ventana in WinDesktop(backend="win32").windows(visible_only=True):
             try:
                 clase = ventana.class_name() or ""
+                if not clase.startswith("Chrome_WidgetWin"):
+                    continue
+                titulo = (ventana.window_text() or "").lower()
+                if any(t in titulo for t in titulos_excluidos):
+                    continue
+                pid = ventana.process_id()
+                if _nombre_proceso(pid) != "msedge.exe":
+                    continue
             except Exception:
                 continue
-            if clase.startswith("Chrome_WidgetWin"):
+            try:
+                ventana.set_focus()
+            except Exception:
                 try:
-                    ventana.set_focus()
+                    ventana.restore()
                 except Exception:
-                    try:
-                        ventana.restore()
-                    except Exception:
-                        pass
+                    pass
     except Exception:
         pass
 
