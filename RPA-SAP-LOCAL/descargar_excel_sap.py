@@ -250,14 +250,15 @@ IW39_URL_DIRECTA = "https://pluz-peru-portal-prd.workzonehr.cfapps.br10.hana.ond
 BASE_DIR = Path(__file__).resolve().parent
 CARGA_SAP_DIR = BASE_DIR.parent / "CARGA" / "SAP"
 DIAG_BASE_DIR = Path.home() / "SAP_RPA_Excel"
-# (2026-09-03) Perfil NUEVO y separado del anterior "perfil_chrome": ahora el
+# (2026-09-03) Perfil NUEVO y separado del anterior "perfil_chrome": el
 # robot usa el Chromium propio de Playwright (no el Chrome de la empresa), y
-# no conviene mezclar el user-data-dir entre los dos motores. La primera
-# corrida con este cambio va a pedir iniciar sesion una vez.
-# (2026-09-18) Perfil NUEVO otra vez, ahora para Edge (ver channel="msedge"
-# mas abajo) -- mismo motivo: no mezclar el formato de perfil entre motores.
-# Pide loguearse una vez mas la primera corrida con este cambio.
-PROFILE_DIR = DIAG_BASE_DIR / "perfil_edge"
+# no conviene mezclar el user-data-dir entre los dos motores.
+# (2026-09-18) Se probo cambiar a Edge (channel="msedge") pensando que el
+# antivirus solo afinaba sus reglas sobre Chrome/Chromium -- no fue asi, el
+# navegador se seguia cerrando igual de seguido con Edge. Se vuelve al
+# Chromium de Playwright (que a la usuaria le venia funcionando bien) hasta
+# retomar con mas tiempo la reescritura sin CDP (ver descargar_excel_sap_uia.py).
+PROFILE_DIR = DIAG_BASE_DIR / "perfil_chromium"
 DIAGNOSTICS_DIR = DIAG_BASE_DIR / "diagnosticos"
 
 TIMEOUT_MS = 60_000
@@ -1248,17 +1249,16 @@ async def correr(ventanas) -> list:
         # extension de seguridad/DLP que -- confirmado por el patron de fallos
         # -- cierra el navegador entero justo al disparar la descarga de datos
         # de SAP.
-        # (2026-09-18) Igual seguia pasando en una PC con un antivirus mas
-        # estricto (probablemente detecta el puerto de depuracion remota que
-        # necesita CUALQUIER automatizacion -- Chromium, Chrome, o Edge -- no
-        # algo especifico de Chrome). Se prueba con channel="msedge" (el Edge
-        # que YA viene instalado en Windows, no hace falta instalar nada) en
-        # vez del Chromium propio de Playwright: muchas reglas de seguridad
-        # estan afinadas especificamente sobre Chrome/Chromium por ser el mas
-        # comun para automatizacion, y podrian no disparar igual con Edge.
+        # (2026-09-18) Se probo channel="msedge" (Edge) pensando que el
+        # antivirus detectaba algo especifico de Chrome/Chromium -- resulto
+        # que el navegador se seguia cerrando igual de seguido con Edge (el
+        # problema es mas de fondo: el puerto de depuracion remota que
+        # necesita CUALQUIER automatizacion via Playwright/CDP, sin importar
+        # el motor). Se vuelve al Chromium propio de Playwright, que a la
+        # usuaria le venia funcionando -- la solucion de fondo (sin CDP) va
+        # en descargar_excel_sap_uia.py, en construccion aparte.
         contexto = await playwright.chromium.launch_persistent_context(
             user_data_dir=str(PROFILE_DIR),
-            channel="msedge",
             headless=False,
             no_viewport=True,
             accept_downloads=True,
@@ -1432,7 +1432,7 @@ async def solo_login() -> None:
     PROFILE_DIR.mkdir(parents=True, exist_ok=True)
     async with async_playwright() as pw:
         ctx = await pw.chromium.launch_persistent_context(
-            user_data_dir=str(PROFILE_DIR), channel="msedge", headless=False, no_viewport=True,
+            user_data_dir=str(PROFILE_DIR), headless=False, no_viewport=True,
             args=["--disable-blink-features=AutomationControlled"],
             ignore_default_args=["--enable-automation"],
         )
