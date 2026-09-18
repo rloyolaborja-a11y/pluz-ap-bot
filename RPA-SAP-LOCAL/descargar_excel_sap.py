@@ -102,7 +102,10 @@ DIAG_BASE_DIR = Path.home() / "SAP_RPA_Excel"
 # robot usa el Chromium propio de Playwright (no el Chrome de la empresa), y
 # no conviene mezclar el user-data-dir entre los dos motores. La primera
 # corrida con este cambio va a pedir iniciar sesion una vez.
-PROFILE_DIR = DIAG_BASE_DIR / "perfil_chromium"
+# (2026-09-18) Perfil NUEVO otra vez, ahora para Edge (ver channel="msedge"
+# mas abajo) -- mismo motivo: no mezclar el formato de perfil entre motores.
+# Pide loguearse una vez mas la primera corrida con este cambio.
+PROFILE_DIR = DIAG_BASE_DIR / "perfil_edge"
 DIAGNOSTICS_DIR = DIAG_BASE_DIR / "diagnosticos"
 
 TIMEOUT_MS = 60_000
@@ -1047,10 +1050,18 @@ async def correr(ventanas) -> list:
         # (HKLM\SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist) una
         # extension de seguridad/DLP que -- confirmado por el patron de fallos
         # -- cierra el navegador entero justo al disparar la descarga de datos
-        # de SAP. El Chromium de Playwright no lee esas politicas ni carga esa
-        # extension. Requiere: playwright install chromium
+        # de SAP.
+        # (2026-09-18) Igual seguia pasando en una PC con un antivirus mas
+        # estricto (probablemente detecta el puerto de depuracion remota que
+        # necesita CUALQUIER automatizacion -- Chromium, Chrome, o Edge -- no
+        # algo especifico de Chrome). Se prueba con channel="msedge" (el Edge
+        # que YA viene instalado en Windows, no hace falta instalar nada) en
+        # vez del Chromium propio de Playwright: muchas reglas de seguridad
+        # estan afinadas especificamente sobre Chrome/Chromium por ser el mas
+        # comun para automatizacion, y podrian no disparar igual con Edge.
         contexto = await playwright.chromium.launch_persistent_context(
             user_data_dir=str(PROFILE_DIR),
+            channel="msedge",
             headless=False,
             no_viewport=True,
             accept_downloads=True,
@@ -1065,8 +1076,16 @@ async def correr(ventanas) -> list:
                 # Modo silencioso: fuera de pantalla (esquina negativa) en vez
                 # de maximizado, para que no aparezca ni robe el foco. Igual a
                 # 1920x1080 para que SAP renderice todos los controles.
-                ("--window-position=-32000,-32000" if SILENCIOSO else "--start-maximized"),
-                "--window-size=1920,1080",
+                # (2026-09-18) BUG encontrado: "--start-maximized" junto con
+                # "--window-size" (que se pasa SIEMPRE, abajo) se pisan entre
+                # si -- Chromium terminaba abriendo una ventana chica en una
+                # esquina rara, sin poder moverla ni maximizarla a mano. En
+                # modo NO silencioso ahora no se pasa "--window-size" (solo
+                # aplica para el modo silencioso, que sí necesita un tamaño
+                # fijo para que SAP renderice bien fuera de pantalla) y en
+                # vez de "--start-maximized" se maximiza de verdad por CDP
+                # más abajo (mismo mecanismo ya usado para el modo silencioso).
+                *(["--window-position=-32000,-32000", "--window-size=1920,1080"] if SILENCIOSO else []),
                 # (2026-09-03) El navegador se estaba cerrando ENTERO (no
                 # solo una pestana) justo al disparar la descarga -- la foto,
                 # el HTML y el archivo mismo fallaban los 3 a la vez con
@@ -1113,6 +1132,20 @@ async def correr(ventanas) -> list:
                 })
             except Exception as exc:
                 print(f"  (aviso: no se pudo reposicionar la ventana del SAP: {exc})")
+        else:
+            # (2026-09-18) Antes se confiaba en el flag "--start-maximized",
+            # que Chromium ignoraba (ver el comentario de mas arriba, en
+            # args) -- se maximiza de verdad por CDP, igual que el modo
+            # silencioso hace para su propia posicion/tamano.
+            try:
+                cdp = await contexto.new_cdp_session(pagina)
+                win = await cdp.send("Browser.getWindowForTarget")
+                await cdp.send("Browser.setWindowBounds", {
+                    "windowId": win["windowId"],
+                    "bounds": {"windowState": "maximized"},
+                })
+            except Exception as exc:
+                print(f"  (aviso: no se pudo maximizar la ventana del SAP: {exc})")
 
         # (2026-09-03) Captura de la descarga por EVENTO, no por pestana fija.
         # SAP dispara la descarga a veces en su propia pestana y a veces en un
@@ -1202,12 +1235,20 @@ async def solo_login() -> None:
     PROFILE_DIR.mkdir(parents=True, exist_ok=True)
     async with async_playwright() as pw:
         ctx = await pw.chromium.launch_persistent_context(
-            user_data_dir=str(PROFILE_DIR), headless=False, no_viewport=True,
-            args=["--start-maximized", "--disable-blink-features=AutomationControlled"],
+            user_data_dir=str(PROFILE_DIR), channel="msedge", headless=False, no_viewport=True,
+            args=["--disable-blink-features=AutomationControlled"],
             ignore_default_args=["--enable-automation"],
         )
         pg = ctx.pages[0] if ctx.pages else await ctx.new_page()
         pg.set_default_timeout(TIMEOUT_MS)
+        # "--start-maximized" no siempre maximiza de verdad (ver el mismo
+        # comentario en correr()) -- se maximiza por CDP en su lugar.
+        try:
+            cdp = await ctx.new_cdp_session(pg)
+            win = await cdp.send("Browser.getWindowForTarget")
+            await cdp.send("Browser.setWindowBounds", {"windowId": win["windowId"], "bounds": {"windowState": "maximized"}})
+        except Exception as exc:
+            print(f"  (aviso: no se pudo maximizar la ventana: {exc})")
         await pg.goto(PORTAL_URL, wait_until="domcontentloaded")
         print("Si SAP pide iniciar sesión, hacelo en la ventana que se abrió. Esperando...")
         await wait_for_portal(pg, headless=False)
