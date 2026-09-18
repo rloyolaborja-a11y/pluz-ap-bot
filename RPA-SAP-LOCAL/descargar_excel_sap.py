@@ -838,6 +838,7 @@ async def exportar_a_excel(frame_lista: Frame, page: Page, destino: Path, descar
     except Exception as exc:
         print(f"  (aviso: fallo el clic final de exportar ({exc}) -- sigo esperando la descarga igual...)")
 
+    exc_save_as: Exception | None = None
     try:
         # 1) Camino preferido: agarrar el objeto Download que dispare
         #    cualquier pestana/popup del contexto (lo llena el listener de
@@ -860,12 +861,28 @@ async def exportar_a_excel(frame_lista: Frame, page: Page, destino: Path, descar
                 return objetivo
             except Exception as exc:
                 print(f"  (no se pudo guardar la descarga con save_as ({exc}) -- busco en disco...)")
+                exc_save_as = exc
 
         # 2) Respaldo: Chromium se abrio con downloads_path = carpeta final,
         #    asi que aunque no hayamos visto el evento, el archivo deberia
         #    estar apareciendo ahi solo. Lo vigilamos por disco.
-        ruta = await _esperar_archivo_nuevo(destino, ignorar=ignorar_previos,
-                                            timeout_ms=ESPERA_EXCEL_MS)
+        try:
+            ruta = await _esperar_archivo_nuevo(destino, ignorar=ignorar_previos,
+                                                timeout_ms=ESPERA_EXCEL_MS)
+        except RuntimeError as exc_disco:
+            # (2026-09-18) BUG real encontrado en una PC con antivirus mas
+            # estricto: si save_as() fallo arriba porque el navegador ya se
+            # habia cerrado (exc_save_as), y ADEMAS el archivo nunca llego a
+            # aparecer en disco (Chrome se cerro antes de terminar de
+            # escribirlo), este except perdia esa pista -- el mensaje final
+            # era solo "No aparecio ningun archivo Excel nuevo...", que
+            # _es_crash_navegador() NO reconoce como choque del navegador, asi
+            # que la corrida entera NUNCA entraba al reintento (aunque ya
+            # estuviera subido a 4 intentos). Se reincorpora el mensaje
+            # original para que sí se clasifique bien y se reintente.
+            if exc_save_as is not None and _es_crash_navegador(exc_save_as):
+                raise RuntimeError(f"{exc_disco} (el navegador se habia cerrado antes: {exc_save_as})") from exc_disco
+            raise
         if objetivo_fijo is not None and ruta.resolve() != objetivo_fijo.resolve():
             try:
                 if objetivo_fijo.exists():
