@@ -63,10 +63,61 @@ from playwright.async_api import Frame, Page, TimeoutError as PlaywrightTimeoutE
 # (la misma libreria que se uso para el robot del GAP) para confirmarlo.
 try:
     from pywinauto import Desktop as WinDesktop
+    from pywinauto import mouse as _win_mouse
 
     _PYWINAUTO_DISPONIBLE = True
 except ImportError:
     _PYWINAUTO_DISPONIBLE = False
+
+
+async def _coords_pantalla(page: Page, locator) -> tuple[int, int] | None:
+    """Convierte la posicion de un elemento (coordenadas de la pagina web) a
+    coordenadas de PANTALLA (las que entiende Windows), sumando la posicion
+    de la ventana del navegador y el alto de su barra/toolbar."""
+    try:
+        box = await locator.bounding_box()
+        if not box:
+            return None
+        info = await page.evaluate(
+            "() => ({sx: window.screenX, sy: window.screenY, ow: window.outerWidth, "
+            "iw: window.innerWidth, oh: window.outerHeight, ih: window.innerHeight})"
+        )
+    except Exception:
+        return None
+    cx = box["x"] + box["width"] / 2
+    cy = box["y"] + box["height"] / 2
+    offset_x = max(0, (info["ow"] - info["iw"])) / 2
+    offset_y = max(0, info["oh"] - info["ih"])
+    return int(info["sx"] + offset_x + cx), int(info["sy"] + offset_y + cy)
+
+
+async def _click_fisico(page: Page, locator) -> bool:
+    """Hace un clic REAL de mouse (a nivel de Windows, con pywinauto/SendInput)
+    en vez de un clic sintetico via el protocolo de depuracion remota (CDP)
+    que usa Playwright normalmente.
+
+    (2026-09-18) Motivo: en la PC de la jefa, el navegador se cierra SIEMPRE
+    justo en el clic final que dispara la exportacion/descarga de SAP -- en
+    ningun otro momento (navegar, llenar campos, etc. nunca falla). Eso
+    encaja con que algun control de seguridad de la empresa (antivirus/DLP,
+    posiblemente una extension forzada por politica) este vigilando
+    puntualmente ESE clic/descarga y matando el navegador si detecta que fue
+    disparado por automatizacion (CDP). Un clic fisico de Windows es
+    indistinguible de que la usuaria hiciera clic ella misma con el mouse, asi
+    que si la teoria es correcta, esto deberia evitar que lo detecte. Si
+    pywinauto no esta disponible o algo falla calculando las coordenadas,
+    devuelve False y el llamador cae al clic normal de Playwright (como
+    hasta ahora)."""
+    if not _PYWINAUTO_DISPONIBLE:
+        return False
+    coords = await _coords_pantalla(page, locator)
+    if coords is None:
+        return False
+    try:
+        await asyncio.to_thread(_win_mouse.click, button="left", coords=coords)
+        return True
+    except Exception:
+        return False
 
 # (2026-09-03) Marca de version -- se imprime apenas arranca el programa
 # (ver main()) para poder confirmar de un vistazo, mirando la consola, que
@@ -834,10 +885,14 @@ async def exportar_a_excel(frame_lista: Frame, page: Page, destino: Path, descar
 
     descargas_antes = len(descargas)
     try:
-        try:
-            await boton_ok_nombre.click(timeout=15_000)
-        except Exception:
-            await boton_ok_nombre.click(timeout=15_000, force=True)
+        clic_fisico_ok = await _click_fisico(page, boton_ok_nombre)
+        if clic_fisico_ok:
+            print("  (clic fisico de Windows en el boton OK -- para que la descarga no se vea como automatizada)")
+        else:
+            try:
+                await boton_ok_nombre.click(timeout=15_000)
+            except Exception:
+                await boton_ok_nombre.click(timeout=15_000, force=True)
     except Exception as exc:
         print(f"  (aviso: fallo el clic final de exportar ({exc}) -- sigo esperando la descarga igual...)")
 
