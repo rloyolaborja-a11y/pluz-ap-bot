@@ -234,11 +234,10 @@ ESPERA_EVENTO_DESCARGA_SEG = 90
 # Playwright se caen a mitad (errores tipo "Target page/context/browser has
 # been closed" o "Connection closed while reading from la driver"). En modo
 # "3 meses" solo se rehacen las ventanas cuyo Excel todavia no bajo.
-# (2026-09-18) Subido de 2 a 4 intentos -- en la PC de un contratista con un
-# antivirus mas estricto, el cierre del navegador (mismo sintoma de arriba)
-# salio 2 corridas seguidas; con solo 1 reintento no alcanzaba para que se
-# recupere sola sin que alguien la vuelva a correr a mano.
-MAX_INTENTOS_CORRIDA = 4
+# (2026-09-18) Se probo subir a 4, pero cada intento tarda varios minutos --
+# a pedido de la usuaria se vuelve a 2 para no dejar la corrida colgada
+# demasiado tiempo si el navegador se sigue cayendo.
+MAX_INTENTOS_CORRIDA = 2
 
 CLASE_ORDEN = "ZM06"
 RANGO_DIAS = 30  # ultimos N dias desde hoy -- cambiar aqui si hace falta otro default
