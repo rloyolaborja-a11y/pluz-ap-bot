@@ -55,7 +55,7 @@ from pathlib import Path
 try:
     from pywinauto import Application, Desktop
     from pywinauto.controls.common_controls import TreeViewWrapper
-    from pywinauto.findwindows import ElementNotFoundError
+    from pywinauto.findwindows import ElementAmbiguousError, ElementNotFoundError
     from pywinauto.timings import TimeoutError as PywinautoTimeoutError
 except ImportError:
     print("Falta instalar pywinauto. Abre una consola (CMD) en esta carpeta")
@@ -317,6 +317,26 @@ def abrir_extractor_datos_sap(ventana_principal) -> None:
         print(f"  (aviso: no se pudo poner la ventana de SDAPeru al frente: {exc})")
     time.sleep(ESPERA_CORTA / 2)
 
+    # (2026-09-18) BUG real encontrado: si una corrida anterior se corto a
+    # mitad (por ejemplo la VM se quedo sin responder) y dejo abierta una
+    # ventana vieja de "Extractor de Datos SAP" sin cerrar, el doble clic de
+    # aca abre OTRA ventana nueva con el MISMO titulo -- y la busqueda de mas
+    # abajo (Desktop().window(title=TITULO_EXTRACTOR)) revienta con
+    # "ElementAmbiguousError: hay 2 elementos que matchean" porque no sabe
+    # cual de las dos usar. Se cierran de entrada todas las que ya existan
+    # ANTES de hacer el doble clic, para asegurar que despues quede una sola.
+    try:
+        viejas = Desktop(backend="win32").windows(title=TITULO_EXTRACTOR, visible_only=True)
+    except Exception:
+        viejas = []
+    for vieja in viejas:
+        try:
+            print("  (habia una ventana vieja de 'Extractor de Datos SAP' abierta de antes -- cerrandola...)")
+            vieja.close()
+            time.sleep(ESPERA_CORTA)
+        except Exception as exc:
+            print(f"  (aviso: no se pudo cerrar la ventana vieja del Extractor: {exc})")
+
     for intento in range(2):
         try:
             if ventana_principal.is_minimized():
@@ -438,6 +458,14 @@ def abrir_extractor_datos_sap(ventana_principal) -> None:
 
         try:
             ventana_extractor = Desktop(backend="win32").window(title=TITULO_EXTRACTOR)
+            ventana_extractor.wait("exists visible ready", timeout=10)
+        except ElementAmbiguousError:
+            # Defensa extra: si de todos modos quedaron 2, nos quedamos con
+            # la ULTIMA (la mas nueva, la que recien abrio nuestro doble
+            # clic) en vez de reventar sin abrir ninguna.
+            print("  (aviso: habia mas de una ventana 'Extractor de Datos SAP' -- uso la mas nueva)")
+            candidatas = Desktop(backend="win32").windows(title=TITULO_EXTRACTOR, visible_only=True)
+            ventana_extractor = candidatas[-1]
             ventana_extractor.wait("exists visible ready", timeout=10)
         except (ElementNotFoundError, PywinautoTimeoutError):
             guardar_diagnostico(
