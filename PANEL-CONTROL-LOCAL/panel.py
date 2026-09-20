@@ -52,7 +52,13 @@ TICK_TASK = "PanelAP_Tick"                          # nombre de la Tarea de Wind
 
 TIMEOUT_CORRIDA_SEG = 45 * 60      # backstop: si una corrida pasa de esto, se corta
 RETENCION_RUNS_DIAS = 45           # se borran los logs de corridas más viejas
-REINTENTO_PROGRAMADA_SEG = 600     # 10 min tras un fallo automático, un único reintento
+REINTENTO_PROGRAMADA_SEG = 600     # 10 min tras un fallo automático, entre reintento y reintento
+# (2026-09-20) Antes era un UNICO reintento -- el bloqueo de red de la
+# empresa a veces se corta por varios minutos seguidos (no un solo
+# instante), asi que un solo reintento no siempre alcanzaba para que la
+# conexion ya estuviera libre otra vez. Se suben a 3 reintentos (o sea,
+# hasta 4 intentos en total contando el primero), separados 10 min cada uno.
+MAX_REINTENTOS_PROGRAMADA = 3
 TICK_ATRASO_SEG = 2 * 3600         # si el tick no corrió en este tiempo, avisar
 
 RUNS_DIR.mkdir(exist_ok=True)
@@ -473,7 +479,7 @@ class Corrida:
             if estado == "ok":
                 set_agenda_estado(reintentar_en=None, reintentos=0)
             elif estado == "error":
-                if int(est.get("reintentos", 0)) < 1:
+                if int(est.get("reintentos", 0)) < MAX_REINTENTOS_PROGRAMADA:
                     cuando = datetime.now() + timedelta(seconds=REINTENTO_PROGRAMADA_SEG)
                     set_agenda_estado(reintentar_en=cuando.isoformat(timespec="seconds"),
                                       reintentos=int(est.get("reintentos", 0)) + 1)
