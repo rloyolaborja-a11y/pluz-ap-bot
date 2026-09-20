@@ -25,10 +25,18 @@ carpeta de reporte.
 from __future__ import annotations
 
 import subprocess
+import sys
 import time
 from pathlib import Path
 
 CLON_DIR = Path(__file__).resolve().parent / "pluz-ap-datos"
+
+# (2026-09-20) Sin esto, CADA comando de git (add/commit/push/pull, uno por
+# uno) abre su propia ventanita de consola en Windows y la cierra enseguida
+# -- confirmado por la usuaria viendolo parpadear en pantalla durante una
+# corrida "silenciosa". CREATE_NO_WINDOW hace que corran ocultos, sin abrir
+# ninguna ventana.
+_FLAGS_SIN_VENTANA = subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0
 
 REINTENTOS_PUSH = 3
 ESPERA_ENTRE_REINTENTOS_SEG = 4
@@ -38,6 +46,7 @@ def _git(*args, timeout=120):
     resultado = subprocess.run(
         ["git"] + list(args), cwd=str(CLON_DIR), capture_output=True, text=True,
         encoding="utf-8", errors="replace", timeout=timeout,
+        creationflags=_FLAGS_SIN_VENTANA,
     )
     salida = (resultado.stdout or "") + (resultado.stderr or "")
     return resultado.returncode, salida.strip()
