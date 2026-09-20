@@ -1,0 +1,34 @@
+DATOS-GITHUB-LOCAL — publicación de datos vía git real
+=======================================================
+
+Esta carpeta tiene el CLON LOCAL del repositorio de datos
+(rloyolaborja-a11y/pluz-ap-datos) y el módulo que usan feed.py de
+Pendientes/Atendidas/Veredas para publicar con git de verdad (add/commit/
+push) en vez de llamadas HTTP directas — así evitamos el bloqueo de
+antivirus/firewall corporativo que a veces corta esas llamadas.
+
+CADA PC (la tuya, la de tu jefa, una nueva) necesita este clon UNA VEZ.
+Si no está, el bot simplemente sigue usando el método viejo (HTTP directo /
+Apps Script) sin romperse — pero no aprovecha la mejora.
+
+CÓMO CONFIGURARLO EN UNA PC NUEVA
+----------------------------------
+1. Abrí una consola (CMD) DENTRO de esta carpeta (DATOS-GITHUB-LOCAL).
+2. Cloná el repo (es público, no pide login):
+     git clone https://github.com/rloyolaborja-a11y/pluz-ap-datos.git
+3. Entrá a la carpeta que se creó y configurá la identidad + el token
+   (el MISMO token que ya está en config.json de Atendidas/Pendientes/
+   Veredas, campo "github_token"):
+     cd pluz-ap-datos
+     git config --local user.name "rloyolaborja-a11y"
+     git config --local user.email "rloyolaborja-a11y@users.noreply.github.com"
+     git config --local credential.helper "store --file=.git/credentials-datos"
+4. Creá el archivo .git\credentials-datos con UNA sola línea (reemplazando
+   TU_TOKEN por el token real):
+     https://x-access-token:TU_TOKEN@github.com
+5. Probá que funciona:
+     git commit --allow-empty -m "prueba"
+     git push origin main
+
+Listo — la próxima vez que corra Ejecutar.bat (o el panel), feed.py va a
+usar este clon automáticamente.

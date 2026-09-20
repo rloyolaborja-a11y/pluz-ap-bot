@@ -10,6 +10,10 @@ RPA-SAP-LOCAL/motor_navegador.txt
 # El sitio web ya es su propio repo aparte (PUBLICAR-WEB-LOCAL/SITIO)
 PUBLICAR-WEB-LOCAL/SITIO/
 
+# El clon local del repo de datos (pluz-ap-datos) es su propio repo git
+# aparte tambien -- cada PC lo clona una vez (ver DATOS-GITHUB-LOCAL/LEEME.txt).
+DATOS-GITHUB-LOCAL/pluz-ap-datos/
+
 # Datos descargados/generados -- pesan mucho y no son "código"
 CARGA/
 **/SALIDA/

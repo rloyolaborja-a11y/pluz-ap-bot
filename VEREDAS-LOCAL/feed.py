@@ -22,6 +22,23 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# 2026-09-20: publicar con GIT DE VERDAD (add/commit/push) como primer
+# intento -- mismo motivo/patron que ya se uso para el sitio web
+# (PUBLICAR-WEB-LOCAL/publicar_sitio.py): las llamadas HTTP crudas a la API
+# de GitHub (mas abajo, _publicar_commit_github) son justo lo que el
+# antivirus/firewall corporativo corta de vez en cuando ("WinError 10053,
+# se ha anulado una conexion establecida por el software en su equipo
+# host"); el ejecutable git.exe parece tratarse distinto. Si el modulo
+# compartido no esta disponible (por ejemplo, todavia no se clono
+# DATOS-GITHUB-LOCAL/pluz-ap-datos en esta PC), se sigue con los caminos de
+# siempre sin romper nada.
+sys.path.insert(0, os.path.join(BASE_DIR, "..", "DATOS-GITHUB-LOCAL"))
+try:
+    from publicar_datos_git import publicar_commit_git
+    _GIT_DISPONIBLE = True
+except Exception:
+    _GIT_DISPONIBLE = False
+
 
 def _contexto_ssl():
     ctx = ssl.create_default_context()
@@ -309,8 +326,14 @@ def _publicar_lote_apps_script(cfg, archivos, mensaje):
 
 
 def publicar_lote(cfg, archivos, mensaje):
-    """Intenta GitHub directo primero y, si falla, cae al camino viejo de
-    Apps Script/Drive."""
+    """Intenta git real primero (si el clon local esta disponible), despues
+    la API HTTP de GitHub directo, y si todo eso falla cae al camino viejo
+    de Apps Script/Drive."""
+    if _GIT_DISPONIBLE:
+        try:
+            return publicar_commit_git(archivos, mensaje)
+        except Exception as e_git:
+            print(f"  git real falló ({e_git}), probando por la API HTTP de GitHub...")
     try:
         return _publicar_commit_github(cfg, archivos, mensaje)
     except Exception as e_github:
