@@ -130,6 +130,67 @@ def _stream(proc, prefijo, log, lock):
             log.write(f"    {prefijo}{linea}")
 
 
+def correr_pipeline_reporte(log, lock, nombre, cwd, prefijo, publicar_habilitado):
+    """Corre procesar_diario.py y despues feed.py (si corresponde) para UN
+    solo reporte, los dos EN SECUENCIA dentro de este mismo hilo -- pero se
+    llama una vez por reporte desde hilos distintos, asi que Pendientes,
+    Atendidas y Veredas quedan corriendo su propio procesar+publicar EN
+    PARALELO entre si, cada uno publicando apenas termina su propia logica
+    (sin esperar a que los otros dos terminen de procesar). La publicacion
+    por `git` real (ver DATOS-GITHUB-LOCAL/publicar_datos_git.py) tiene su
+    propio candado para que no se pisen si dos terminan de procesar casi al
+    mismo tiempo."""
+    env = dict(os.environ)
+    env["PYTHONIOENCODING"] = "utf-8"
+    env["PYTHONUNBUFFERED"] = "1"
+
+    def _log(texto):
+        with lock:
+            log.write(f"    {prefijo}{texto}\n" if texto else "\n")
+
+    def _correr_script(script):
+        ruta = os.path.join(cwd, script)
+        if not os.path.exists(ruta):
+            _log(f"ERROR: no existe {ruta}")
+            return False, 0.0
+        t0 = time.time()
+        try:
+            proc = subprocess.Popen(
+                [sys.executable, script], cwd=cwd, env=env,
+                stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                text=True, encoding="utf-8", errors="replace", bufsize=1,
+                creationflags=_CREATIONFLAGS,
+            )
+        except Exception as exc:
+            _log(f"ERROR al lanzar {script}: {exc}")
+            return False, time.time() - t0
+        for linea in proc.stdout:
+            _log(linea.rstrip("\n"))
+        proc.wait()
+        return proc.returncode == 0, time.time() - t0
+
+    resultado = {"procesar": (False, 0.0), "publicar": None}
+
+    ok, seg = _correr_script("procesar_diario.py")
+    _log(f"-> {nombre}: procesar {'OK' if ok else 'FALLO'}  ({seg:.0f}s)")
+    resultado["procesar"] = (ok, seg)
+    if not ok:
+        return resultado
+
+    if not publicar_habilitado:
+        _log("(modo prueba: --sin-publicar -- se salta la publicación)")
+        resultado["publicar"] = (True, 0.0, True)
+    elif not os.path.exists(os.path.join(cwd, "config.json")):
+        _log(f"(no hay config.json en {os.path.basename(cwd)} -- se salta la publicación)")
+        resultado["publicar"] = (True, 0.0, True)
+    else:
+        ok2, seg2 = _correr_script("feed.py")
+        _log(f"-> {nombre}: publicar {'OK' if ok2 else 'FALLO'}  ({seg2:.0f}s)")
+        resultado["publicar"] = (ok2, seg2, False)
+
+    return resultado
+
+
 def correr_pasos_en_paralelo(log, specs):
     """specs: [{titulo, script, cwd, args, prefijo}, ...]. Lanza todos a la
     vez (SAP corre en esta PC, GAP corre en la VM y acá solo se espera, así
@@ -302,71 +363,59 @@ def main():
             log.linea("    y los diagnósticos DENTRO de la VM: %USERPROFILE%\\GAP_RPA_Excel\\diagnosticos")
         abortar(fallo_desc)
 
-    # ---- Pasos 3-4: Pendientes ----
-    if solo_pend or not algun_solo:
-        ok, seg = correr_paso(log, "Pendientes AP — procesar", "procesar_diario.py", PENDIENTES_DIR)
-        registrar("Pendientes: procesar", ok, seg)
-        if not ok:
-            abortar("Pendientes: procesar")
+    # ---- Pasos 3-8: Pendientes + Atendidas + Veredas, EN PARALELO ----
+    # (2026-09-22) Antes corrian uno atras del otro (procesar+publicar de
+    # Pendientes, despues Atendidas, despues Veredas). Ahora cada uno corre
+    # en su propio hilo, procesando y publicando por su cuenta apenas
+    # termina -- sin esperar a los otros dos. La publicacion por git tiene
+    # su propio candado (ver publicar_datos_git.py) para no pisarse.
+    TODOS_LOS_REPORTES = [
+        ("Pendientes", PENDIENTES_DIR, "[PEND] ", solo_pend),
+        ("Atendidas", ATENDIDAS_DIR, "[ATEN] ", solo_aten),
+        ("Veredas", VEREDAS_DIR, "[VERE] ", solo_ver),
+    ]
+    specs_reportes = [(n, c, p) for n, c, p, solo in TODOS_LOS_REPORTES if solo or not algun_solo]
+    saltados_reportes = [n for n, c, p, solo in TODOS_LOS_REPORTES if not (solo or not algun_solo)]
 
-        if not publicar:
-            log.linea("\n    (modo prueba: --sin-publicar — se salta la publicación)")
-            registrar("Pendientes: publicar", True, 0, saltado=True)
-        elif os.path.exists(os.path.join(PENDIENTES_DIR, "config.json")):
-            ok, seg = correr_paso(log, "Pendientes AP — publicar", "feed.py", PENDIENTES_DIR)
-            registrar("Pendientes: publicar", ok, seg)
-            if not ok:
-                abortar("Pendientes: publicar")
-        else:
-            log.linea("\n    (no hay config.json en PENDIENTES-LOCAL — se salta la publicación)")
-            registrar("Pendientes: publicar", True, 0, saltado=True)
-    else:
-        registrar("Pendientes: procesar", True, 0, saltado=True)
-        registrar("Pendientes: publicar", True, 0, saltado=True)
+    for nombre in saltados_reportes:
+        registrar(f"{nombre}: procesar", True, 0, saltado=True)
+        registrar(f"{nombre}: publicar", True, 0, saltado=True)
 
-    # ---- Pasos 5-6: Atendidas ----
-    if solo_aten or not algun_solo:
-        ok, seg = correr_paso(log, "Atendidas AP — procesar", "procesar_diario.py", ATENDIDAS_DIR)
-        registrar("Atendidas: procesar", ok, seg)
-        if not ok:
-            abortar("Atendidas: procesar")
+    if specs_reportes:
+        log.linea()
+        log.linea("=" * 70)
+        log.linea(">>> " + "  +  ".join(f"{n}: procesar + publicar" for n, _, _ in specs_reportes) + "   (EN PARALELO)")
+        log.linea("=" * 70)
 
-        if not publicar:
-            log.linea("\n    (modo prueba: --sin-publicar — se salta la publicación)")
-            registrar("Atendidas: publicar", True, 0, saltado=True)
-        elif os.path.exists(os.path.join(ATENDIDAS_DIR, "config.json")):
-            ok, seg = correr_paso(log, "Atendidas AP — publicar", "feed.py", ATENDIDAS_DIR)
-            registrar("Atendidas: publicar", ok, seg)
-            if not ok:
-                abortar("Atendidas: publicar")
-        else:
-            log.linea("\n    (no hay config.json en ATENDIDAS-LOCAL — se salta la publicación)")
-            registrar("Atendidas: publicar", True, 0, saltado=True)
-    else:
-        registrar("Atendidas: procesar", True, 0, saltado=True)
-        registrar("Atendidas: publicar", True, 0, saltado=True)
+        lock_reportes = threading.Lock()
+        resultados_hilos = {}
 
-    # ---- Pasos 7-8: Veredas (usa los mismos SAP/GAP de arriba) ----
-    if solo_ver or not algun_solo:
-        ok, seg = correr_paso(log, "Veredas AP — procesar", "procesar_diario.py", VEREDAS_DIR)
-        registrar("Veredas: procesar", ok, seg)
-        if not ok:
-            abortar("Veredas: procesar")
+        def _correr(nombre, cwd, prefijo):
+            resultados_hilos[nombre] = correr_pipeline_reporte(log, lock_reportes, nombre, cwd, prefijo, publicar)
 
-        if not publicar:
-            log.linea("\n    (modo prueba: --sin-publicar — se salta la publicación)")
-            registrar("Veredas: publicar", True, 0, saltado=True)
-        elif os.path.exists(os.path.join(VEREDAS_DIR, "config.json")):
-            ok, seg = correr_paso(log, "Veredas AP — publicar", "feed.py", VEREDAS_DIR)
-            registrar("Veredas: publicar", ok, seg)
-            if not ok:
-                abortar("Veredas: publicar")
-        else:
-            log.linea("\n    (no hay config.json en VEREDAS-LOCAL — se salta la publicación)")
-            registrar("Veredas: publicar", True, 0, saltado=True)
-    else:
-        registrar("Veredas: procesar", True, 0, saltado=True)
-        registrar("Veredas: publicar", True, 0, saltado=True)
+        hilos = [threading.Thread(target=_correr, args=(n, c, p), daemon=True) for n, c, p in specs_reportes]
+        for h in hilos:
+            h.start()
+        for h in hilos:
+            h.join()
+
+        fallo_reporte = None
+        for nombre, cwd, prefijo in specs_reportes:
+            r = resultados_hilos[nombre]
+            ok_p, seg_p = r["procesar"]
+            registrar(f"{nombre}: procesar", ok_p, seg_p)
+            if not ok_p:
+                if fallo_reporte is None:
+                    fallo_reporte = f"{nombre}: procesar"
+                registrar(f"{nombre}: publicar", True, 0, saltado=True)
+                continue
+            ok_pub, seg_pub, saltado_pub = r["publicar"]
+            registrar(f"{nombre}: publicar", ok_pub, seg_pub, saltado=saltado_pub)
+            if not ok_pub and fallo_reporte is None:
+                fallo_reporte = f"{nombre}: publicar"
+
+        if fallo_reporte:
+            abortar(fallo_reporte)
 
     resumen(pasos, log, ok_total=True)
     log.close()
