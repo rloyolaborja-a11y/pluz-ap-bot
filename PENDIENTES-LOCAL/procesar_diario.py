@@ -784,6 +784,14 @@ def main():
     filas_bd, ahora, reclamos_en_gap = procesar(df_gap, df_sap, requisito)
     print(f"Filas procesadas (ventana descargada): {len(filas_bd)}")
 
+    # (2026-09-22) "Última actualización" que se ve en la página ahora es la
+    # hora del Excel del GAP más reciente (el dato real que se está
+    # mostrando), no la hora en que terminó de correr todo el proceso -- es
+    # mas parecido a la hora real de los datos. IMPORTANTE: "ahora" (arriba)
+    # sigue siendo la hora real de este instante para todo lo que es CALCULO
+    # (vencimientos DP/FDP, duración, la libreta NO LEGAL) -- eso no cambia.
+    ultima_actualizacion = datetime.utcfromtimestamp(os.path.getmtime(gap_paths[0]))
+
     # LEGAL: todas las pendientes de la ventana de 3 meses. NO LEGAL: pasa por
     # la "libreta" acumulada para no perder pendientes más viejos que el Excel.
     filas_bd = aplicar_libreta_nodt(filas_bd, reclamos_en_gap, ahora)
@@ -792,16 +800,16 @@ def main():
     ruta_excel = guardar_excel_completo(filas_bd, ahora)
     print(f"Excel completo (con datos de cliente, solo local): {ruta_excel}")
 
-    ruta_json, n = guardar_json_publicar(filas_bd, ahora)
+    ruta_json, n = guardar_json_publicar(filas_bd, ultima_actualizacion)
     print(f"Listo para publicar, dashboard ({n} filas): {ruta_json}")
 
-    ruta_completa, n2 = guardar_json_completo(filas_bd, ahora)
+    ruta_completa, n2 = guardar_json_completo(filas_bd, ultima_actualizacion)
     print(f"Listo para publicar, BD completa/Buscar y exportar ({n2} filas): {ruta_completa}")
 
     print("Generando archivos recortados por contratista (aislamiento de datos)...")
-    for contratista, ruta, n in guardar_json_publicar_contratistas(filas_bd, ahora):
+    for contratista, ruta, n in guardar_json_publicar_contratistas(filas_bd, ultima_actualizacion):
         print(f"  {contratista}: dashboard ({n} filas): {ruta}")
-    for contratista, ruta, n in guardar_json_completo_contratistas(filas_bd, ahora):
+    for contratista, ruta, n in guardar_json_completo_contratistas(filas_bd, ultima_actualizacion):
         print(f"  {contratista}: BD completa ({n} filas): {ruta}")
 
     print("Ejecuta feed.py (o Ejecutar.bat, que ya lo hace) para subir todo a GitHub.")

@@ -844,6 +844,13 @@ def main():
     print(f"Tabla motivo->Tipo DT (de Pendientes): {len(mapa_deficiencia)} motivo(s)" if mapa_deficiencia
           else "AVISO: no se pudo leer data_requisito.json -- Tipo DT/LEGAL van a salir 'NO DT'/'NO' para todo.")
 
+    # (2026-09-22) "Última actualización" que se ve en la página = hora del
+    # Excel del GAP mas reciente (el mismo criterio que Pendientes/Veredas,
+    # para que las 3 paginas muestren la MISMA hora) -- no la hora en que
+    # termino de correr todo el proceso. "ahora" sigue siendo la hora real
+    # para todo lo que es CALCULO (duracion, archivado de meses, etc.).
+    ultima_actualizacion = datetime.utcfromtimestamp(os.path.getmtime(gab_paths[0]))
+
     df_gab = leer_gab_muchos(gab_paths)
     rows_publicas, rows_completas, ahora, stats = procesar(df_gab, maestros, correcciones, mapa_deficiencia, mapa_zona)
     print(f"Filas: total={stats['total']} -> ATENDIDA={stats['tras_estado']} -> "
@@ -885,16 +892,16 @@ def main():
             res = historico_lib.archivar_mes(HISTORICO_DIR, clave, pasado_por_mes[clave], id_login_de_contratista, ahora_iso)
             print(f"  {clave} ({res['label']}): {res['publicas']} filas archivadas (ya mezcladas con lo que hubiera antes)")
 
-    ruta_json, n = guardar_json_publicar(actual_publicas, ahora)
+    ruta_json, n = guardar_json_publicar(actual_publicas, ultima_actualizacion)
     print(f"Listo para publicar - dashboard, mes actual ({n} filas): {ruta_json}")
 
-    ruta_completa, n_completa = guardar_json_completo(actual_completas, ahora)
+    ruta_completa, n_completa = guardar_json_completo(actual_completas, ultima_actualizacion)
     print(f"Listo para publicar - BD completa/Buscar y exportar, mes actual ({n_completa} filas): {ruta_completa}")
 
     print("Generando archivos recortados por contratista (aislamiento de datos)...")
-    for contratista, ruta, n in guardar_json_publicar_contratistas(actual_publicas, ahora):
+    for contratista, ruta, n in guardar_json_publicar_contratistas(actual_publicas, ultima_actualizacion):
         print(f"  {contratista}: dashboard ({n} filas): {ruta}")
-    for contratista, ruta, n in guardar_json_completo_contratistas(actual_completas, ahora):
+    for contratista, ruta, n in guardar_json_completo_contratistas(actual_completas, ultima_actualizacion):
         print(f"  {contratista}: BD completa ({n} filas): {ruta}")
 
     generar_indice_correcciones(script_url)

@@ -298,11 +298,20 @@ def main():
     ruta_excel = guardar_excel_completo(filas, ahora)
     print(f"Excel (solo local): {ruta_excel}")
 
-    ruta_json, n = guardar_json_publicar(filas, ahora)
+    # (2026-09-22) "Última actualización" = hora del Excel del GAP mas
+    # reciente (mismo criterio que Pendientes/Atendidas, para que las 3
+    # paginas muestren la MISMA hora). Si no hay GAP disponible (es
+    # opcional aca, solo se usa para completar Distrito), se cae a la hora
+    # real de ahora como respaldo.
+    ultima_actualizacion = (
+        datetime.utcfromtimestamp(os.path.getmtime(gap_paths[0])) if gap_paths else ahora
+    )
+
+    ruta_json, n = guardar_json_publicar(filas, ultima_actualizacion)
     print(f"Listo para publicar, dashboard/exportar ({n} filas): {ruta_json}")
 
     print("Generando archivos recortados por contratista (aislamiento de datos)...")
-    for contratista, ruta, n in guardar_json_publicar_contratistas(filas, ahora):
+    for contratista, ruta, n in guardar_json_publicar_contratistas(filas, ultima_actualizacion):
         print(f"  {contratista}: {n} filas: {ruta}")
 
     print("Ejecuta feed.py (o Ejecutar.bat, que ya lo hace) para publicar.")
