@@ -24,6 +24,7 @@ carpeta de reporte.
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 import time
@@ -65,46 +66,85 @@ def _verificar_repo() -> None:
         raise RuntimeError(f"{CLON_DIR} no es un repositorio git valido: {salida}")
 
 
+_LOCK_PATH = CLON_DIR.parent / ".publicar.lock"
+_LOCK_TIMEOUT_SEG = 180  # si un candado queda "colgado" mas que esto, se pisa
+
+
+def _adquirir_lock() -> None:
+    """Candado de archivo simple -- necesario porque Pendientes/Atendidas/
+    Veredas ahora publican EN PARALELO (procesos de Python separados, no
+    hilos del mismo proceso) al MISMO clon local. Sin esto, dos `git`
+    corriendo a la vez sobre la misma carpeta se pisan entre si (o tiran
+    "Unable to create '.git/index.lock'"). Si dos procesos llegan juntos,
+    el segundo espera a que el primero termine, en vez de fallar."""
+    t0 = time.time()
+    while True:
+        try:
+            fd = os.open(str(_LOCK_PATH), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            os.close(fd)
+            return
+        except FileExistsError:
+            if time.time() - t0 > _LOCK_TIMEOUT_SEG:
+                # Candado viejo (algun proceso murio sin liberarlo) -- se pisa
+                # para no bloquear publicaciones para siempre.
+                try:
+                    _LOCK_PATH.unlink()
+                except Exception:
+                    pass
+                continue
+            time.sleep(1)
+
+
+def _liberar_lock() -> None:
+    try:
+        _LOCK_PATH.unlink()
+    except Exception:
+        pass
+
+
 def publicar_commit_git(archivos, mensaje: str) -> dict:
     """archivos: lista de (path_remoto, contenido_bytes) -- path_remoto
     relativo a la raiz del repo (ej. "atendidas/data/a/bd_actual.json").
     Escribe cada archivo en el clon local, hace add/commit/push. Si no hay
     nada nuevo para subir, no falla -- avisa {"publicado": False}."""
     _verificar_repo()
+    _adquirir_lock()
+    try:
+        # Traer lo ultimo antes de escribir -- los 3 reportes (y otras PCs)
+        # publican al mismo repo, mejor partir de la punta actual para no
+        # terminar con un push rechazado por "no fast-forward".
+        codigo, salida = _git("pull", "--rebase", "origin", "main", timeout=60)
+        if codigo != 0:
+            raise RuntimeError(f"git pull (antes de publicar) fallo: {salida}")
 
-    # Traer lo ultimo antes de escribir -- los 3 reportes (y otras PCs)
-    # publican al mismo repo, mejor partir de la punta actual para no
-    # terminar con un push rechazado por "no fast-forward".
-    codigo, salida = _git("pull", "--rebase", "origin", "main", timeout=60)
-    if codigo != 0:
-        raise RuntimeError(f"git pull (antes de publicar) fallo: {salida}")
+        rutas_repo = []
+        for path_remoto, contenido in archivos:
+            destino = CLON_DIR / path_remoto
+            destino.parent.mkdir(parents=True, exist_ok=True)
+            destino.write_bytes(contenido)
+            rutas_repo.append(path_remoto)
 
-    rutas_repo = []
-    for path_remoto, contenido in archivos:
-        destino = CLON_DIR / path_remoto
-        destino.parent.mkdir(parents=True, exist_ok=True)
-        destino.write_bytes(contenido)
-        rutas_repo.append(path_remoto)
+        codigo, salida = _git("add", "--", *rutas_repo)
+        if codigo != 0:
+            raise RuntimeError(f"git add fallo: {salida}")
 
-    codigo, salida = _git("add", "--", *rutas_repo)
-    if codigo != 0:
-        raise RuntimeError(f"git add fallo: {salida}")
-
-    codigo, salida = _git("diff", "--cached", "--quiet")
-    if codigo == 0:
-        return {"publicado": False}
-
-    codigo, salida = _git("commit", "-m", mensaje)
-    if codigo != 0:
-        raise RuntimeError(f"git commit fallo: {salida}")
-
-    ultimo_error = None
-    for intento in range(1, REINTENTOS_PUSH + 1):
-        codigo, salida = _git("push", "origin", "HEAD:main", timeout=120)
+        codigo, salida = _git("diff", "--cached", "--quiet")
         if codigo == 0:
-            return {"publicado": True, "commit": salida}
-        ultimo_error = salida
-        print(f"    (git push) intento {intento}/{REINTENTOS_PUSH} fallo: {salida}")
-        if intento < REINTENTOS_PUSH:
-            time.sleep(ESPERA_ENTRE_REINTENTOS_SEG)
-    raise RuntimeError(f"git push fallo despues de {REINTENTOS_PUSH} intentos: {ultimo_error}")
+            return {"publicado": False}
+
+        codigo, salida = _git("commit", "-m", mensaje)
+        if codigo != 0:
+            raise RuntimeError(f"git commit fallo: {salida}")
+
+        ultimo_error = None
+        for intento in range(1, REINTENTOS_PUSH + 1):
+            codigo, salida = _git("push", "origin", "HEAD:main", timeout=120)
+            if codigo == 0:
+                return {"publicado": True, "commit": salida}
+            ultimo_error = salida
+            print(f"    (git push) intento {intento}/{REINTENTOS_PUSH} fallo: {salida}")
+            if intento < REINTENTOS_PUSH:
+                time.sleep(ESPERA_ENTRE_REINTENTOS_SEG)
+        raise RuntimeError(f"git push fallo despues de {REINTENTOS_PUSH} intentos: {ultimo_error}")
+    finally:
+        _liberar_lock()
