@@ -372,15 +372,12 @@ def main():
             log.linea("    y los diagnósticos DENTRO de la VM: %USERPROFILE%\\GAP_RPA_Excel\\diagnosticos")
         abortar(fallo_desc)
 
-    # ---- Pasos 3-8: Pendientes PRIMERO, despues Atendidas + Veredas EN PARALELO ----
-    # (2026-09-22) Antes corrian uno atras del otro (Pendientes, Atendidas,
-    # Veredas). Se paso a que los 3 corrieran en paralelo entre si.
-    # (2026-09-23, a pedido de la usuaria) Pendientes es la pagina que MAS se
-    # necesita actualizada rapido -- se prioriza corriendola SOLA primero (sin
-    # competir con las otras 2 por CPU/red/git), y RECIEN cuando termina se
-    # largan Atendidas y Veredas juntas en paralelo (como ya se hacia). Si
-    # Pendientes falla, igual se intenta con Atendidas/Veredas -- una falla
-    # de Pendientes no debe dejar a las otras 2 sin actualizar.
+    # ---- Pasos 3-8: Pendientes + Atendidas + Veredas, EN PARALELO ----
+    # (2026-09-22) Antes corrian uno atras del otro (procesar+publicar de
+    # Pendientes, despues Atendidas, despues Veredas). Ahora cada uno corre
+    # en su propio hilo, procesando y publicando por su cuenta apenas
+    # termina -- sin esperar a los otros dos. La publicacion por git tiene
+    # su propio candado (ver publicar_datos_git.py) para no pisarse.
     TODOS_LOS_REPORTES = [
         ("Pendientes", PENDIENTES_DIR, "[PEND] ", solo_pend),
         ("Atendidas", ATENDIDAS_DIR, "[ATEN] ", solo_aten),
@@ -394,33 +391,22 @@ def main():
         registrar(f"{nombre}: publicar", True, 0, saltado=True)
 
     if specs_reportes:
+        log.linea()
+        log.linea("=" * 70)
+        log.linea(">>> " + "  +  ".join(f"{n}: procesar + publicar" for n, _, _ in specs_reportes) + "   (EN PARALELO)")
+        log.linea("=" * 70)
+
         lock_reportes = threading.Lock()
         resultados_hilos = {}
 
         def _correr(nombre, cwd, prefijo):
             resultados_hilos[nombre] = correr_pipeline_reporte(log, lock_reportes, nombre, cwd, prefijo, publicar)
 
-        specs_pendientes = [s for s in specs_reportes if s[0] == "Pendientes"]
-        specs_resto = [s for s in specs_reportes if s[0] != "Pendientes"]
-
-        if specs_pendientes:
-            log.linea()
-            log.linea("=" * 70)
-            log.linea(">>> Pendientes: procesar + publicar   (PRIMERO -- es lo que mas se necesita)")
-            log.linea("=" * 70)
-            n, c, p = specs_pendientes[0]
-            _correr(n, c, p)  # sin hilo -- corre sola, bloqueante, antes que las demas
-
-        if specs_resto:
-            log.linea()
-            log.linea("=" * 70)
-            log.linea(">>> " + "  +  ".join(f"{n}: procesar + publicar" for n, _, _ in specs_resto) + "   (EN PARALELO)")
-            log.linea("=" * 70)
-            hilos = [threading.Thread(target=_correr, args=(n, c, p), daemon=True) for n, c, p in specs_resto]
-            for h in hilos:
-                h.start()
-            for h in hilos:
-                h.join()
+        hilos = [threading.Thread(target=_correr, args=(n, c, p), daemon=True) for n, c, p in specs_reportes]
+        for h in hilos:
+            h.start()
+        for h in hilos:
+            h.join()
 
         fallo_reporte = None
         for nombre, cwd, prefijo in specs_reportes:
