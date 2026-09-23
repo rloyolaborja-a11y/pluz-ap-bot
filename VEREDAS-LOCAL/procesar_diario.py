@@ -37,7 +37,7 @@ import os
 import re
 import sys
 import unicodedata
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 try:
     import pandas as pd
@@ -272,14 +272,22 @@ def guardar_json_publicar_contratistas(filas, ahora):
     return resultados
 
 
+# (2026-09-23) Igual fix que en PENDIENTES-LOCAL/procesar_diario.py: el
+# bloque 1 de SAP baja los ultimos RANGO_DIAS_BLOQUE_1 dias RODANTES desde
+# hoy, NO "el mes calendario actual" -- hay que comparar contra eso, no
+# contra mes/año.
+RANGO_DIAS_BLOQUE_1 = 30
+
+
 def generar_lista_odm_vigilar(filas, ahora, ruta=ODM_VIGILAR_PATH):
     """Igual criterio que Pendientes (ver PENDIENTES-LOCAL/procesar_diario.py):
-    los pendientes de Veredas cuya 'Fecha de creación' cae FUERA del mes
-    actual no van a aparecer si el bloque 1 de SAP solo baja el mes actual --
-    hay que vigilarlos por su Orden para que el bloque 2 los busque en la
-    corrida siguiente. Todos los pendientes de Veredas YA tienen Orden (son
-    filas de SAP), asi que a diferencia de Pendientes no hace falta filtrar
-    por "sin ODM"."""
+    los pendientes de Veredas cuya 'Fecha de creación' cae FUERA de la
+    ventana rodante de RANGO_DIAS_BLOQUE_1 dias no van a aparecer en el
+    bloque 1 de SAP -- hay que vigilarlos por su Orden para que el bloque 2
+    los busque en la corrida siguiente. Todos los pendientes de Veredas YA
+    tienen Orden (son filas de SAP), asi que a diferencia de Pendientes no
+    hace falta filtrar por "sin ODM"."""
+    corte_bloque_1 = ahora - timedelta(days=RANGO_DIAS_BLOQUE_1)
     ordenes = []
     vistos = set()
     for fila in filas:
@@ -289,8 +297,8 @@ def generar_lista_odm_vigilar(filas, ahora, ruta=ODM_VIGILAR_PATH):
         f_creacion = fila.get("Fecha de creación")
         if not isinstance(f_creacion, (datetime, pd.Timestamp)):
             continue
-        if f_creacion.year == ahora.year and f_creacion.month == ahora.month:
-            continue  # dentro del mes actual -- ya lo trae el bloque 1
+        if f_creacion >= corte_bloque_1:
+            continue  # dentro de la ventana rodante de 30 dias -- ya lo trae el bloque 1
         clave = clave_busqueda(orden)
         if clave == "" or clave in vistos:
             continue

@@ -764,6 +764,18 @@ def aplicar_libreta_nodt(filas_bd, reclamos_en_gap, ahora):
     return filas_legal + nodt_finales
 
 
+# (2026-09-23) BUG encontrado por la usuaria: el bloque 1 de SAP NO baja "el
+# mes calendario actual" -- baja los ultimos RANGO_DIAS_BLOQUE_1 dias RODANTES
+# desde hoy (ver RANGO_DIAS en RPA-SAP-LOCAL/descargar_excel_sap.py). Un caso
+# del 26-27 de agosto, visto desde el 23 de septiembre, todavia esta DENTRO
+# de esa ventana rodante de 30 dias (24 ago - 23 sep) aunque sea "mes
+# calendario distinto" -- filtrar por mes calendario los marcaba como "fuera
+# de rango" por error, cuando el bloque 1 ya los iba a traer solo. Debe ser
+# el MISMO numero que RANGO_DIAS alla (se duplica el valor a proposito: este
+# archivo no depende del de RPA-SAP-LOCAL).
+RANGO_DIAS_BLOQUE_1 = 30
+
+
 def generar_lista_odm_vigilar(filas_bd, ahora, ruta=ODM_VIGILAR_PATH):
     """Arma la lista de ODMs "a vigilar" para el bloque 2 de SAP (selección
     múltiple) de la SIGUIENTE corrida -- ver conversación 2026-09-23.
@@ -774,13 +786,15 @@ def generar_lista_odm_vigilar(filas_bd, ahora, ruta=ODM_VIGILAR_PATH):
       - YA tienen ODM asignado en SAP (si no, se saltan esta vez: SAP
         recién les va a generar el ODM en 1-2 min, para la corrida de
         MAÑANA el GAP ya los va a traer con ODM),
-      - y caen FUERA del mes actual (los del mes actual ya los trae el
-        bloque 1 normal -- buscarlos también acá sería tiempo perdido),
+      - y caen FUERA de los ultimos RANGO_DIAS_BLOQUE_1 dias (los de esa
+        ventana rodante ya los trae el bloque 1 normal -- buscarlos también
+        acá sería tiempo perdido),
       - y no son "_sinConfirmar" de la libreta (no vistos en el GAP de
         esta corrida -- no hay certeza de que sigan realmente pendientes).
 
     No decide nada de pendiente/atendida (eso lo sigue haciendo el GAP) --
     es solo la lista de qué ODMs puntuales buscar en el bloque 2."""
+    corte_bloque_1 = ahora - timedelta(days=RANGO_DIAS_BLOQUE_1)
     ordenes = []
     vistos = set()
     for fila in filas_bd:
@@ -792,8 +806,8 @@ def generar_lista_odm_vigilar(filas_bd, ahora, ruta=ODM_VIGILAR_PATH):
         fecha_registro = fila.get("SAP - Fecha de registro")
         if not isinstance(fecha_registro, (datetime, pd.Timestamp)):
             continue
-        if fecha_registro.year == ahora.year and fecha_registro.month == ahora.month:
-            continue  # dentro del mes actual -- ya lo trae el bloque 1
+        if fecha_registro >= corte_bloque_1:
+            continue  # dentro de la ventana rodante de 30 dias -- ya lo trae el bloque 1
         clave = clave_busqueda(odm)
         if clave == "" or clave in vistos:
             continue
