@@ -20,6 +20,7 @@ CARGA/
 **/HISTORICO/
 **/EXCEL-MESES-ANTERIORES/
 PENDIENTES-LOCAL/HISTORICO-NODT/
+PENDIENTES-LOCAL/pendientes_odm_vigilar.json
 **/logs/
 **/runs/
 **/_diagnosticos/

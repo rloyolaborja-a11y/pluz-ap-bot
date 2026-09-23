@@ -41,6 +41,10 @@ REQUISITO_PATH = os.path.join(BASE_DIR, "REQUISITO", "data_requisito.json")
 PENDIENTE_PUBLICAR = os.path.join(SALIDA_DIR, "bd_actual.json")
 # "Libreta" acumulada de pendientes NO DT (ver historico_pendientes.py).
 HIST_NODT_DIR = os.path.join(BASE_DIR, "HISTORICO-NODT")
+# (2026-09-23) Lista de ODMs "a vigilar" para el bloque 2 de SAP (ver
+# generar_lista_odm_vigilar): la lee descargar_excel_sap.py en la SIGUIENTE
+# corrida, no en esta.
+ODM_VIGILAR_PATH = os.path.join(BASE_DIR, "pendientes_odm_vigilar.json")
 
 # Mismo orden en que aparecen estas columnas en el Excel grande (reducido)
 # que se sube hoy — así el Excel que se descarga en SALIDA\ sale con las
@@ -760,6 +764,48 @@ def aplicar_libreta_nodt(filas_bd, reclamos_en_gap, ahora):
     return filas_legal + nodt_finales
 
 
+def generar_lista_odm_vigilar(filas_bd, ahora, ruta=ODM_VIGILAR_PATH):
+    """Arma la lista de ODMs "a vigilar" para el bloque 2 de SAP (selección
+    múltiple) de la SIGUIENTE corrida -- ver conversación 2026-09-23.
+
+    Solo entran los casos que:
+      - siguen pendientes según esta corrida (ya están en filas_bd, la
+        lista final a publicar -- LEGAL ventana + NO LEGAL libreta),
+      - YA tienen ODM asignado en SAP (si no, se saltan esta vez: SAP
+        recién les va a generar el ODM en 1-2 min, para la corrida de
+        MAÑANA el GAP ya los va a traer con ODM),
+      - y caen FUERA del mes actual (los del mes actual ya los trae el
+        bloque 1 normal -- buscarlos también acá sería tiempo perdido),
+      - y no son "_sinConfirmar" de la libreta (no vistos en el GAP de
+        esta corrida -- no hay certeza de que sigan realmente pendientes).
+
+    No decide nada de pendiente/atendida (eso lo sigue haciendo el GAP) --
+    es solo la lista de qué ODMs puntuales buscar en el bloque 2."""
+    ordenes = []
+    vistos = set()
+    for fila in filas_bd:
+        if fila.get("_sinConfirmar"):
+            continue
+        odm = fila.get("ODM")
+        if not odm or odm == "SIN ODM":
+            continue
+        fecha_registro = fila.get("SAP - Fecha de registro")
+        if not isinstance(fecha_registro, (datetime, pd.Timestamp)):
+            continue
+        if fecha_registro.year == ahora.year and fecha_registro.month == ahora.month:
+            continue  # dentro del mes actual -- ya lo trae el bloque 1
+        clave = clave_busqueda(odm)
+        if clave == "" or clave in vistos:
+            continue
+        vistos.add(clave)
+        ordenes.append(clave)
+
+    payload = {"generado": iso_js(ahora), "ordenes": ordenes}
+    with open(ruta, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+    return ruta, len(ordenes)
+
+
 def main():
     print("=== Reporte de Pendientes AP — procesamiento local ===")
     gap_paths = todos_los_excel(GAP_DIR)
@@ -796,6 +842,9 @@ def main():
     # la "libreta" acumulada para no perder pendientes más viejos que el Excel.
     filas_bd = aplicar_libreta_nodt(filas_bd, reclamos_en_gap, ahora)
     print(f"Filas a publicar (LEGAL ventana + NO LEGAL libreta): {len(filas_bd)}")
+
+    ruta_odm, n_odm = generar_lista_odm_vigilar(filas_bd, ahora)
+    print(f"Lista de ODMs a vigilar (bloque 2 SAP, próxima corrida): {n_odm} orden(es) -> {ruta_odm}")
 
     ruta_excel = guardar_excel_completo(filas_bd, ahora)
     print(f"Excel completo (con datos de cliente, solo local): {ruta_excel}")
