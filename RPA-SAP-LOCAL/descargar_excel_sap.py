@@ -1577,8 +1577,19 @@ def main() -> None:
         except KeyboardInterrupt:
             sys.exit("\nCancelado por el usuario.")
         except Exception as error:
-            if intento < MAX_INTENTOS_CORRIDA and _es_crash_navegador(error):
-                print(f"\n(el navegador/driver de Playwright se cayo: {error})")
+            # (2026-09-21) BUG real encontrado: "El portal SAP no cargo
+            # dentro del tiempo esperado" (SAP/la red lenta un rato, sin que
+            # el navegador se cayera) es un PlaywrightTimeoutError comun,
+            # NO un choque de navegador -- _es_crash_navegador() no lo
+            # reconocia, asi que nunca entraba al reintento aunque fuera
+            # justo el tipo de falla pasajera que un reintento resuelve
+            # solo (visto en 2 corridas automaticas seguidas el mismo dia).
+            # Ahora tambien se reintenta ante CUALQUIER timeout de
+            # Playwright, no solo los choques de navegador.
+            es_timeout = isinstance(error, PlaywrightTimeoutError)
+            if intento < MAX_INTENTOS_CORRIDA and (_es_crash_navegador(error) or es_timeout):
+                motivo = "se cayo el navegador/driver" if not es_timeout else "timeout esperando a SAP"
+                print(f"\n({motivo}: {error})")
                 print(f"Reintento {intento + 1}/{MAX_INTENTOS_CORRIDA} en 15s — "
                       "retomo desde la(s) ventana(s) que falten…")
                 time.sleep(15)
