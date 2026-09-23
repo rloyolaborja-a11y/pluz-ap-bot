@@ -257,6 +257,7 @@ def correr_pasos_en_paralelo(log, specs):
 
 
 def main():
+    t0_corrida = time.time()
     argv = set(sys.argv[1:])
     saltar_sap = "--saltar-sap" in argv or "--saltar-descargas" in argv
     saltar_gap = "--saltar-gap" in argv or "--saltar-descargas" in argv
@@ -325,7 +326,7 @@ def main():
         log.linea(f"!  SE DETUVO: fallo el paso '{titulo_fallo}'.")
         log.linea("!  No se siguió con los pasos siguientes (la data quedaría incompleta).")
         log.linea("!" * 70)
-        resumen(pasos, log, ok_total=False)
+        resumen(pasos, log, ok_total=False, seg_total=time.time() - t0_corrida)
         log.close()
         sys.exit(1)
 
@@ -426,11 +427,15 @@ def main():
         if fallo_reporte:
             abortar(fallo_reporte)
 
-    resumen(pasos, log, ok_total=True)
+    resumen(pasos, log, ok_total=True, seg_total=time.time() - t0_corrida)
     log.close()
 
 
-def resumen(pasos, log, ok_total):
+def _fmt_dur(seg):
+    return f"{seg/60:.0f}m{seg%60:02.0f}s" if seg >= 60 else f"{seg:.0f}s"
+
+
+def resumen(pasos, log, ok_total, seg_total=None):
     log.linea()
     log.linea("======================= RESUMEN =======================")
     for titulo, ok, seg, saltado in pasos:
@@ -440,13 +445,16 @@ def resumen(pasos, log, ok_total):
             estado = "[OK]     "
         else:
             estado = "[FALLO]  "
-        t = f"{seg/60:.0f}m{seg%60:02.0f}s" if seg >= 60 else f"{seg:.0f}s"
-        log.linea(f"  {estado} {titulo:<32} {t:>8}")
+        log.linea(f"  {estado} {titulo:<32} {_fmt_dur(seg):>8}")
     log.linea("======================================================")
+    # (2026-09-23) A pedido de la usuaria: mostrar cuanto demoro la corrida
+    # COMPLETA al costado de "TODO OK" -- antes solo se veia el tiempo de
+    # cada paso suelto, no el total de punta a punta.
+    tiempo_total = f" (demoró {_fmt_dur(seg_total)})" if seg_total is not None else ""
     if ok_total:
-        log.linea("  TODO OK. El sitio (Vercel/Drive) muestra los datos nuevos en 1-2 min.")
+        log.linea(f"  TODO OK{tiempo_total}. El sitio (Vercel/Drive) muestra los datos nuevos en 1-2 min.")
     else:
-        log.linea("  QUEDÓ A MEDIAS. Revisá el paso [FALLO] de arriba.")
+        log.linea(f"  QUEDÓ A MEDIAS{tiempo_total}. Revisá el paso [FALLO] de arriba.")
     log.linea(f"  Log completo: {log.ruta}")
 
 

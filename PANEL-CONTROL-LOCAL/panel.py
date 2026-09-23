@@ -133,6 +133,45 @@ def flags_ejecutar_todo(cfg):
     return args
 
 
+# (2026-09-23) A pedido de la usuaria: mostrar en el panel cuántos meses de
+# GAP hacen falta de verdad para no perder confirmación de ningún pendiente
+# viejo. IMPORTANTE (corregido en vivo con la usuaria): NO alcanza con mirar
+# solo los "LEGAL" -- un NO LEGAL viejo que ya no entra en el rango del GAP
+# NO se pierde de la página, pero queda marcado "_sinConfirmar" PARA SIEMPRE
+# (ver historico_pendientes.mezclar): nunca más se puede confirmar si de
+# verdad sigue abierto o ya se cerró. Por eso la métrica correcta es la edad
+# del caso MÁS VIEJO que la corrida actual todavía puede confirmar bien
+# (LEGAL, que siempre se reconfirma; o NO LEGAL con _sinConfirmar=False) --
+# ese es el mínimo de meses de GAP para no empezar a acumular "sin confirmar".
+def meses_gap_sugeridos():
+    ruta = RAIZ / "PENDIENTES-LOCAL" / "SALIDA" / "bd_completa.json"
+    try:
+        rows = json.loads(ruta.read_text(encoding="utf-8"))["rows"]
+    except Exception:
+        return {"disponible": False}
+
+    def _parse(s):
+        try:
+            return datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S")
+        except Exception:
+            return None
+
+    activos = [r for r in rows if r.get("LEGAL") == "SI" or not r.get("_sinConfirmar")]
+    fechas = [f for f in (_parse(r.get("SAP - Fecha de registro")) for r in activos) if f]
+    if not fechas:
+        return {"disponible": False}
+
+    dias = (datetime.utcnow() - min(fechas)).days
+    meses = max(1, -(-dias // 30))  # ceil sin importar math
+    sin_confirmar = sum(1 for r in rows if r.get("_sinConfirmar"))
+    return {
+        "disponible": True,
+        "dias_caso_mas_viejo": dias,
+        "meses_sugeridos": meses,
+        "casos_sin_confirmar": sin_confirmar,
+    }
+
+
 def tick_latido_iso():
     try:
         return json.loads(TICK_LATIDO_PATH.read_text(encoding="utf-8-sig")).get("ultimo")
@@ -827,6 +866,9 @@ class Handler(BaseHTTPRequestHandler):
 
         if ruta == "/api/config":
             return self._json(cargar_config())
+
+        if ruta == "/api/meses-gap-sugeridos":
+            return self._json(meses_gap_sugeridos())
 
         if ruta == "/api/gap-ruta":
             actual = ""

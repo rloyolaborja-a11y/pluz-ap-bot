@@ -47,6 +47,7 @@
   .row{display:flex;flex-wrap:wrap;gap:20px 30px;align-items:flex-end}
   .field{display:flex;flex-direction:column;gap:7px}
   .field label{font-size:12px;color:var(--ink-soft);font-weight:600}
+  .field .muted{color:var(--ink-soft);font-size:11.5px;max-width:260px;line-height:1.4}
   .checks{display:flex;gap:16px;flex-wrap:wrap}
   .checks label{display:flex;gap:7px;align-items:center;font-weight:500;cursor:pointer}
   select{font:inherit;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--ink)}
@@ -135,6 +136,7 @@
             <option>1</option><option>2</option><option selected>3</option>
             <option>4</option><option>5</option><option>6</option>
           </select>
+          <small id="meses-sugerido" class="muted"></small>
         </div>
         <div class="field">
           <label>Opciones</label>
@@ -511,7 +513,25 @@ document.querySelectorAll(".rep,#meses,#prueba,#silencioso").forEach(el => el.ad
     $("#prueba").checked = !!c.prueba;
   }catch(e){}
   refrescarEstado(); refrescarHistorial(); pollLog();
+  cargarMesesSugeridos();
 })();
+
+// (2026-09-23) Sugerencia de cuántos meses de GAP hacen falta de verdad, para
+// no perder confirmación de ningún pendiente viejo (ver meses_gap_sugeridos
+// en panel.py: NO alcanza con mirar los "LEGAL" solos -- un NO LEGAL que se
+// queda sin confirmar por falta de rango no se borra de la página, pero
+// nunca más se puede saber si de verdad sigue abierto).
+async function cargarMesesSugeridos(){
+  const el = $("#meses-sugerido");
+  if (!el) return;
+  try{
+    const d = await (await fetch("/api/meses-gap-sugeridos")).json();
+    if (!d.disponible){ el.textContent = ""; return; }
+    let texto = `Sugerido: ${d.meses_sugeridos} mes(es) — el pendiente más viejo que hoy se sigue confirmando bien tiene ${d.dias_caso_mas_viejo} días.`;
+    if (d.casos_sin_confirmar > 0) texto += ` ⚠ ${d.casos_sin_confirmar} caso(s) ya sin confirmar.`;
+    el.textContent = texto;
+  }catch(e){ el.textContent = ""; }
+}
 /* ---- acciones sueltas ---- */
 document.querySelectorAll(".acc-grid button").forEach(b => b.onclick = async () => {
   const accion = b.dataset.accion;
