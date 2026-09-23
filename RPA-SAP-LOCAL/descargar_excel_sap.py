@@ -249,6 +249,11 @@ IW39_URL_DIRECTA = "https://pluz-peru-portal-prd.workzonehr.cfapps.br10.hana.ond
 
 BASE_DIR = Path(__file__).resolve().parent
 CARGA_SAP_DIR = BASE_DIR.parent / "CARGA" / "SAP"
+# (2026-09-23) Lista de ODMs "a vigilar" que genera PENDIENTES-LOCAL\
+# procesar_diario.py al final de CADA corrida (ver generar_lista_odm_vigilar
+# ahi) -- son pendientes que se escapan del mes actual pero YA tienen ODM.
+# Se lee ACA, en la corrida SIGUIENTE, para el bloque 2 (seleccion multiple).
+PENDIENTES_ODM_VIGILAR_PATH = BASE_DIR.parent / "PENDIENTES-LOCAL" / "pendientes_odm_vigilar.json"
 DIAG_BASE_DIR = Path.home() / "SAP_RPA_Excel"
 # (2026-09-18) El antivirus/EDR corporativo que mata el navegador a mitad de
 # la descarga de SAP es INTERMITENTE y, por lo que se vio en la practica, no
@@ -743,6 +748,106 @@ async def llenar_campo_por_titulo(frame: Frame, selectores: Iterable[str], valor
     await campo.fill(valor)
 
 
+def _leer_odms_a_vigilar() -> list[str]:
+    """Lee la lista de ODMs a vigilar (bloque 2) que dejo la corrida anterior
+    de Pendientes. Si el archivo no existe o esta vacio/corrupto, devuelve
+    lista vacia -- el bloque 2 simplemente no se corre esa vez (no es un
+    error: puede ser la primera corrida, o Pendientes no corrio antes)."""
+    import json as _json
+    try:
+        data = _json.loads(PENDIENTES_ODM_VIGILAR_PATH.read_text(encoding="utf-8"))
+        ordenes = data.get("ordenes") or []
+        return [str(o).strip() for o in ordenes if str(o).strip()]
+    except Exception:
+        return []
+
+
+CAMPO_ORDEN_SELECTORES = [
+    "input[title='Orden']:not([readonly])",
+    "input[title='Orden:']:not([readonly])",
+    "input[title*='Orden' i]:not([readonly])",
+]
+
+
+async def seleccionar_multiples_ordenes(frame: Frame, page: Page, odms: list[str]) -> None:
+    """Abre 'Selección múltiple' del campo Orden y carga la lista de ODMs
+    (uno por fila) via el icono de pegar de SAP -- ver la investigacion
+    completa (con capturas reales) en _prueba_bloque_odm.py. Puntos clave
+    que costaron varias iteraciones en vivo:
+      - El icono de 'Selección múltiple' se ubica por POSICION (misma Y que
+        el input 'Orden'), no por texto/orden en el HTML -- hay ~20 iconos
+        con el mismo titulo en la pantalla, uno por cada campo.
+      - El popup NO esta aislado por frame_with() -- SAP GUI clasico lo
+        pinta en el mismo frame de toda la pagina, asi que los selectores
+        genericos (input:visible, etc.) pueden matchear la pantalla de
+        FONDO. Por eso todo se ubica por posicion relativa a un landmark
+        unico ("Valor indiv.").
+      - Pegar es con el icono 'Upload del portapapeles', NO Ctrl+V.
+      - Confirmar es F8 a nivel de pagina, pero DESPUES de sacar el foco del
+        campo de texto recien pegado (si no, F8 se va a la barra de
+        direcciones del navegador en vez de al dialogo de SAP)."""
+    campo_orden = await first_visible(frame, CAMPO_ORDEN_SELECTORES, TIMEOUT_MS)
+    caja_orden = await campo_orden.bounding_box()
+    if caja_orden is None:
+        raise RuntimeError("No pude leer la posicion del campo 'Orden'.")
+
+    candidatos = frame.locator("[role='button'][title*='ltiple' i]")
+    total_candidatos = await candidatos.count()
+    boton_multiple = None
+    for i in range(total_candidatos):
+        c = candidatos.nth(i)
+        caja_c = await c.bounding_box()
+        if caja_c is None:
+            continue
+        if abs(caja_c["y"] - caja_orden["y"]) < 15 and caja_c["x"] > caja_orden["x"]:
+            boton_multiple = c
+            break
+    if boton_multiple is None:
+        raise RuntimeError("No encontre el icono de seleccion multiple en la fila de 'Orden'.")
+    await boton_multiple.click(timeout=15_000)
+    await page.wait_for_timeout(800)
+
+    frame_popup = await frame_with(page, "text=Selección múltiple", TIMEOUT_MS)
+
+    await page.context.grant_permissions(["clipboard-read", "clipboard-write"])
+    await page.evaluate("(t) => navigator.clipboard.writeText(t)", "\n".join(odms))
+
+    encabezado = frame_popup.get_by_text("Valor indiv.", exact=False).first
+    caja_encabezado = await encabezado.bounding_box()
+    if caja_encabezado is None:
+        raise RuntimeError("No encontre el encabezado 'Valor indiv.' del dialogo.")
+
+    todos_los_inputs = frame_popup.locator("input:visible:not([readonly])")
+    total_inputs = await todos_los_inputs.count()
+    primer_campo = None
+    for i in range(total_inputs):
+        candidato = todos_los_inputs.nth(i)
+        caja_c = await candidato.bounding_box()
+        if caja_c is None:
+            continue
+        mismo_x = abs(caja_c["x"] - caja_encabezado["x"]) < 150
+        debajo = caja_c["y"] > caja_encabezado["y"] and caja_c["y"] < caja_encabezado["y"] + 80
+        if mismo_x and debajo:
+            primer_campo = candidato
+            break
+    if primer_campo is None:
+        raise RuntimeError("No encontre el campo 'Valor indiv.' cerca de su encabezado.")
+    await primer_campo.click()
+
+    icono_pegar = frame_popup.locator("[role='button'][title*='Upload del portapapeles' i]").first
+    await icono_pegar.click(timeout=15_000)
+    await page.wait_for_timeout(800)
+
+    espacio_en_blanco = frame_popup.locator("input:visible:not([readonly])").nth(2)
+    try:
+        await espacio_en_blanco.click(timeout=5_000)
+    except Exception:
+        await page.mouse.click(caja_encabezado["x"] + 400, caja_encabezado["y"] + 60)
+    await page.wait_for_timeout(300)
+    await page.keyboard.press("F8")
+    await page.wait_for_timeout(1000)
+
+
 async def llenar_periodo(frame: Frame, desde: str, hasta: str) -> None:
     """Campo 'Período:' -- dos inputs de fecha (desde / 'a:').
 
@@ -1129,7 +1234,9 @@ def _dejar_solo(destino: Path, ganador: Path) -> None:
 
 # Modo "3 meses": cada ventana se guarda con nombre fijo SAP_m0/m1/m2 y NO se
 # borra a las demas. procesar_diario.py (Pendientes) las lee todas y las une.
-_SLOT_RE = re.compile(r"^SAP_m\d+\.(xlsx|xls|xlsm|mhtml|mht|csv)$", re.I)
+# "SAP_odm" es el bloque 2 (ODMs puntuales, ver descargar_bloque_odm) -- debe
+# incluirse aca tambien, si no _limpiar_estray lo borra por "no reconocido".
+_SLOT_RE = re.compile(r"^SAP_(m\d+|odm)\.(xlsx|xls|xlsm|mhtml|mht|csv)$", re.I)
 
 
 def _slot_filename(slot: str) -> str:
@@ -1246,6 +1353,45 @@ async def ejecutar_y_esperar_lista(pagina: Page, desde: str, hasta: str) -> Fram
             if intento == MAX_INTENTOS_EJECUTAR:
                 raise
     raise ultimo_error  # pragma: no cover (el for siempre sale por return o raise)
+
+
+async def descargar_bloque_odm(pagina: Page, odms: list[str], descargas: list) -> Path:
+    """Bloque 2: en vez de un rango de fechas, busca puntualmente los ODMs
+    de 'odms' (seleccion multiple). Se usa para los pendientes que quedaron
+    fuera del rango del mes actual (ver PENDIENTES_ODM_VIGILAR_PATH) -- asi
+    no hace falta volver a descargar meses enteros para esos pocos casos."""
+    print(f"\n============ Bloque 2: {len(odms)} ODM(s) puntuales (pendientes de meses anteriores) ============")
+    frame_sel = await abrir_iw39(pagina)
+
+    print("Marcando 'concluido' y 'Hist.'...")
+    await marcar_checkbox(frame_sel, "concluido")
+    await marcar_checkbox(frame_sel, "Hist.")
+
+    print(f"Clase de orden = {CLASE_ORDEN}...")
+    await llenar_campo_por_titulo(frame_sel, CAMPO_CLASE_ORDEN_SELECTORES, CLASE_ORDEN)
+
+    print("Seleccion multiple de Orden...")
+    await seleccionar_multiples_ordenes(frame_sel, pagina, odms)
+
+    print("Periodo vacio (no filtra por fecha en este bloque)...")
+    await llenar_periodo(frame_sel, "", "")
+
+    print("Layout = /PRT...")
+    await llenar_campo_por_titulo(frame_sel, CAMPO_LAYOUT_SELECTORES, "/PRT")
+
+    print("Ejecutando...")
+    boton_ejecutar = await texto_visible(frame_sel, "Ejecutar", exact=True)
+    await boton_ejecutar.click(timeout=15_000)
+    await pagina.wait_for_timeout(2500)
+
+    frame_lista = await frame_with(pagina, "text=Fe.creac.", ESPERA_LISTA_POR_INTENTO_MS)
+    print("Filtrando por Fecha de creación (rango vacio)...")
+    await filtrar_por_fecha_creacion(frame_lista, pagina, "", "")
+
+    print("Exportando a Excel...")
+    ruta = await exportar_a_excel(frame_lista, pagina, CARGA_SAP_DIR, descargas, slot="odm")
+    print(f"Listo: {ruta}")
+    return ruta
 
 
 async def correr(ventanas) -> list:
@@ -1394,6 +1540,23 @@ async def correr(ventanas) -> list:
                 ruta = await exportar_a_excel(frame_lista, pagina, CARGA_SAP_DIR, descargas, slot=slot)
                 print(f"Listo: {ruta}")
                 rutas.append(ruta)
+
+            # (2026-09-23) Bloque 2: ODMs puntuales de pendientes que se
+            # escaparon del rango del mes actual (ver PENDIENTES_ODM_VIGILAR_PATH).
+            # Se protege con su propio try/except -- si falla, NO tumba la
+            # corrida: el bloque 1 (arriba) ya es lo critico y ya se bajo
+            # bien. Se salta si el Excel de este bloque ya existe (retomar
+            # una corrida a medias) o si no hay ninguna ODM que vigilar.
+            odms_a_vigilar = _leer_odms_a_vigilar()
+            if odms_a_vigilar and not _slot_ya_ok("odm"):
+                try:
+                    ruta_odm = await descargar_bloque_odm(pagina, odms_a_vigilar, descargas)
+                    rutas.append(ruta_odm)
+                except Exception as error_odm:
+                    print(f"\n(aviso: el bloque 2 de ODMs fallo, se continua igual -- {error_odm})")
+                    await guardar_diagnostico(pagina, "bloque_odm", error_odm, contexto)
+            elif odms_a_vigilar:
+                print(f"\n(bloque 2: ya estaba descargado de un intento anterior de esta corrida, se salta)")
 
             # Red de seguridad final (2026-09-15): barre cualquier Excel
             # suelto que haya quedado con un nombre que no sea SAP_m#.xlsx
