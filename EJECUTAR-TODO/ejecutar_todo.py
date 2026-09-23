@@ -52,7 +52,16 @@ PENDIENTES_DIR = os.path.join(RAIZ, "PENDIENTES-LOCAL")
 ATENDIDAS_DIR = os.path.join(RAIZ, "ATENDIDAS-LOCAL")
 VEREDAS_DIR = os.path.join(RAIZ, "VEREDAS-LOCAL")
 
-MESES = 3
+MESES = 3  # GAP: sigue siendo configurable -- GAP decide de verdad qué está
+# pendiente, hace falta ver una ventana amplia para no perder casos viejos
+# que siguen activos.
+
+# (2026-09-23) SAP: FIJO en 1 mes, ya no depende de --meses/config del panel.
+# El bloque 2 (ODMs puntuales -- ver descargar_bloque_odm en
+# descargar_excel_sap.py) cubre los pendientes que se escapan de ese mes,
+# sin tener que volver a descargar meses enteros por SAP (3 transacciones
+# de SAP por corrida era demasiado tiempo/riesgo para ~25 casos viejos).
+MESES_SAP = 1
 
 # El Panel de Control corre esto con PANEL_SIN_VENTANA=1 para que ni este
 # proceso ni sus hijos (SAP, GAP, feed...) abran una ventana de consola.
@@ -323,8 +332,8 @@ def main():
     # ---- Pasos 1-2: descargas SAP + GAP EN PARALELO ----
     # SAP corre en esta PC (su propio Chromium); GAP corre en la VM y acá solo
     # se espera el archivo por OneDrive -- no compiten, así que van juntas.
-    _sap_args = ["--meses", str(meses_sel)] + (["--silencioso"] if silencioso else [])
-    SPEC_SAP = {"titulo": f"Descarga SAP ({meses_sel} meses)", "script": "descargar_excel_sap.py",
+    _sap_args = ["--meses", str(MESES_SAP)] + (["--silencioso"] if silencioso else [])
+    SPEC_SAP = {"titulo": f"Descarga SAP ({MESES_SAP} mes + bloque ODMs)", "script": "descargar_excel_sap.py",
                 "cwd": SAP_DIR, "args": _sap_args, "prefijo": "[SAP] "}
     SPEC_GAP = {"titulo": f"Descarga GAP ({meses_sel} meses)", "script": "iniciar_y_esperar_gap_pc.py",
                 "cwd": GAP_PC_DIR, "args": ["--meses", str(meses_sel)], "prefijo": "[GAP] "}
