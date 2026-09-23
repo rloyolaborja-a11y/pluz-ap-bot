@@ -52,6 +52,14 @@ GAP_DIR = os.path.join(CARGA_DIR, "EXCEL")
 SALIDA_DIR = os.path.join(BASE_DIR, "SALIDA")
 MAPA_CONTRATISTA_PATH = os.path.join(BASE_DIR, "REQUISITO", "mapa_contratista.json")
 PENDIENTE_PUBLICAR = os.path.join(SALIDA_DIR, "bd_actual.json")
+# (2026-09-23) Lista de ODMs "a vigilar" para el bloque 2 de SAP -- ver el
+# mismo mecanismo en PENDIENTES-LOCAL/procesar_diario.py. Veredas viene
+# DIRECTO del SAP (cada fila YA es una orden con su "Orden"), asi que aca no
+# hay que esperar a que se genere el ODM -- el unico motivo por el que un
+# pendiente de Veredas se "escapa" es que su mes quedo fuera del rango
+# descargado (bloque 1). descargar_excel_sap.py lee y combina este archivo
+# con el de Pendientes para armar la lista completa del bloque 2.
+ODM_VIGILAR_PATH = os.path.join(BASE_DIR, "pendientes_odm_vigilar.json")
 
 GRUPO_HOJAS_RUTA_VEREDAS = "APEMEVER"
 ESTADOS_EXCLUIDOS = {"CER", "CAN"}  # atendido / cancelado -> ya no es pendiente
@@ -264,6 +272,37 @@ def guardar_json_publicar_contratistas(filas, ahora):
     return resultados
 
 
+def generar_lista_odm_vigilar(filas, ahora, ruta=ODM_VIGILAR_PATH):
+    """Igual criterio que Pendientes (ver PENDIENTES-LOCAL/procesar_diario.py):
+    los pendientes de Veredas cuya 'Fecha de creación' cae FUERA del mes
+    actual no van a aparecer si el bloque 1 de SAP solo baja el mes actual --
+    hay que vigilarlos por su Orden para que el bloque 2 los busque en la
+    corrida siguiente. Todos los pendientes de Veredas YA tienen Orden (son
+    filas de SAP), asi que a diferencia de Pendientes no hace falta filtrar
+    por "sin ODM"."""
+    ordenes = []
+    vistos = set()
+    for fila in filas:
+        orden = fila.get("Orden")
+        if orden is None or (isinstance(orden, float) and pd.isna(orden)):
+            continue
+        f_creacion = fila.get("Fecha de creación")
+        if not isinstance(f_creacion, (datetime, pd.Timestamp)):
+            continue
+        if f_creacion.year == ahora.year and f_creacion.month == ahora.month:
+            continue  # dentro del mes actual -- ya lo trae el bloque 1
+        clave = clave_busqueda(orden)
+        if clave == "" or clave in vistos:
+            continue
+        vistos.add(clave)
+        ordenes.append(clave)
+
+    payload = {"generado": iso_js(ahora), "ordenes": ordenes}
+    with open(ruta, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+    return ruta, len(ordenes)
+
+
 def main():
     print("=== Reporte de Veredas AP — procesamiento local ===")
     sap_paths = todos_los_excel(SAP_DIR)
@@ -295,6 +334,10 @@ def main():
           f"-> siguen sin distrito: {stats['distrito_vacio_en_sap'] - stats['completados_por_gap']}")
 
     ahora = datetime.utcnow()
+
+    ruta_odm, n_odm = generar_lista_odm_vigilar(filas, ahora)
+    print(f"Lista de ODMs a vigilar (bloque 2 SAP, próxima corrida): {n_odm} orden(es) -> {ruta_odm}")
+
     ruta_excel = guardar_excel_completo(filas, ahora)
     print(f"Excel (solo local): {ruta_excel}")
 

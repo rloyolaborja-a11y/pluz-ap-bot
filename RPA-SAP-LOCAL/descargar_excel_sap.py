@@ -249,11 +249,16 @@ IW39_URL_DIRECTA = "https://pluz-peru-portal-prd.workzonehr.cfapps.br10.hana.ond
 
 BASE_DIR = Path(__file__).resolve().parent
 CARGA_SAP_DIR = BASE_DIR.parent / "CARGA" / "SAP"
-# (2026-09-23) Lista de ODMs "a vigilar" que genera PENDIENTES-LOCAL\
-# procesar_diario.py al final de CADA corrida (ver generar_lista_odm_vigilar
-# ahi) -- son pendientes que se escapan del mes actual pero YA tienen ODM.
-# Se lee ACA, en la corrida SIGUIENTE, para el bloque 2 (seleccion multiple).
-PENDIENTES_ODM_VIGILAR_PATH = BASE_DIR.parent / "PENDIENTES-LOCAL" / "pendientes_odm_vigilar.json"
+# (2026-09-23) Listas de ODMs "a vigilar" que generan PENDIENTES-LOCAL\ y
+# VEREDAS-LOCAL\procesar_diario.py al final de CADA corrida (ver
+# generar_lista_odm_vigilar en cada uno) -- pendientes que se escapan del mes
+# actual (Pendientes: ademas ya con ODM asignado; Veredas: todos sus
+# pendientes YA tienen Orden, por venir directo del SAP). Se leen ACA, en la
+# corrida SIGUIENTE, y se combinan para un solo bloque 2 (seleccion multiple).
+ODM_VIGILAR_PATHS = [
+    BASE_DIR.parent / "PENDIENTES-LOCAL" / "pendientes_odm_vigilar.json",
+    BASE_DIR.parent / "VEREDAS-LOCAL" / "pendientes_odm_vigilar.json",
+]
 DIAG_BASE_DIR = Path.home() / "SAP_RPA_Excel"
 # (2026-09-18) El antivirus/EDR corporativo que mata el navegador a mitad de
 # la descarga de SAP es INTERMITENTE y, por lo que se vio en la practica, no
@@ -749,17 +754,24 @@ async def llenar_campo_por_titulo(frame: Frame, selectores: Iterable[str], valor
 
 
 def _leer_odms_a_vigilar() -> list[str]:
-    """Lee la lista de ODMs a vigilar (bloque 2) que dejo la corrida anterior
-    de Pendientes. Si el archivo no existe o esta vacio/corrupto, devuelve
-    lista vacia -- el bloque 2 simplemente no se corre esa vez (no es un
-    error: puede ser la primera corrida, o Pendientes no corrio antes)."""
+    """Lee y combina (sin repetidos) las listas de ODMs a vigilar (bloque 2)
+    que dejo la corrida anterior de Pendientes Y de Veredas. Si un archivo no
+    existe o esta vacio/corrupto, se lo salta sin cortar el otro -- no es un
+    error: puede ser la primera corrida, o ese reporte no corrio antes."""
     import json as _json
-    try:
-        data = _json.loads(PENDIENTES_ODM_VIGILAR_PATH.read_text(encoding="utf-8"))
-        ordenes = data.get("ordenes") or []
-        return [str(o).strip() for o in ordenes if str(o).strip()]
-    except Exception:
-        return []
+    vistos: set[str] = set()
+    ordenes: list[str] = []
+    for ruta in ODM_VIGILAR_PATHS:
+        try:
+            data = _json.loads(ruta.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        for o in (data.get("ordenes") or []):
+            clave = str(o).strip()
+            if clave and clave not in vistos:
+                vistos.add(clave)
+                ordenes.append(clave)
+    return ordenes
 
 
 CAMPO_ORDEN_SELECTORES = [
