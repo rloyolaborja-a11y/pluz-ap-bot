@@ -2,8 +2,10 @@
 setlocal
 cd /d "%~dp0"
 
-echo === Prueba de la Pantalla 1 de SAP con pywinauto (sin CDP) ===
-echo (Version en construccion -- no es el bot final todavia.)
+echo === Prueba de la Pantalla 1 del robot UIA (Clase de orden + Periodo + Layout) ===
+echo Version en construccion -- todavia NO es el bot final (falta Pantalla 2 y 3).
+echo Va a llenar la pantalla de verdad y esperar tu confirmacion ANTES de
+echo clickear 'Ejecutar', para que puedas revisar que los datos quedaron bien.
 echo.
 
 where python >nul 2>nul

@@ -5,9 +5,11 @@ confirmada es que algo de seguridad de la empresa mata el navegador cuando
 lo detecta controlado por ese protocolo, sin importar el navegador (Chrome,
 Chromium o Edge) ni el clic puntual.
 
-ESTADO (2026-09-18, PAUSADO -- retomar cuando haya tiempo): en construccion,
-PANTALLA POR PANTALLA. NO esta conectado al bot real todavia (el bot sigue
-usando descargar_excel_sap.py con Playwright/Chromium mientras tanto).
+ESTADO (2026-09-24, EN CONSTRUCCION -- Pantalla 1 resuelta): NO esta
+conectado al bot real todavia (el bot sigue usando descargar_excel_sap.py
+con Playwright/Chromium mientras tanto), pero la Pantalla 1 completa
+(checkboxes + Clase de orden + Periodo + Layout) ya funciona de punta a
+punta contra SAP real.
 
 Lo que YA se probo y funciona:
   - Abrir Edge NORMAL (subprocess.Popen, sin --remote-debugging-port) y
@@ -16,6 +18,16 @@ Lo que YA se probo y funciona:
     ventana nueva comparando handles de msedge.exe antes/despues de
     lanzarla, NO por PID de Popen -- Edge a veces reusa un proceso ya
     corriendo y ese PID nunca tiene ventana propia).
+  - (2026-09-24) abrir_edge_y_conectar() lanza Edge con el flag
+    --force-renderer-accessibility. SIN esto, Chromium decidia el solo
+    (mal) si construir el arbol de accesibilidad completo del contenido
+    web -- confirmado con diagnostico_pantalla1.py: sin el flag, pywinauto
+    solo veia 1 elemento 'Edit' en TODA la ventana (la barra de
+    direcciones), sin importar que tan visible estuviera SAP en pantalla.
+    Con el flag, aparecen los 160+ campos reales de la pantalla. Este flag
+    NO habilita CDP ni control remoto, solo afecta como Chromium arma su
+    propio arbol interno -- no deberia disparar la misma deteccion del
+    antivirus que hizo abandonar CDP.
   - Los checkboxes 'concluido' y 'Hist.' SI tienen nombre accesible -> se
     encuentran bien por nombre (_esperar_control_por_nombre).
   - UI Automation de Windows tira de vez en cuando un COMError pasajero
@@ -23,54 +35,57 @@ Lo que YA se probo y funciona:
     haya nada mal -- hay que reintentar (ver _con_reintento).
   - Los textos de SAP a veces usan '\xa0' (espacio irrompible) en vez de
     espacio normal -- hay que normalizar antes de comparar (_normalizar_texto).
+  - (2026-09-24) Los indices de los campos de TEXTO (Clase de orden,
+    Periodo, Layout) quedaron confirmados usando diagnostico_pantalla1.py
+    -- un script aparte que saca una foto de la pantalla real con un
+    numero dibujado encima de cada campo 'Edit', para identificar el indice
+    correcto con solo mirar la foto en vez de contar a mano (que fue justo
+    donde se trabo el intento anterior). Ver INDICE_CLASE_ORDEN,
+    INDICE_PERIODO_DESDE/HASTA e INDICE_LAYOUT mas abajo para los valores y
+    la explicacion completa.
+  - (2026-09-24) Layout (indice 162, muy abajo en la pantalla, fuera de lo
+    visible sin scroll) se llena con set_focus() en vez de click_input():
+    pedirle el foco a un elemento de contenido web via UI Automation hace
+    que Chromium lo scrollee solo hasta que quede visible, evitando tener
+    que calcular ni mover el scroll a mano o depender de coordenadas de
+    pantalla que podrian estar fuera de vista.
+  - (2026-09-24) IMPORTANTE -- llenar_pantalla_seleccion() y
+    clickear_ejecutar() ya NO usan click_input()/type_keys() (que simulan
+    mouse/teclado REALES y le mueven el cursor y le interrumpen lo que este
+    haciendo en su PC a quien lo corra -- confirmado, se quejo de esto
+    probando el robot). Se cambio a llamadas puras de UI Automation que NO
+    tocan mouse/teclado: set_edit_text() (IUIAutomationValuePattern.SetValue,
+    la misma API que usa un lector de pantalla), toggle()
+    (IUIAutomationTogglePattern.Toggle) e invoke()
+    (IUIAutomationInvokePattern.Invoke). Con esto el robot deberia poder
+    correr sin robarle el mouse a la usuaria mientras hace otra cosa.
+    PENDIENTE DE PROBAR: confirmar que corriendo asi, de verdad no se mueve
+    el mouse ni interrumpe.
 
-Lo que NO funciono / donde quedo trabado:
-  - Los campos de TEXTO (Clase de orden, Periodo, Layout, y en general TODOS
-    los inputs de esta pantalla) NO tienen nombre accesible NI etiqueta
-    cercana -- SAP no expone esa info a UI Automation aca (a diferencia de
-    los checkboxes). Buscarlos por nombre/texto es imposible.
-  - Se intento identificarlos por POSICION (indice dentro de la lista de
-    todos los 'Edit' con rectangulo valido, ver _campos_edit_visibles) --
-    la pantalla real es: fila 1 "Orden" (desde/hasta), fila 2 "Clase de
-    orden" (desde/hasta), fila 3 "Ubicacion tecnica", fila 4 "Equipo", fila 5
-    "Material", fila 6 "Numero de serie", fila 7 "Dat.adic.disposit.", fila 8
-    "Notificacion", fila 9 "Pto.tbjo.responsable", fila 10
-    "Ce.p.pto.trabajo" ... (sigue bajando hasta llegar a "Periodo" y
-    "Layout", no llegamos a ver esas dos filas en la captura). Los indices
-    que se probaron (INDICE_CLASE_ORDEN=3, INDICE_PERIODO_DESDE=21,
-    INDICE_PERIODO_HASTA=22) estaban CORRIDOS -- el valor de prueba "ZM06"
-    termino en el campo "Orden: a:" (fila 1, columna derecha) en vez de
-    "Clase de orden" (fila 2). Hay que volver a contar con cuidado,
-    correlacionando una captura de pantalla REAL (con las etiquetas
-    visibles) contra el volcado de _campos_edit_visibles en el MISMO
-    momento, fila por fila.
-  - Falta totalmente resolver 'Layout' (no se llego a probar el Tab-desde-
-    Periodo que se dejo armado en el codigo, ver el bloque "DIAGNOSTICO:
-    foco despues de cada Tab").
+Lo que NO esta hecho todavia:
+  - Pantalla 2 (lista de resultados + filtro por Fecha de creacion) y
+    Pantalla 3 (exportar a Excel) -- ninguna de las dos esta ni empezada.
+    main() todavia corta despues de clickear 'Ejecutar'.
 
-PROXIMO PASO sugerido al retomar: correr esto de nuevo, SIN llenar nada a
-mano, y en vez de confiar en indices ya calculados, usar el volcado de
-_volcar_diagnostico_etiqueta / _campos_edit_visibles JUNTO con una captura
-de pantalla tomada en el MISMO instante (ImageGrab.grab(), ya esta el
-codigo) para contar los indices bien desde cero, fila por fila, sin apurar.
-Una vez que Clase de orden/Periodo/Layout esten confirmados, falta TODA la
-Pantalla 2 (lista de resultados + filtro por Fecha de creacion) y la
-Pantalla 3 (exportar a Excel) -- ninguna de las dos esta ni empezada.
-
-Se corre a mano (PRUEBA-uia-pantalla1.bat) para ir verificando cada parte
-contra el SAP real antes de conectarlo al bot de verdad.
+Se corre a mano (DIAGNOSTICO-Pantalla1-SAP.bat para el diagnostico visual,
+o este mismo archivo directo) para ir verificando cada parte contra el SAP
+real antes de conectarlo al bot de verdad.
 """
 
 from __future__ import annotations
 
+import ctypes
 import subprocess
 import sys
 import time
 from pathlib import Path
 
+import comtypes
+
 try:
     from pywinauto import Desktop
     from pywinauto.application import Application
+    from pywinauto.uia_defines import get_elem_interface
 except ImportError:
     print("Falta pywinauto. Instalalo con: pip install pywinauto")
     sys.exit(1)
@@ -184,7 +199,24 @@ def abrir_edge_y_conectar(url: str):
         return handles
 
     handles_antes = _handles_msedge()
-    proceso = subprocess.Popen([msedge, f"--user-data-dir={PROFILE_DIR}", url])
+    # (2026-09-24) --force-renderer-accessibility: SIN esto, Chromium decide
+    # el mismo si construye o no el arbol de accesibilidad completo del
+    # contenido web (deteccion automatica de "hay un lector de pantalla/
+    # cliente UIA escuchando"), y esa deteccion resulto poco confiable con la
+    # pantalla de SAP -- confirmado con diagnostico_pantalla1.py: con Edge
+    # completamente visible y la pantalla de SAP cargada, pywinauto solo veia
+    # 1 elemento 'Edit' (la barra de direcciones), ninguno de los campos de
+    # SAP. Este flag fuerza esa construccion desde el arranque, sin
+    # depender de la deteccion. A diferencia de --remote-debugging-port, NO
+    # habilita CDP ni ningun protocolo de control remoto -- solo cambia como
+    # Chromium arma su propio arbol de accesibilidad interno -- no deberia
+    # disparar la misma deteccion del antivirus que causo abandonar CDP.
+    proceso = subprocess.Popen([
+        msedge,
+        f"--user-data-dir={PROFILE_DIR}",
+        "--force-renderer-accessibility",
+        url,
+    ])
 
     deadline = time.time() + TIMEOUT_ESPERA_VENTANA_SEG
     while time.time() < deadline:
@@ -393,16 +425,28 @@ def _volcar_diagnostico_etiqueta(ventana, texto_parcial: str) -> None:
     print("  --- fin diagnostico ---\n")
 
 
-# (2026-09-18) Indices confirmados a partir de una corrida real llenada a
-# mano: en la lista de TODOS los campos 'Edit' con rectangulo valido (no
-# (0,0,0,0)), en el orden en que aparecen, el campo #3 (contando desde 0) es
-# 'Clase de orden' y los campos #21/#22 son 'Periodo desde'/'Periodo hasta'.
+# (2026-09-24) Indices RECONFIRMADOS con diagnostico_pantalla1.py (foto con
+# numeros dibujados encima de cada campo, ver ese script) -- los indices
+# viejos (3/21/22, de 2026-09-18) estaban CORRIDOS, como ya avisaban las
+# notas de mas arriba. Ademas se necesito el flag
+# --force-renderer-accessibility en abrir_edge_y_conectar() para que
+# Chromium exponga TODOS los campos de la pantalla via UI Automation --
+# sin ese flag, solo se veia 1 campo (la barra de direcciones de Edge) sin
+# importar que tan visible estuviera la pantalla de SAP.
+# En la lista de TODOS los campos 'Edit' con rectangulo valido (no
+# (0,0,0,0)), en el orden en que aparecen:
+#   #4   = Clase de orden (desde)
+#   #24  = Periodo desde
+#   #25  = Periodo hasta
+#   #162 = Layout
 # Ninguno de estos campos tiene nombre accesible ni etiqueta cercana (SAP no
 # expone esa info a UI Automation en esta pantalla) -- la POSICION es la
 # unica pista estable que encontramos.
-INDICE_CLASE_ORDEN = 3
-INDICE_PERIODO_DESDE = 21
-INDICE_PERIODO_HASTA = 22
+INDICE_CLASE_ORDEN = 4
+INDICE_PERIODO_DESDE = 24
+INDICE_PERIODO_HASTA = 25
+INDICE_LAYOUT = 162
+LAYOUT = "/PRT"
 
 
 def _campos_edit_visibles(ventana):
@@ -449,19 +493,22 @@ def _elemento_con_foco():
 
 
 def llenar_pantalla_seleccion(ventana, desde: str, hasta: str) -> None:
+    # (2026-09-24) .toggle() llama a IUIAutomationTogglePattern.Toggle() --
+    # cambia el estado del checkbox via COM, sin clic de mouse real (a
+    # diferencia de click_input(), que si mueve el cursor de verdad).
     print("Marcando 'concluido'...")
     chk_concluido = _esperar_control_por_nombre(ventana, "concluido", tipos=("CheckBox",))
     if not _con_reintento(lambda: chk_concluido.get_toggle_state()):
-        _con_reintento(lambda: chk_concluido.click_input())
+        _con_reintento(lambda: chk_concluido.toggle())
 
     print("Marcando 'Hist.'...")
     chk_hist = _esperar_control_por_nombre(ventana, "Hist.", tipos=("CheckBox",), exacto=True)
     if not _con_reintento(lambda: chk_hist.get_toggle_state()):
-        _con_reintento(lambda: chk_hist.click_input())
+        _con_reintento(lambda: chk_hist.toggle())
 
     campos = _con_reintento(lambda: _campos_edit_visibles(ventana))
     print(f"  ({len(campos)} campos 'Edit' visibles encontrados)")
-    necesarios = max(INDICE_CLASE_ORDEN, INDICE_PERIODO_DESDE, INDICE_PERIODO_HASTA)
+    necesarios = max(INDICE_CLASE_ORDEN, INDICE_PERIODO_DESDE, INDICE_PERIODO_HASTA, INDICE_LAYOUT)
     if len(campos) <= necesarios:
         raise RuntimeError(
             f"Esperaba al menos {necesarios + 1} campos 'Edit' visibles, "
@@ -469,42 +516,156 @@ def llenar_pantalla_seleccion(ventana, desde: str, hasta: str) -> None:
             "a la esperada -- revisa la foto/log."
         )
 
+    # (2026-09-24) IMPORTANTE: se usa set_edit_text() en vez de
+    # click_input()+type_keys(). click_input()/type_keys() simulan un CLIC Y
+    # TECLADO REALES (mueven el mouse de la usuaria de verdad y le
+    # interrumpen lo que este haciendo en su PC en ese momento -- confirmado,
+    # se quejo de esto probando el robot). set_edit_text() en cambio llama
+    # directo a IUIAutomationValuePattern.SetValue() -- la MISMA API que usa
+    # un lector de pantalla para escribir por la persona -- sin tocar el
+    # mouse ni el teclado real, y sin robarle el foco a la ventana que la
+    # usuaria tenga abierta en ese momento. set_edit_text(texto), sin indicar
+    # pos_start/pos_end, reemplaza TODO el contenido previo del campo (igual
+    # que Ctrl+A y despues escribir).
+    #   PERO set_edit_text() exige que el elemento este "visible" (no
+    #   offscreen DENTRO DE SU PROPIA PAGINA -- esto no tiene nada que ver
+    #   con que otra ventana lo tape en el escritorio, eso no afecta a UI
+    #   Automation). La pantalla arranca con el scroll arriba del todo, asi
+    #   que cualquier campo mas abajo que "Clase de orden" arranca offscreen
+    #   -- confirmado, fallo justo en Periodo con ElementNotVisible. Por eso
+    #   TODOS los campos pasan primero por set_focus() (tambien pura UI
+    #   Automation, sin mouse/teclado real) para que Chromium los scrollee
+    #   solo antes de escribirles.
+    def _esperar_que_quede_visible(campo, timeout=5.0):
+        """El scroll que dispara set_focus() no es instantaneo -- en vez de
+        adivinar cuanto dormir, se chequea el estado REAL del elemento
+        (is_visible(), que lee la propiedad IsOffscreen de UI Automation)
+        en un loop corto hasta confirmar que ya esta visible, o hasta
+        timeout. Determinista: en cuanto esta visible, sigue de una, sin
+        esperar de mas."""
+        deadline = time.time() + timeout
+        while time.time() < deadline:
+            try:
+                if campo.is_visible():
+                    return
+            except Exception:
+                pass
+            time.sleep(0.1)
+        raise RuntimeError("El campo no quedo visible a tiempo despues de pedirle el foco (set_focus).")
+
+    def _campo_fresco(indice):
+        """NO reusa el objeto 'campo' guardado en la lista 'campos' de mas
+        arriba -- al hacerle scroll para traer un campo lejano a la vista,
+        SAP puede reciclar/recrear esa parte de la pagina, y la referencia
+        vieja a ese elemento queda invalida, aunque el campo #indice siga
+        siendo el mismo logicamente. Por eso se vuelve a pedir la lista de
+        campos FRESCA justo antes de escribir."""
+        campo = _campos_edit_visibles(ventana)[indice]
+        campo.set_focus()
+        _esperar_que_quede_visible(campo)
+        # Se vuelve a pedir de nuevo aca: el paso anterior (esperar a que
+        # quede visible) puede el mismo haber disparado otro reciclado.
+        return _campos_edit_visibles(ventana)[indice]
+
+    def _valor_actual(indice):
+        try:
+            return _campos_edit_visibles(ventana)[indice].get_value()
+        except Exception:
+            return None
+
+    def _quedo_escrito(indice, texto, espera=0.35):
+        # (2026-09-24) CLAVE: escribir "por atras" (ValuePattern o
+        # LegacyIAccessible) cambia lo que se VE en el campo, pero SAP
+        # (SAPUI5/Fiori) tiene su PROPIO modelo de datos interno separado del
+        # DOM -- si no se disparan los eventos de teclado reales que SAP
+        # escucha, su modelo interno nunca se entera del cambio, y SAP
+        # redibuja el campo desde su modelo (el valor viejo) enseguida,
+        # BORRANDO lo que se acababa de escribir -- confirmado a ojo (se veia
+        # "ZM06" aparecer y desaparecer solo). set_edit_text()/SetValue() NO
+        # tiran error cuando esto pasa (la llamada en si funciona bien),
+        # asi que la UNICA forma de saber si de verdad quedo es volver a leer
+        # el campo despues de darle un instante a SAP para redibujar, y
+        # comparar.
+        time.sleep(espera)
+        return _valor_actual(indice) == texto
+
+    def _por_teclado(indice, texto):
+        # (2026-09-24) type_keys() SI dispara los eventos de teclado reales
+        # que SAP necesita para actualizar su modelo interno -- por eso es la
+        # unica via que persiste de verdad. A diferencia de click_input(), no
+        # mueve el mouse, pero SI manda teclado real a nivel de Windows, que
+        # va a la ventana que este en PRIMER PLANO en ese instante -- si la
+        # usuaria esta trabajando en otra ventana en ese momento, el texto se
+        # escribiria ahi por error. Por eso se trae Edge al frente JUSTO
+        # antes de escribir y se devuelve el foco a lo que la usuaria tuviera
+        # abierto apenas se termina -- la interrupcion queda acotada a los
+        # campos que de verdad lo necesitan, no a toda la corrida.
+        user32 = ctypes.windll.user32
+        user32.GetForegroundWindow.restype = ctypes.c_void_p
+        user32.SetForegroundWindow.argtypes = [ctypes.c_void_p]
+        anterior = user32.GetForegroundWindow()
+        user32.SetForegroundWindow(ventana.handle)
+        try:
+            campo = _campo_fresco(indice)
+            campo.type_keys("^a{DEL}", set_foreground=False)
+            campo.type_keys(texto, with_spaces=True, set_foreground=False)
+        finally:
+            if anterior:
+                user32.SetForegroundWindow(anterior)
+
+    def _llenar(indice, texto):
+        # Intento 1: ValuePattern (set_edit_text) -- el mas silencioso.
+        try:
+            _con_reintento(lambda: _campo_fresco(indice).set_edit_text(texto), intentos=3, espera=0.5)
+            if _quedo_escrito(indice, texto):
+                return
+            print("    (SAP borro el valor solo -- ValuePattern no le avisa a SAP del cambio, probando otra via)")
+        except comtypes.COMError:
+            pass
+
+        # Intento 2: LegacyIAccessible -- la interfaz VIEJA de accesibilidad
+        # (la que usaban los lectores de pantalla antes de UI Automation).
+        # Sigue siendo pura COM, cero simulacion de input.
+        print("    (probando por LegacyIAccessible)")
+        try:
+            def via_legacy():
+                campo = _campo_fresco(indice)
+                iface = get_elem_interface(campo.element_info.element, "LegacyIAccessible")
+                iface.SetValue(texto)
+            _con_reintento(via_legacy, intentos=3, espera=0.5)
+            if _quedo_escrito(indice, texto):
+                return
+            print("    (SAP tambien borro este -- probando por teclado)")
+        except comtypes.COMError:
+            pass
+
+        # Intento 3 (ultimo recurso): teclado real. Ver _por_teclado() arriba
+        # para la explicacion del breve parpadeo de foreground que esto
+        # implica.
+        _con_reintento(lambda: _por_teclado(indice, texto), intentos=3, espera=0.5)
+        if not _quedo_escrito(indice, texto):
+            raise RuntimeError(
+                f"El campo #{indice} no acepto '{texto}' ni siquiera por teclado -- "
+                "revisar a mano si es el campo correcto."
+            )
+
     print(f"Clase de orden = {CLASE_ORDEN}  (campo #{INDICE_CLASE_ORDEN})...")
-    campo_clase = campos[INDICE_CLASE_ORDEN]
-    campo_clase.click_input()
-    campo_clase.type_keys("^a")
-    campo_clase.type_keys(CLASE_ORDEN, with_spaces=True)
+    _llenar(INDICE_CLASE_ORDEN, CLASE_ORDEN)
 
     print(f"Periodo = {desde} a {hasta}  (campos #{INDICE_PERIODO_DESDE}/#{INDICE_PERIODO_HASTA})...")
-    campo_desde = campos[INDICE_PERIODO_DESDE]
-    campo_desde.click_input()
-    campo_desde.type_keys("^a")
-    campo_desde.type_keys(desde, with_spaces=True)
-    campo_hasta = campos[INDICE_PERIODO_HASTA]
-    campo_hasta.click_input()
-    campo_hasta.type_keys("^a")
-    campo_hasta.type_keys(hasta, with_spaces=True)
+    _llenar(INDICE_PERIODO_DESDE, desde)
+    _llenar(INDICE_PERIODO_HASTA, hasta)
 
-    # (2026-09-18) Layout: por ahora NO sabemos su indice (esta pantalla
-    # tiene cientos de campos ocultos de "seleccion multiple" entre Periodo
-    # y Layout, contar el indice exacto a mano es muy propenso a error).
-    # Probamos algo distinto: Tab desde el campo de Periodo-hasta (donde SI
-    # sabemos pararnos) -- el orden de tabulacion del teclado deberia saltar
-    # directo a los controles VISIBLES de verdad, sin pasar por las filas
-    # ocultas. Se imprime que quedo enfocado despues de cada Tab para poder
-    # ajustar la cantidad si hace falta.
-    print("\n  --- DIAGNOSTICO: foco despues de cada Tab desde Periodo-hasta ---")
-    for i in range(1, 6):
-        campo_hasta.type_keys("{TAB}")
-        time.sleep(0.3)
-        print(f"    Tab #{i}: {_elemento_con_foco()}")
-    print("  --- fin diagnostico de Tabs ---\n")
+    print(f"Layout = {LAYOUT}  (campo #{INDICE_LAYOUT})...")
+    _llenar(INDICE_LAYOUT, LAYOUT)
 
 
 def clickear_ejecutar(ventana) -> None:
+    # (2026-09-24) .invoke() llama a IUIAutomationInvokePattern.Invoke() --
+    # activa el boton via COM, sin clic de mouse real.
     print("Ejecutando...")
     boton = _esperar_control_por_nombre(ventana, "Ejecutar", tipos=("Button",))
-    boton.click_input()
+    boton.invoke()
 
 
 def main():

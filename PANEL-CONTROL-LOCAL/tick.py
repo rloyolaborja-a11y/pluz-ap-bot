@@ -99,6 +99,15 @@ def correr_pipeline(cfg, reintento):
         marcador.write_text(json.dumps({
             "id": rid, "origen": "programada" + (" (reintento)" if reintento else ""),
             "inicio": datetime.fromtimestamp(inicio).isoformat(timespec="seconds"),
+            # (2026-09-25) pid del proceso de tick.py que sostiene esta
+            # corrida -- si tick.py mismo muere de golpe (no solo su
+            # subproceso ejecutar_todo.py), el bloque finally de mas abajo
+            # nunca llega a borrar este marcador, y el panel queda
+            # convencido para siempre de que "hay una corrida en curso"
+            # (confirmado: paso, dejo al panel trabado horas). Con el pid
+            # guardado, panel.py puede detectar que ya murio y autolimpiarse
+            # -- igual que ya hace _lock.json.
+            "pid": os.getpid(),
         }), encoding="utf-8")
     except Exception:
         pass

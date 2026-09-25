@@ -653,11 +653,22 @@ def historial(limite=40):
 
 
 def _tick_corriendo():
-    """dict del marcador si hay una corrida automática (tick.py) en curso."""
+    """dict del marcador si hay una corrida automática (tick.py) EN CURSO DE
+    VERDAD; None si no hay o si el proceso de tick.py que lo dejo ya murio
+    (y en ese caso borra el archivo -- mismo criterio que lock_info(), ver
+    ahi el porque: si tick.py muere de golpe -- confirmado, paso una vez --
+    este marcador quedaba pegado para siempre y el panel se convencia de que
+    seguia habiendo una corrida activa aunque no hubiera nada corriendo)."""
     p = RUNS_DIR / "_corriendo.json"
     try:
         d = json.loads(p.read_text(encoding="utf-8"))
     except (FileNotFoundError, ValueError):
+        return None
+    if "pid" in d and not _pid_vivo(d.get("pid")):
+        try:
+            p.unlink()
+        except Exception:
+            pass
         return None
     # el log crece mientras corre -> sacar el paso actual de ahí
     lp = RUNS_DIR / f"run_{d.get('id')}.log"
