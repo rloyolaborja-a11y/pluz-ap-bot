@@ -103,6 +103,11 @@ GAB_COLUMNS = [
     # Estas dos no vienen en el Excel reducido actual — se quedan en None,
     # igual que antes, por si algún día vuelven a incluirse.
     "SAP - Sucursal", "SAP MOVIL - Codigo Cuadrilla",
+    # (2026-09-29) Poste/SED/Suministro -- a pedido, para el buscador del
+    # Mapa. Es el MISMO Excel de GAP que ya lee Pendientes (ver LEEME de
+    # CARGA\EXCEL), que sí trae estas columnas -- leer_gab() ya rellena con
+    # None si algún día no vinieran, asi que agregarlas acá es seguro.
+    "Poste - Número", "Poste - SED", "Cliente - Suministro",
 ]
 # "SAP - Cod. SAP" = la ODM (código que empieza con 600...). 2026-09-05: se
 # agregó porque la pestaña "Correcciones" la muestra como columna "ODM".
@@ -530,6 +535,9 @@ def procesar(df, maestros, correcciones=None, mapa_deficiencia=None, mapa_zona=N
         motivo = fila["SAP - Motivo de reclamo"]
         distrito = fila["Poste - Distrito"]
         referencias = fila["Poste - Referencias"]
+        poste_numero = fila["Poste - Número"]
+        poste_sed = fila["Poste - SED"]
+        suministro = fila["Cliente - Suministro"]
         obs = fila["SAP - Observaciones en Atención"]
         sap_maestra = fila["SAP - SAP Maestra"]
         motivo_falla = fila["SAP - Motivo falla técnica"]
@@ -613,7 +621,16 @@ def procesar(df, maestros, correcciones=None, mapa_deficiencia=None, mapa_zona=N
             "_dashboardValido": dashboard_valido,
         }
         rows_publicas.append(base)
-        rows_completas.append({"Poste - Referencias": referencias, **base})
+        # Poste/SED/Suministro solo en la "completa" (Mapa/Buscar y
+        # exportar) -- igual criterio que "Poste - Referencias", no se
+        # publican en bd_actual (Dashboard).
+        rows_completas.append({
+            "Poste - Referencias": referencias,
+            "Poste - Número": poste_numero,
+            "Poste - SED": poste_sed,
+            "Cliente - Suministro": suministro,
+            **base,
+        })
 
     # Casos "SIN ASIGNAR" (muy pocos, la excepción — técnico que no está en
     # MAESTROS/tecnicos.json): se les asigna el contratista que más atiende
