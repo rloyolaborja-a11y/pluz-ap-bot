@@ -113,6 +113,7 @@ CONFIG_PATH = os.path.join(BASE_DIR, "config.json")
 SALIDA_DIR = os.path.join(BASE_DIR, "SALIDA")
 DATA_PATH = os.path.join(SALIDA_DIR, "bd_actual.json")
 DATA_COMPLETA_PATH = os.path.join(SALIDA_DIR, "bd_completa.json")
+HISTORICO_DIR = os.path.join(BASE_DIR, "HISTORICO")
 
 # Contratistas con clave propia (aislamiento de datos) — igual que en
 # procesar_diario.py y assets/js/app.js.
@@ -424,6 +425,57 @@ def publicar_lote(cfg, archivos, mensaje):
             raise RuntimeError(f"GitHub: {e_github} | Apps Script: {e_apps_script}")
 
 
+def _clave_mes_actual_lima():
+    """Mismo criterio que clave_mes_actual_lima() en procesar_diario.py y
+    mesActualLima() en app.js -- "YYYY-MM" del mes calendario actual en hora
+    de Lima (UTC-5, sin horario de verano)."""
+    ahora_lima = datetime.datetime.utcnow() - datetime.timedelta(hours=5)
+    return ahora_lima.strftime("%Y-%m")
+
+
+def _publicar_historico_futuro(cfg, mensaje):
+    """(2026-09-30) A pedido: detecta sola y publica los meses de HISTORICO\\
+    que sean FUTUROS respecto a hoy (ej. "2026-10" mientras estamos en
+    septiembre) -- son los casos con "Fecha de Atención" mal cargada en
+    SAP/GAP con una fecha que todavía no llega, que procesar_diario.py ya
+    archiva ahí solo. Sin esto, esos casos quedaban invisibles en el sitio
+    hasta que alguien corriera "Publicar histórico" a mano.
+
+    A propósito NO toca meses pasados ya cerrados (esos no cambian día a
+    día, resubirlos todos los días sería puro desperdicio) -- publicar_historico.py
+    sigue siendo la herramienta para esos, de una sola vez."""
+    if not os.path.isdir(HISTORICO_DIR):
+        return
+    clave_actual = _clave_mes_actual_lima()
+    nombres = sorted(f for f in os.listdir(HISTORICO_DIR) if f.endswith(".json"))
+    futuros = [n for n in nombres if n != "index.json" and n[:7] > clave_actual]
+    if not futuros:
+        return
+    print()
+    print(f"Detectados {len(futuros)} archivo(s) de histórico FUTURO (fecha mal cargada en SAP/GAP) -- publicando solos:")
+    archivos = []
+    for nombre in futuros:
+        ruta_local = os.path.join(HISTORICO_DIR, nombre)
+        with open(ruta_local, "rb") as f:
+            contenido = f.read()
+        n_filas = len(json.loads(contenido).get("rows", []))
+        print(f"  {nombre}: {n_filas} filas")
+        archivos.append((f"atendidas/data/historico/{nombre}", contenido))
+    # index.json (la lista de meses que lee el desplegable "Mes") también se
+    # sube junto -- si el mes futuro es nuevo, tiene que aparecer ahí para
+    # que se pueda elegir en "Buscar y exportar".
+    ruta_indice = os.path.join(HISTORICO_DIR, "index.json")
+    if os.path.exists(ruta_indice):
+        with open(ruta_indice, "rb") as f:
+            archivos.append(("atendidas/data/historico/index.json", f.read()))
+    try:
+        publicar_lote(cfg, archivos, mensaje + " (histórico futuro)")
+        print("  Publicado.")
+    except Exception as e:
+        print(f"  AVISO: no se pudo publicar el histórico futuro: {e}")
+        print("  No es grave -- el mes actual ya se publicó bien. Se reintenta solo en la próxima corrida.")
+
+
 def main():
     if not os.path.exists(DATA_PATH):
         print(f"No existe {DATA_PATH}. Corre primero procesar_diario.py.")
@@ -518,6 +570,8 @@ def main():
 
     print()
     print(f"Publicado (slot '{slot_nuevo}'). El sitio va a tardar 1-2 minutos en mostrar los datos nuevos.")
+
+    _publicar_historico_futuro(cfg, mensaje)
 
 
 if __name__ == "__main__":
